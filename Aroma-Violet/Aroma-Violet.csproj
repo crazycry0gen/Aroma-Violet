@@ -168,14 +168,39 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AddressTypesController.cs" />
     <Compile Include="Controllers\AdministratorController.cs" />
-    <Compile Include="Controllers\ClientController.cs" />
-    <Compile Include="Controllers\ClientTypeController.cs" />
+    <Compile Include="Controllers\ClientsController.cs" />
+    <Compile Include="Controllers\ClientTypesController.cs" />
+    <Compile Include="Controllers\ContactTypesController.cs" />
+    <Compile Include="Controllers\CountriesController.cs" />
+    <Compile Include="Controllers\EthnicGroupsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\IncomeGroupsController.cs" />
+    <Compile Include="Controllers\LanguagesController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\ProvincesController.cs" />
+    <Compile Include="Controllers\TitelsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201508050851109_InitialCreate.cs" />
+    <Compile Include="Migrations\201508050851109_InitialCreate.Designer.cs">
+      <DependentUpon>201508050851109_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201508051119280_Lookups added.cs" />
+    <Compile Include="Migrations\201508051119280_Lookups added.Designer.cs">
+      <DependentUpon>201508051119280_Lookups added.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201508051341159_Even More lookup changes.cs" />
+    <Compile Include="Migrations\201508051341159_Even More lookup changes.Designer.cs">
+      <DependentUpon>201508051341159_Even More lookup changes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201508051356127_xx.cs" />
+    <Compile Include="Migrations\201508051356127_xx.Designer.cs">
+      <DependentUpon>201508051356127_xx.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AdministratorModels.cs" />
     <Compile Include="Models\AromaDataModels.cs" />
@@ -242,16 +267,56 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Administrator\Index.cshtml" />
     <Content Include="Views\Shared\_ApplicationMenuList.cshtml" />
-    <Content Include="Views\ClientType\Create.cshtml" />
-    <Content Include="Views\ClientType\Delete.cshtml" />
-    <Content Include="Views\ClientType\Details.cshtml" />
-    <Content Include="Views\ClientType\Edit.cshtml" />
-    <Content Include="Views\ClientType\Index.cshtml" />
-    <Content Include="Views\Client\Create.cshtml" />
-    <Content Include="Views\Client\Delete.cshtml" />
-    <Content Include="Views\Client\Details.cshtml" />
-    <Content Include="Views\Client\Edit.cshtml" />
-    <Content Include="Views\Client\Index.cshtml" />
+    <Content Include="Views\Clients\Create.cshtml" />
+    <Content Include="Views\Clients\Delete.cshtml" />
+    <Content Include="Views\Clients\Details.cshtml" />
+    <Content Include="Views\Clients\Edit.cshtml" />
+    <Content Include="Views\Clients\Index.cshtml" />
+    <Content Include="Views\ClientTypes\Create.cshtml" />
+    <Content Include="Views\ClientTypes\Delete.cshtml" />
+    <Content Include="Views\ClientTypes\Details.cshtml" />
+    <Content Include="Views\ClientTypes\Edit.cshtml" />
+    <Content Include="Views\ClientTypes\Index.cshtml" />
+    <Content Include="Views\EthnicGroups\Create.cshtml" />
+    <Content Include="Views\EthnicGroups\Delete.cshtml" />
+    <Content Include="Views\EthnicGroups\Details.cshtml" />
+    <Content Include="Views\EthnicGroups\Edit.cshtml" />
+    <Content Include="Views\EthnicGroups\Index.cshtml" />
+    <Content Include="Views\Titels\Create.cshtml" />
+    <Content Include="Views\Titels\Delete.cshtml" />
+    <Content Include="Views\Titels\Details.cshtml" />
+    <Content Include="Views\Titels\Edit.cshtml" />
+    <Content Include="Views\Titels\Index.cshtml" />
+    <Content Include="Views\Languages\Create.cshtml" />
+    <Content Include="Views\Languages\Delete.cshtml" />
+    <Content Include="Views\Languages\Details.cshtml" />
+    <Content Include="Views\Languages\Edit.cshtml" />
+    <Content Include="Views\Languages\Index.cshtml" />
+    <Content Include="Views\IncomeGroups\Create.cshtml" />
+    <Content Include="Views\IncomeGroups\Delete.cshtml" />
+    <Content Include="Views\IncomeGroups\Details.cshtml" />
+    <Content Include="Views\IncomeGroups\Edit.cshtml" />
+    <Content Include="Views\IncomeGroups\Index.cshtml" />
+    <Content Include="Views\AddressTypes\Create.cshtml" />
+    <Content Include="Views\AddressTypes\Delete.cshtml" />
+    <Content Include="Views\AddressTypes\Details.cshtml" />
+    <Content Include="Views\AddressTypes\Edit.cshtml" />
+    <Content Include="Views\AddressTypes\Index.cshtml" />
+    <Content Include="Views\Provinces\Create.cshtml" />
+    <Content Include="Views\Provinces\Delete.cshtml" />
+    <Content Include="Views\Provinces\Details.cshtml" />
+    <Content Include="Views\Provinces\Edit.cshtml" />
+    <Content Include="Views\Provinces\Index.cshtml" />
+    <Content Include="Views\Countries\Create.cshtml" />
+    <Content Include="Views\Countries\Delete.cshtml" />
+    <Content Include="Views\Countries\Details.cshtml" />
+    <Content Include="Views\Countries\Edit.cshtml" />
+    <Content Include="Views\Countries\Index.cshtml" />
+    <Content Include="Views\ContactTypes\Create.cshtml" />
+    <Content Include="Views\ContactTypes\Delete.cshtml" />
+    <Content Include="Views\ContactTypes\Details.cshtml" />
+    <Content Include="Views\ContactTypes\Edit.cshtml" />
+    <Content Include="Views\ContactTypes\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -263,6 +328,20 @@
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201508050851109_InitialCreate.resx">
+      <DependentUpon>201508050851109_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508051119280_Lookups added.resx">
+      <DependentUpon>201508051119280_Lookups added.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508051341159_Even More lookup changes.resx">
+      <DependentUpon>201508051341159_Even More lookup changes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508051356127_xx.resx">
+      <DependentUpon>201508051356127_xx.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

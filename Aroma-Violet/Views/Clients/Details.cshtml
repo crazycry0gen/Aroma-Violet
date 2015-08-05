@@ -1,0 +1,154 @@
+﻿@model Aroma_Violet.Models.Client
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Client</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ClientType.ClientTypeName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ClientType.ClientTypeName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Country.CountryName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Country.CountryName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EthnicGroup.EthnicGroupName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EthnicGroup.EthnicGroupName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IncomeGroup.IncomeGroupName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IncomeGroup.IncomeGroupName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Province.ProvinceName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Province.ProvinceName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Titel.TitelName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Titel.TitelName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ClientName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ClientName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NickName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NickName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FullNames)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FullNames)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.HomeLanguageID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.HomeLanguageID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Employer)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Employer)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DateOfBirth)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DateOfBirth)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ClientSurname)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ClientSurname)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SAResident)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SAResident)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IDNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IDNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PostalAddressID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PostalAddressID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DeliveryAddressID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DeliveryAddressID)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ClientId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

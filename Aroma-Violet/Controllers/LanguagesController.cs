@@ -7,111 +7,111 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using Aroma_Indigo.Models;
+using Aroma_Violet.Models;
 
 namespace Aroma_Violet.Controllers
 {
-    public class ClientTypeController : Controller
+    public class LanguagesController : Controller
     {
         private AromaContext db = new AromaContext();
 
-        // GET: ClientType
+        // GET: Languages
         public async Task<ActionResult> Index()
         {
-            return View(await db.ClientTypes.ToListAsync());
+            return View(await db.Languages.ToListAsync());
         }
 
-        // GET: ClientType/Details/5
+        // GET: Languages/Details/5
         public async Task<ActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ClientType clientType = await db.ClientTypes.FindAsync(id);
-            if (clientType == null)
+            Language language = await db.Languages.FindAsync(id);
+            if (language == null)
             {
                 return HttpNotFound();
             }
-            return View(clientType);
+            return View(language);
         }
 
-        // GET: ClientType/Create
+        // GET: Languages/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: ClientType/Create
+        // POST: Languages/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "ClientTypeId,ClientTypeName,Active")] ClientType clientType)
+        public async Task<ActionResult> Create([Bind(Include = "LanguageId,LanguageName,Active")] Language language)
         {
             if (ModelState.IsValid)
             {
-                db.ClientTypes.Add(clientType);
+                db.Languages.Add(language);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
-            return View(clientType);
+            return View(language);
         }
 
-        // GET: ClientType/Edit/5
+        // GET: Languages/Edit/5
         public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ClientType clientType = await db.ClientTypes.FindAsync(id);
-            if (clientType == null)
+            Language language = await db.Languages.FindAsync(id);
+            if (language == null)
             {
                 return HttpNotFound();
             }
-            return View(clientType);
+            return View(language);
         }
 
-        // POST: ClientType/Edit/5
+        // POST: Languages/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "ClientTypeId,ClientTypeName,Active")] ClientType clientType)
+        public async Task<ActionResult> Edit([Bind(Include = "LanguageId,LanguageName,Active")] Language language)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(clientType).State = EntityState.Modified;
+                db.Entry(language).State = EntityState.Modified;
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            return View(clientType);
+            return View(language);
         }
 
-        // GET: ClientType/Delete/5
+        // GET: Languages/Delete/5
         public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ClientType clientType = await db.ClientTypes.FindAsync(id);
-            if (clientType == null)
+            Language language = await db.Languages.FindAsync(id);
+            if (language == null)
             {
                 return HttpNotFound();
             }
-            return View(clientType);
+            return View(language);
         }
 
-        // POST: ClientType/Delete/5
+        // POST: Languages/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            ClientType clientType = await db.ClientTypes.FindAsync(id);
-            db.ClientTypes.Remove(clientType);
+            Language language = await db.Languages.FindAsync(id);
+            db.Languages.Remove(language);
             await db.SaveChangesAsync();
             return RedirectToAction("Index");
         }

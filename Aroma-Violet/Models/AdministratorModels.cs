@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace Aroma_Indigo.Models
+namespace Aroma_Violet.Models
 {
     public class AdministratorViewModel
     {
@@ -16,9 +16,17 @@ namespace Aroma_Indigo.Models
         {
             this.Text = "Administrator Menu";
             //fixed items for now, could be fetched from DB at a later stage
-            this.Add("Client Type", "Index", "ClientType");
-            this.Add("Client", "Index", "Client");
-            this.Add("Product", "Index", "Product");
+            this.Add("Client Type", "Index", "ClientTypes");
+            this.Add("Ethnic Group", "Index", "EthnicGroups");
+            this.Add("Titel", "Index", "Titels");
+            this.Add("Language", "Index", "Languages");
+            this.Add("Income Group", "Index", "IncomeGroups");
+            this.Add("Address Type", "Index", "AddressTypes");
+            this.Add("Province", "Index", "Provinces");
+            this.Add("Country", "Index", "Countries");
+            this.Add("Contact Type", "Index", "ContactTypes");
+            this.Add("Client", "Index", "Clients");
+            this.Add("Product", "Index", "Products");
             this.Add("Subscription", "Index", "Product");
         }
     }

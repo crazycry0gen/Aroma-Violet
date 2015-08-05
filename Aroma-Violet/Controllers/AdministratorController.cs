@@ -1,11 +1,11 @@
-﻿using Aroma_Indigo.Models;
+﻿using Aroma_Violet.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace Aroma_Indigo.Controllers
+namespace Aroma_Violet.Controllers
 {
     public class AdministratorController : Controller
     {
