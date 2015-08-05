@@ -1,0 +1,13 @@
+﻿@model Aroma_Indigo.Models.ApplicationMenuList
+
+<div class="float-left">
+    <h3>@Model.Text</h3>
+<nav>
+    <ul id="left menu">
+        @foreach(var menuItem in Model){
+            <li>@Html.ActionLink(menuItem.Text, menuItem.ActionName, menuItem.ControllerName)</li>
+        }
+    </ul>
+</nav>
+</div>
+
