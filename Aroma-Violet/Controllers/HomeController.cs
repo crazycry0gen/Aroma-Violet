@@ -8,8 +8,11 @@ namespace Aroma_Violet.Controllers
 {
     public class HomeController : Controller
     {
+        [Authorize]
         public ActionResult Index()
         {
+            if (User.IsInRole("Administrator"))
+                return RedirectToAction("Index", "Administrator");
             return View();
         }
 

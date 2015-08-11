@@ -9,7 +9,8 @@ namespace Aroma_Violet.Migrations
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = false;
+            AutomaticMigrationDataLossAllowed = true;
+            AutomaticMigrationsEnabled = true;
             ContextKey = "Aroma_Violet.Models.AromaContext";
         }
 
@@ -85,6 +86,30 @@ namespace Aroma_Violet.Migrations
                 new Aroma_Violet.Models.ContactType() { ContactTypeName = "Fax (Home)", Active = true },
                 new Aroma_Violet.Models.ContactType() { ContactTypeName = "Fax (Work)", Active = true },
                 new Aroma_Violet.Models.ContactType() { ContactTypeName = "EMail", Active = true }
+                );
+            
+            context.AccountHolders.AddOrUpdate(
+                p=>p.AccountHolderName,
+                new Aroma_Violet.Models.AccountHolder() {AccountHolderName="Self", Active=true },
+                new Aroma_Violet.Models.AccountHolder() { AccountHolderName = "Spouse", Active = true },
+                new Aroma_Violet.Models.AccountHolder() { AccountHolderName = "Child", Active = true },
+                new Aroma_Violet.Models.AccountHolder() { AccountHolderName = "Parent", Active = true },
+                new Aroma_Violet.Models.AccountHolder() { AccountHolderName = "Other", Active = true }
+                );
+
+            context.AccountTypes.AddOrUpdate(
+                p=>p.AccountTypeName,
+                new Aroma_Violet.Models.AccountType() {AccountTypeName= "Cheque", Active = true},
+                new Aroma_Violet.Models.AccountType() { AccountTypeName = "Debitable Savings", Active = true },
+                new Aroma_Violet.Models.AccountType() { AccountTypeName = "Transaction", Active = true }
+                );
+
+            context.Banks.AddOrUpdate(
+                p=>p.BankName,
+                new Aroma_Violet.Models.Bank() {BankName= "ABSA", Active = true },
+                new Aroma_Violet.Models.Bank() { BankName = "FNB", Active = true },
+                new Aroma_Violet.Models.Bank() { BankName = "Netbank", Active = true },
+                new Aroma_Violet.Models.Bank() { BankName = "Standard bank", Active = true }
                 );
         }
     }

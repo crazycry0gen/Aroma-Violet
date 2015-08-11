@@ -25,6 +25,11 @@ namespace Aroma_Violet.Models
             this.Add("Province", "Index", "Provinces");
             this.Add("Country", "Index", "Countries");
             this.Add("Contact Type", "Index", "ContactTypes");
+            this.Add("Account Holder", "Index", "AccountHolders");
+            this.Add("Account Type", "Index", "AccountTypes");
+            this.Add("Bank", "Index", "Banks");
+            this.Add("Branch", "Index", "Branches");
+            this.Add("Contact Type", "Index", "ContactTypes");
             this.Add("Client", "Index", "Clients");
             this.Add("Product", "Index", "Products");
             this.Add("Subscription", "Index", "Product");

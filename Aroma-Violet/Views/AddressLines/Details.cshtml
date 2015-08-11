@@ -1,0 +1,50 @@
+﻿@model Aroma_Violet.Models.AddressLine
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>AddressLine</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Address.Code)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Address.Code)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AddressLineText)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AddressLineText)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Order)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Order)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Active)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Active)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.AddressLineId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

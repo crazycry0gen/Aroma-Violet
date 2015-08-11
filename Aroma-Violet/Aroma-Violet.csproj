@@ -168,10 +168,17 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AccountHoldersController.cs" />
+    <Compile Include="Controllers\AddressesController.cs" />
+    <Compile Include="Controllers\AddressLinesController.cs" />
     <Compile Include="Controllers\AddressTypesController.cs" />
     <Compile Include="Controllers\AdministratorController.cs" />
+    <Compile Include="Controllers\BankingDetailsController.cs" />
+    <Compile Include="Controllers\BanksController.cs" />
+    <Compile Include="Controllers\BranchesController.cs" />
     <Compile Include="Controllers\ClientsController.cs" />
     <Compile Include="Controllers\ClientTypesController.cs" />
+    <Compile Include="Controllers\ContactsController.cs" />
     <Compile Include="Controllers\ContactTypesController.cs" />
     <Compile Include="Controllers\CountriesController.cs" />
     <Compile Include="Controllers\EthnicGroupsController.cs" />
@@ -179,26 +186,12 @@
     <Compile Include="Controllers\IncomeGroupsController.cs" />
     <Compile Include="Controllers\LanguagesController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\ProductsController.cs" />
     <Compile Include="Controllers\ProvincesController.cs" />
+    <Compile Include="Controllers\SubscriptionsController.cs" />
     <Compile Include="Controllers\TitelsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201508050851109_InitialCreate.cs" />
-    <Compile Include="Migrations\201508050851109_InitialCreate.Designer.cs">
-      <DependentUpon>201508050851109_InitialCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201508051119280_Lookups added.cs" />
-    <Compile Include="Migrations\201508051119280_Lookups added.Designer.cs">
-      <DependentUpon>201508051119280_Lookups added.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201508051341159_Even More lookup changes.cs" />
-    <Compile Include="Migrations\201508051341159_Even More lookup changes.Designer.cs">
-      <DependentUpon>201508051341159_Even More lookup changes.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201508051356127_xx.cs" />
-    <Compile Include="Migrations\201508051356127_xx.Designer.cs">
-      <DependentUpon>201508051356127_xx.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -317,6 +310,51 @@
     <Content Include="Views\ContactTypes\Details.cshtml" />
     <Content Include="Views\ContactTypes\Edit.cshtml" />
     <Content Include="Views\ContactTypes\Index.cshtml" />
+    <Content Include="Views\Addresses\Create.cshtml" />
+    <Content Include="Views\Addresses\Delete.cshtml" />
+    <Content Include="Views\Addresses\Details.cshtml" />
+    <Content Include="Views\Addresses\Edit.cshtml" />
+    <Content Include="Views\Addresses\Index.cshtml" />
+    <Content Include="Views\AddressLines\Create.cshtml" />
+    <Content Include="Views\AddressLines\Delete.cshtml" />
+    <Content Include="Views\AddressLines\Details.cshtml" />
+    <Content Include="Views\AddressLines\Edit.cshtml" />
+    <Content Include="Views\AddressLines\Index.cshtml" />
+    <Content Include="Views\Contacts\Create.cshtml" />
+    <Content Include="Views\Contacts\Delete.cshtml" />
+    <Content Include="Views\Contacts\Details.cshtml" />
+    <Content Include="Views\Contacts\Edit.cshtml" />
+    <Content Include="Views\Contacts\Index.cshtml" />
+    <Content Include="Views\Products\Create.cshtml" />
+    <Content Include="Views\Products\Delete.cshtml" />
+    <Content Include="Views\Products\Details.cshtml" />
+    <Content Include="Views\Products\Edit.cshtml" />
+    <Content Include="Views\Products\Index.cshtml" />
+    <Content Include="Views\BankingDetails\Create.cshtml" />
+    <Content Include="Views\BankingDetails\Delete.cshtml" />
+    <Content Include="Views\BankingDetails\Details.cshtml" />
+    <Content Include="Views\BankingDetails\Edit.cshtml" />
+    <Content Include="Views\BankingDetails\Index.cshtml" />
+    <Content Include="Views\Subscriptions\Create.cshtml" />
+    <Content Include="Views\Subscriptions\Delete.cshtml" />
+    <Content Include="Views\Subscriptions\Details.cshtml" />
+    <Content Include="Views\Subscriptions\Edit.cshtml" />
+    <Content Include="Views\Subscriptions\Index.cshtml" />
+    <Content Include="Views\Banks\Create.cshtml" />
+    <Content Include="Views\Banks\Delete.cshtml" />
+    <Content Include="Views\Banks\Details.cshtml" />
+    <Content Include="Views\Banks\Edit.cshtml" />
+    <Content Include="Views\Banks\Index.cshtml" />
+    <Content Include="Views\Branches\Create.cshtml" />
+    <Content Include="Views\Branches\Delete.cshtml" />
+    <Content Include="Views\Branches\Details.cshtml" />
+    <Content Include="Views\Branches\Edit.cshtml" />
+    <Content Include="Views\Branches\Index.cshtml" />
+    <Content Include="Views\AccountHolders\Create.cshtml" />
+    <Content Include="Views\AccountHolders\Delete.cshtml" />
+    <Content Include="Views\AccountHolders\Details.cshtml" />
+    <Content Include="Views\AccountHolders\Edit.cshtml" />
+    <Content Include="Views\AccountHolders\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -328,20 +366,6 @@
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201508050851109_InitialCreate.resx">
-      <DependentUpon>201508050851109_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201508051119280_Lookups added.resx">
-      <DependentUpon>201508051119280_Lookups added.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201508051341159_Even More lookup changes.resx">
-      <DependentUpon>201508051341159_Even More lookup changes.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201508051356127_xx.resx">
-      <DependentUpon>201508051356127_xx.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
