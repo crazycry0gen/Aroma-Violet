@@ -43,6 +43,9 @@ namespace Aroma_Violet.Models
         public DbSet<finClientAccount> ClientAccounts { get; set; }
         public DbSet<finJournal> Journals { get; set; }
         public DbSet<DebitOrder> DebitOrders { get; set; }
+        public DbSet<SystemSMS> SystemSMSes { get; set; }
+        public DbSet<SupportTicketStatus> SupportTicketStatuses { get; set; }
+        public DbSet<SupportTicket> SupportTickets { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -53,6 +56,19 @@ namespace Aroma_Violet.Models
     }
 
     #region Lookup tables
+
+
+    [Table("SupportTicketStatus")]
+    public class SupportTicketStatus
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public int SupportTicketStatusId { get; set; }
+        [DisplayName("Name")]
+        public string SupportTicketStatusName { get; set; }
+        public bool Active { get; set; }
+
+    }
 
     [Table("ClientType")]
     public class ClientType
@@ -234,6 +250,47 @@ namespace Aroma_Violet.Models
     #endregion
 
     #region Data object tables
+
+
+    [Table("SupportTicket")]
+    public class SupportTicket
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public Guid SupportTicketId { get; set; }
+        public string Heading { get; set; }
+        public string Text { get; set; }
+
+        [DisplayName("Client")]
+        public int? ClientID { get; set; }
+        public virtual Client Client { get; set; }
+        
+        [DisplayName("Assigned User")]
+        public Guid AssignedUserID { get; set; }
+        
+        [DisplayName("SupportTicketStatus")]
+        public int SupportTicketStatusID { get; set; }
+        public virtual SupportTicketStatus SupportTicketStatus { get; set; }
+    }
+
+    [Table("SystemSMS")]
+    public class SystemSMS
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public int SystemSMSId { get; set; }
+        [DisplayName("Number")]
+        public string Number { get; set; }
+        public string Text { get; set; }
+        public DateTime Created { get; set; }
+        public DateTime? Sent { get; set; }
+        [DisplayName("Last Send Attempt")]
+        public DateTime? LastSendAttempt { get; set; }
+        [DisplayName("Message")]
+        public string LastSendMessage { get; set; }
+        public bool Active { get; set; }
+        public Guid? Source { get; set; }
+    }
 
     [Table("Client")]
     public class Client
