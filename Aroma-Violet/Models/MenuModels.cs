@@ -23,7 +23,7 @@ namespace Aroma_Violet.Models
         public ApplicationMenuItem(string text, string actionName, string controllerName)
         {
             this.Text = text;
-            this.ActionName = ActionName;
+            this.ActionName = actionName;
             this.ControllerName = controllerName;
         }
         public string Text { get; set; }

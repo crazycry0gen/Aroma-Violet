@@ -30,9 +30,12 @@ namespace Aroma_Violet.Models
             this.Add("Bank", "Index", "Banks");
             this.Add("Branch", "Index", "Branches");
             this.Add("Contact Type", "Index", "ContactTypes");
+            this.Add("Financial Account","Index","finAccounts");
+            this.Add("Client Account", "Index", "finClientAccounts");
             this.Add("Client", "Index", "Clients");
             this.Add("Product", "Index", "Products");
             this.Add("Subscription", "Index", "Product");
+            this.Add("Debit Order", "Index", "DebitOrders");
         }
     }
 }

@@ -34,15 +34,22 @@ namespace Aroma_Violet.Models
         public DbSet<AccountType> AccountTypes { get; set; }
         public DbSet<Bank> Banks { get; set; }
         public DbSet<Branch> Branches { get; set; }
-        public System.Data.Entity.DbSet<Aroma_Violet.Models.Product> Products { get; set; }
-        public System.Data.Entity.DbSet<Aroma_Violet.Models.BankingDetail> BankingDetails { get; set; }
-        public System.Data.Entity.DbSet<Aroma_Violet.Models.Subscription> Subscriptions { get; set; }
+        public DbSet<Product> Products { get; set; }
+        public DbSet<BankingDetail> BankingDetails { get; set; }
+        public DbSet<Subscription> Subscriptions { get; set; }
+        public DbSet<SystemNote> SystemNotes { get; set; }
+        public DbSet<SystemLink> SystemLinks { get; set; }
+        public DbSet<finAccount> Accounts { get; set; }
+        public DbSet<finClientAccount> ClientAccounts { get; set; }
+        public DbSet<finJournal> Journals { get; set; }
+        public DbSet<DebitOrder> DebitOrders { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
             modelBuilder.Conventions.Remove<ManyToManyCascadeDeleteConvention>();
         }
+        
     }
 
     #region Lookup tables
@@ -226,6 +233,7 @@ namespace Aroma_Violet.Models
     }
     #endregion
 
+    #region Data object tables
 
     [Table("Client")]
     public class Client
@@ -498,4 +506,175 @@ namespace Aroma_Violet.Models
         public bool Active { get; set; }
 
     }
+
+
+    [Table("SystemNote")] /*This table may be used to attatch a note to any database entry with a guid for a key*/
+    public class SystemNote
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public Guid NoteId { get; set; }
+
+        [DisplayName("NoteText")]
+        public string NoteText { get; set; }
+
+        [DisplayName("User")]
+        public Guid UserID { get; set; }
+
+        [DisplayName("Created")]
+        public string Created { get; set; }
+    }
+
+
+    [Table("SystemLink")] /*this table may be used to link any two database entries together that has a guid as a key*/
+    public class SystemLink
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public Guid LinkId { get; set; }
+
+        public Guid Parent { get; set; }
+        public Guid Child { get; set; }
+
+        [DisplayName("User")]
+        public Guid UserID { get; set; }
+
+        [DisplayName("Created")]
+        public string Created { get; set; }
+    }
+    #endregion
+
+    #region Financial tables
+
+    /*TODO: Add finAccount to administrator control functions; view edit delete ....*/
+    [Table("finAccount")]
+    public class finAccount
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public Guid AccountId { get; set; }
+        [DisplayName("Account")]
+        public string AccountName { get; set; }
+        [DisplayName("System Account")]
+        public bool IsSystemAccount { get; set; }
+        public bool Active { get; set; }
+
+    }
+
+
+    [Table("finClientAccount")]
+    public class finClientAccount
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public Guid ClientAccountId { get; set; }
+
+        [DisplayName("Client")]
+        public int ClientID { get; set; } 
+        public virtual Client Client { get; set; }
+
+        [DisplayName("Account")]
+        public int AccountID { get; set; }
+        public virtual finAccount Account { get; set; }
+
+        public bool Active { get; set; }
+
+    }
+
+    [Table("finJournal")]
+    public class finJournal
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public Guid JournalId { get; set; }
+
+        [DisplayName("Account")]
+        public Guid AccountID { get; set; } /*account will normaly point to a client account id but may point to account id when it is a system account*/
+
+        [DisplayName("Amount")]
+        public double Amount { get; set; }
+
+        [DisplayName("Corresponding Joutnal Entry")]
+        public Guid CorrespondingJournalId { get; set; }
+
+        [DisplayName("Movement Source")]
+        public Guid MovementSource { get; set; }
+
+        [DisplayName("User")]
+        public Guid UserID { get; set; }
+
+        [DisplayName("Effective Date")]
+        public DateTime EffectiveDate { get; set; }
+
+        [DisplayName("Journal Date")]
+        public DateTime JournalDate { get; set; }
+
+        public bool Active { get; set; }
+
+    }
+    #endregion
+
+    #region Debit order
+
+    [Table("DebitOrder")]
+    public class DebitOrder
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public Guid DebitOrderId { get; set; }
+
+        [DisplayName("Client")]
+        public int ClientID { get; set; }
+        public virtual Client Client { get; set; }
+
+        [Required]
+        [DisplayName("Account Holder")]
+        public int AccountHolderID { get; set; }
+        public virtual AccountHolder AccountHolder { get; set; }
+
+        [DisplayName("Account Holder Other Detail")]
+        public string AccountHolderOtherDetail { get; set; }
+
+        [Required]
+        [DisplayName("Initials")]
+        public string Initials { get; set; }
+
+        [Required]
+        [DisplayName("Surname")]
+        public string Surname { get; set; }
+
+        [Required]
+        [DisplayName("Account Type")]
+        public int AccountTypeID { get; set; }
+        public virtual AccountType AccountType { get; set; }
+
+        [Required]
+        [DisplayName("Debit Date")]
+        [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
+        public DateTime DebitDate { get; set; }
+
+        [Required]
+        [DisplayName("Account Number")]
+        public string AccountNumber { get; set; }
+
+        [Required]
+        [DisplayName("Bank")]
+        public int BankID { get; set; }
+        public virtual Bank Bank { get; set; }
+
+        [Required]
+        [DisplayName("Branch")]
+        public int BranchID { get; set; }
+        public virtual Branch Branch { get; set; }
+
+        [Required]
+        [DisplayName("Source")]
+        public Guid SourceID { get; set; }
+
+        public bool Active { get; set; }
+        public DateTime Created { get; set; }
+        public DateTime? ProcessDate { get; set; }
+
+    }
+    #endregion
 }

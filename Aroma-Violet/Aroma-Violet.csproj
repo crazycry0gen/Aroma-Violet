@@ -181,7 +181,10 @@
     <Compile Include="Controllers\ContactsController.cs" />
     <Compile Include="Controllers\ContactTypesController.cs" />
     <Compile Include="Controllers\CountriesController.cs" />
+    <Compile Include="Controllers\DebitOrdersController.cs" />
     <Compile Include="Controllers\EthnicGroupsController.cs" />
+    <Compile Include="Controllers\finAccountsController.cs" />
+    <Compile Include="Controllers\finClientAccountsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\IncomeGroupsController.cs" />
     <Compile Include="Controllers\LanguagesController.cs" />
@@ -190,6 +193,7 @@
     <Compile Include="Controllers\ProvincesController.cs" />
     <Compile Include="Controllers\SubscriptionsController.cs" />
     <Compile Include="Controllers\TitelsController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -200,6 +204,7 @@
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\MenuModels.cs" />
+    <Compile Include="Models\UserModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -355,6 +360,22 @@
     <Content Include="Views\AccountHolders\Details.cshtml" />
     <Content Include="Views\AccountHolders\Edit.cshtml" />
     <Content Include="Views\AccountHolders\Index.cshtml" />
+    <Content Include="Views\User\Index.cshtml" />
+    <Content Include="Views\finAccounts\Create.cshtml" />
+    <Content Include="Views\finAccounts\Delete.cshtml" />
+    <Content Include="Views\finAccounts\Details.cshtml" />
+    <Content Include="Views\finAccounts\Edit.cshtml" />
+    <Content Include="Views\finAccounts\Index.cshtml" />
+    <Content Include="Views\finClientAccounts\Create.cshtml" />
+    <Content Include="Views\finClientAccounts\Delete.cshtml" />
+    <Content Include="Views\finClientAccounts\Details.cshtml" />
+    <Content Include="Views\finClientAccounts\Edit.cshtml" />
+    <Content Include="Views\finClientAccounts\Index.cshtml" />
+    <Content Include="Views\DebitOrders\Create.cshtml" />
+    <Content Include="Views\DebitOrders\Delete.cshtml" />
+    <Content Include="Views\DebitOrders\Details.cshtml" />
+    <Content Include="Views\DebitOrders\Edit.cshtml" />
+    <Content Include="Views\DebitOrders\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
