@@ -1,0 +1,16 @@
+﻿@model Aroma_Violet.Models.Address
+
+
+    
+        @foreach (var line in (Model.Lines))
+        {
+        <dd>
+            @line.AddressLineText
+        </dd>
+        }
+        <dd>
+            @Html.DisplayFor(model => model.Code)
+        </dd>
+
+    
+

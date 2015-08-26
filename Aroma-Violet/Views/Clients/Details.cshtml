@@ -135,7 +135,7 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.PostalAddressID)
+            @Html.DisplayFor(model => model.PostalAddress)
         </dd>
 
         <dt>
@@ -143,12 +143,16 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.DeliveryAddressID)
+            @Html.DisplayFor(model => model.DeliveryAddress)
         </dd>
 
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.ClientId }) |
+@if (User.IsInRole("User"))
+{
+    <div>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.ClientId }) |
+    </div>                                                         }
     @Html.ActionLink("Back to List", "Index")
 </p>

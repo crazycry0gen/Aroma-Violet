@@ -126,7 +126,11 @@
         <div class="form-group">
             @Html.LabelFor(model => model.PostalAddressID, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.PostalAddressID, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.DisplayFor(model => model.PostalAddress, new { htmlAttributes = new { @class = "form-control" } })
+                @if (User.IsInRole("User"))
+                {
+                    <div>@Html.ActionLink("Edit", "Edit", "Address", new { id = Model.PostalAddressID }, new { id = Model.PostalAddressID })</div>
+                }
                 @Html.ValidationMessageFor(model => model.PostalAddressID, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -134,7 +138,11 @@
         <div class="form-group">
             @Html.LabelFor(model => model.DeliveryAddressID, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.DeliveryAddressID, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.DisplayFor(model => model.DeliveryAddress, new { htmlAttributes = new { @class = "form-control" } })
+                @if (User.IsInRole("User"))
+                {
+                    <div>@Html.ActionLink("Edit", "Edit", "Address", new { id = Model.DeliveryAddressID },new object { })</div>
+                }
                 @Html.ValidationMessageFor(model => model.DeliveryAddressID, "", new { @class = "text-danger" })
             </div>
         </div>
