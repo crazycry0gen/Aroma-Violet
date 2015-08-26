@@ -1,0 +1,6 @@
+﻿@model DateTime
+
+<div class="form-group input-group-sm">
+    @Html.TextBoxFor(model => model, new { @class = "form-control datepicker", placeholder = "Enter date here..." })
+    @Html.ValidationMessageFor(model => model)
+</div>

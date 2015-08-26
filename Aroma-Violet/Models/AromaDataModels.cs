@@ -5,8 +5,6 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
-using System.Globalization;
-using System.Web.Security;
 
 namespace Aroma_Violet.Models
 {
@@ -353,7 +351,6 @@ namespace Aroma_Violet.Models
         public int IncomeGroupID { get; set; }
         public virtual IncomeGroup IncomeGroup { get; set; }
 
-        [Required]
         [DisplayName("Postal Address")]
         public int? PostalAddressID { get; set; }
         public virtual Address PostalAddress { get; set; }
@@ -405,7 +402,7 @@ namespace Aroma_Violet.Models
         [Key]
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         public int AddressLineId { get; set; }
-        [Required]
+     
         [DisplayName("Line Text")]
         public string AddressLineText { get; set; }
 

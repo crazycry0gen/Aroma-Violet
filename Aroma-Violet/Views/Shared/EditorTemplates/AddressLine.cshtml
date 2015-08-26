@@ -1,0 +1,12 @@
+﻿@model Aroma_Violet.Models.AddressLine
+    
+    <div class="form-horizontal">
+        @Html.HiddenFor(model => model.AddressLineId)
+        @Html.HiddenFor(model => model.AddressID)
+        @Html.HiddenFor(model => model.Order)
+        @Html.HiddenFor(model => model.Active)
+
+        @Html.EditorFor(model => model.AddressLineText, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.AddressLineText, "", new { @class = "text-danger" })
+    </div>
+

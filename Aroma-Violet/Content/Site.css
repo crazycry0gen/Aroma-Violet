@@ -16,9 +16,47 @@
     white-space: normal;
 }
 
+.control-label{
+    /*white-space:nowrap;
+    width:200px;*/
+    /*border:5px solid red;*/
+    display: block;
+    padding-left: 15px;
+    text-indent: -50px;
+
+}
+
 /* Set width on the form input elements since they're 100% wide by default */
 input,
 select,
-textarea {
+textarea,
+datepicker {
     max-width: 280px;
+    /*width: 13px;
+    height: 13px;*/
+    padding: 0;
+    margin:0;
+    vertical-align: bottom;
+    position: relative;
+    top: -1px;
+    *overflow: hidden;
+
+}
+
+table {
+    width:100%;
+    table-layout: fixed;
+    /*border:5px solid red;*/
+}
+
+tr {
+
+    /*border:1px solid yellow;*/
+}
+
+td {
+    /*border:1px solid green;
+    align-content:center;
+    height:20px;*/
+    /*white-space:nowrap;*/
 }
