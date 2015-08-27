@@ -65,11 +65,12 @@ namespace Aroma_Violet.Controllers
         // GET: Addresses/Edit/5
         public async Task<ActionResult> Edit(int? id)
         {
+            
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Address address = await db.Addresses.FindAsync(id);
+            Address address = await db.Addresses.Where(m=>m.AddressId== id).Include(m=>m.Client).SingleOrDefaultAsync();
             if (address == null)
             {
                 return HttpNotFound();
@@ -83,8 +84,9 @@ namespace Aroma_Violet.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "AddressId,Code,ClientID,AddressTypeID,Active")] Address address)
+        public async Task<ActionResult> Edit([Bind(Include = "AddressId,Code,ClientID,AddressTypeID,Active,Lines,ClientId,Line1,Line2,Line3 ")] Address address, int? ClientId, string Line1, string Line2, string Line3)
         {
+
             if (ModelState.IsValid)
             {
                 db.Entry(address).State = EntityState.Modified;

@@ -26,11 +26,22 @@
 
 }
 
+.logo {
+    position:absolute;
+    width:12%;
+    left:85%;
+    top:90px;
+  
+}
+.logo-small {
+     width:50px;
+}
+
 /* Set width on the form input elements since they're 100% wide by default */
 input,
 select,
-textarea,
-datepicker {
+textarea
+ {
     max-width: 280px;
     /*width: 13px;
     height: 13px;*/

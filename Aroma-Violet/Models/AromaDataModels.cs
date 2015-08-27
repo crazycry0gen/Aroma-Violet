@@ -318,7 +318,7 @@ namespace Aroma_Violet.Models
 
         [Required]
         [DisplayName("Date of Birth")]
-        [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:dd/mm/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime DateOfBirth { get; set; }
 
         [Required]
@@ -352,11 +352,11 @@ namespace Aroma_Violet.Models
         public virtual IncomeGroup IncomeGroup { get; set; }
 
         [DisplayName("Postal Address")]
-        public int? PostalAddressID { get; set; }
+        //public int? PostalAddressID { get; set; }
         public virtual Address PostalAddress { get; set; }
 
         [DisplayName("Delivery Address")]
-        public int? DeliveryAddressID { get; set; }
+        //public int DeliveryAddressID { get; set; }
         public virtual Address DeliveryAddress { get; set; }
 
         [Required]
@@ -384,7 +384,7 @@ namespace Aroma_Violet.Models
         public string Code { get; set; }
 
         [DisplayName("Client")]
-        public string ClientID { get; set; }
+        //public int ClientID { get; set; }
         public virtual Client Client { get; set; }
         
         [DisplayName("AddressType")]

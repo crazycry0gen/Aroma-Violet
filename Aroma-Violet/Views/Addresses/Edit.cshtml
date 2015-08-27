@@ -14,8 +14,23 @@
     <div class="form-horizontal">
         <h4>Address</h4>
         <hr />
+        @Html.HiddenFor(model=>model.Client.ClientId)
+        @Html.HiddenFor(model=>model.AddressTypeID)
+        @Html.HiddenFor(model=>model.Active)
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.AddressId)
+@for (int i = 0; i < Model.Lines?.Count; i++)
+{
+    var daName = string.Format("Line{0}", i + 1);
+         <div class="form-group">
+
+            @Html.LabelFor(model => model.Lines.ToArray()[i].AddressLineText, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.Editor(daName, null, new { htmlAttributes = new { @class = "form-control", value= Model.Lines.ToArray()[i].AddressLineText } })
+                @Html.ValidationMessageFor(model => model.Lines.ToArray()[i], "", new { @class = "text-danger" })
+            </div>
+        </div>
+}
 
         <div class="form-group">
             @Html.LabelFor(model => model.Code, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -24,32 +39,7 @@
                 @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
             </div>
         </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ClientID, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ClientID, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ClientID, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.AddressTypeID, "AddressTypeID", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("AddressTypeID", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.AddressTypeID, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Active, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <div class="checkbox">
-                    @Html.EditorFor(model => model.Active)
-                    @Html.ValidationMessageFor(model => model.Active, "", new { @class = "text-danger" })
-                </div>
-            </div>
-        </div>
+        
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
