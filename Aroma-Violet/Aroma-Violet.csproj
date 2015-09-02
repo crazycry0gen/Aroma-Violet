@@ -177,6 +177,7 @@
     <Compile Include="Controllers\BanksController.cs" />
     <Compile Include="Controllers\BranchesController.cs" />
     <Compile Include="Controllers\ClientsController.cs" />
+    <Compile Include="Controllers\ClientSubscriptionsController.cs" />
     <Compile Include="Controllers\ClientTypesController.cs" />
     <Compile Include="Controllers\ContactsController.cs" />
     <Compile Include="Controllers\ContactTypesController.cs" />
@@ -370,21 +371,11 @@
     <Content Include="Views\Contacts\Details.cshtml" />
     <Content Include="Views\Contacts\Edit.cshtml" />
     <Content Include="Views\Contacts\Index.cshtml" />
-    <Content Include="Views\Products\Create.cshtml" />
-    <Content Include="Views\Products\Delete.cshtml" />
-    <Content Include="Views\Products\Details.cshtml" />
-    <Content Include="Views\Products\Edit.cshtml" />
-    <Content Include="Views\Products\Index.cshtml" />
     <Content Include="Views\BankingDetails\Create.cshtml" />
     <Content Include="Views\BankingDetails\Delete.cshtml" />
     <Content Include="Views\BankingDetails\Details.cshtml" />
     <Content Include="Views\BankingDetails\Edit.cshtml" />
     <Content Include="Views\BankingDetails\Index.cshtml" />
-    <Content Include="Views\Subscriptions\Create.cshtml" />
-    <Content Include="Views\Subscriptions\Delete.cshtml" />
-    <Content Include="Views\Subscriptions\Details.cshtml" />
-    <Content Include="Views\Subscriptions\Edit.cshtml" />
-    <Content Include="Views\Subscriptions\Index.cshtml" />
     <Content Include="Views\Banks\Create.cshtml" />
     <Content Include="Views\Banks\Delete.cshtml" />
     <Content Include="Views\Banks\Details.cshtml" />
@@ -422,6 +413,21 @@
     <Content Include="Views\Shared\DisplayTemplates\Address.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\Language.cshtml" />
     <Content Include="Views\Shared\_LayoutNoLogo.cshtml" />
+    <Content Include="Views\Products\Create.cshtml" />
+    <Content Include="Views\Products\Delete.cshtml" />
+    <Content Include="Views\Products\Details.cshtml" />
+    <Content Include="Views\Products\Edit.cshtml" />
+    <Content Include="Views\Products\Index.cshtml" />
+    <Content Include="Views\ClientSubscriptions\Create.cshtml" />
+    <Content Include="Views\ClientSubscriptions\Delete.cshtml" />
+    <Content Include="Views\ClientSubscriptions\Details.cshtml" />
+    <Content Include="Views\ClientSubscriptions\Edit.cshtml" />
+    <Content Include="Views\ClientSubscriptions\Index.cshtml" />
+    <Content Include="Views\Subscriptions\Create.cshtml" />
+    <Content Include="Views\Subscriptions\Delete.cshtml" />
+    <Content Include="Views\Subscriptions\Details.cshtml" />
+    <Content Include="Views\Subscriptions\Edit.cshtml" />
+    <Content Include="Views\Subscriptions\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

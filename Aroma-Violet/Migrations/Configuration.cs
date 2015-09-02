@@ -17,7 +17,14 @@ namespace Aroma_Violet.Migrations
 
         protected override void Seed(Aroma_Violet.Models.AromaContext context)
         {
-            
+
+            context.ClientTypes.AddOrUpdate(
+                p=>p.ClientTypeName,
+                new Aroma_Violet.Models.ClientType() {Active=true, ClientTypeName = "Distributor" },
+                new Aroma_Violet.Models.ClientType() { Active = true, ClientTypeName = "Reseller" },
+                new Aroma_Violet.Models.ClientType() { Active = true, ClientTypeName = "Client" }
+                );
+
             context.Titles.AddOrUpdate(
                 p => p.TitleName,
                 new Aroma_Violet.Models.Title() {TitleName="Mr",Active=true },

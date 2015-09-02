@@ -22,6 +22,11 @@ namespace Aroma_Violet.Models
 
         public List<string> DeliveryAddressLines { get; set; }
 
+        public string TelWork { get; set; }
+        public string Cell { get; set; }
+        public string TelHome { get; set; }
+        public string Email { get; set; }
+
         private string GetAddressLine(Address add, int index)
         {
             if (add?.Lines?.Count > index)

@@ -35,6 +35,7 @@ namespace Aroma_Violet.Models
         public DbSet<Product> Products { get; set; }
         public DbSet<BankingDetail> BankingDetails { get; set; }
         public DbSet<Subscription> Subscriptions { get; set; }
+        public DbSet<ClientSubscription> ClientSubscriptions { get; set; }
         public DbSet<SystemNote> SystemNotes { get; set; }
         public DbSet<SystemLink> SystemLinks { get; set; }
         public DbSet<finAccount> Accounts { get; set; }
@@ -299,13 +300,16 @@ namespace Aroma_Violet.Models
 
         [Required]
         [DisplayName("Initials")]
-        public string ClientName { get; set; }
+        public string ClientInitials { get; set; }
 
         [DisplayName("Nick Name")]
         public string NickName { get; set; }
 
         [DisplayName("Full Names")]
         public string FullNames { get; set; }
+
+        [DisplayName("Occupation")]
+        public string Occupation { get; set; }
 
         [Required]
         [DisplayName("Home Language")]
@@ -453,13 +457,13 @@ namespace Aroma_Violet.Models
         [DisplayName("Product")]
         public string ProductName { get; set; }
         [Required]
-        [DisplayName("UnitPrice")]
-        public double UnitPrice { get; set; }
+        [DisplayName("Product Code")]
+        public string ProductCode { get; set; }
         public bool Active { get; set; }
     }
 
 
-    [Table("ClientSubscription")]
+    [Table("Subscription")]
     public class Subscription
     {
         [Key]
@@ -467,11 +471,40 @@ namespace Aroma_Violet.Models
         public int SubscriptionId { get; set; }
 
         [Required]
-        [DisplayName("Client")]
-        public int ClientID { get; set; }
-        public virtual Client Client { get; set; }
+        [DisplayName("Client Type")]
+        public int ClientTypeID { get; set; }
+        public virtual ClientType ClientType { get; set; }
 
         [Required]
+        [DisplayName("Product")]
+        public int ProductID { get; set; }
+        public virtual Product Product { get; set; }
+
+        [Required]
+        [DisplayName("Mandatory Quantity")]
+        public int MandatoryQuantity { get; set; }
+
+        [Required]
+        [DisplayName("Price")]
+        [DataType(DataType.Currency)]
+        public decimal Price { get; set; }
+        
+        public bool Active { get; set; }
+    }
+
+    [Table("ClientSubscription")]
+    public class ClientSubscription
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public int ClientSubscriptionId { get; set; }
+
+        [Required]
+        [DisplayName("Client")]
+        public int ClientID { get; set; }
+        public virtual ClientType Client { get; set; }
+        
+        [Required]/*TODO: check logic - I'm using product id instead of subscriptionId. If a client wants products outside of the standards subscription we must be able to accomodate*/
         [DisplayName("Product")]
         public int ProductID { get; set; }
         public virtual Product Product { get; set; }
@@ -482,7 +515,6 @@ namespace Aroma_Violet.Models
 
         public bool Active { get; set; }
     }
-
 
     [Table("BankingDetail")]
     public class BankingDetail
@@ -535,7 +567,7 @@ namespace Aroma_Violet.Models
 
         [Required]
         [DisplayName("Commencement Date")]
-        [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime CommencementDate { get; set; }
 
         [Required]
@@ -554,7 +586,7 @@ namespace Aroma_Violet.Models
 
         [Required]
         [DisplayName("Salary Date")]
-        [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime SalaryDate { get; set; }
 
         public bool Active { get; set; }
@@ -704,7 +736,7 @@ namespace Aroma_Violet.Models
 
         [Required]
         [DisplayName("Debit Date")]
-        [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime DebitDate { get; set; }
 
         [Required]

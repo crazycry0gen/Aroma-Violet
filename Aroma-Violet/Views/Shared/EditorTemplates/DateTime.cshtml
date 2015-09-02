@@ -1,4 +1,4 @@
 ﻿@model DateTime
 
-    @Html.TextBoxFor(model => model, new { @class = "form-control datepicker", placeholder = "Enter date here..."})
+    @Html.TextBoxFor(model => model, new { @class = "form-control datepicker", placeholder = "Enter date here...",Value=Model.ToString("dd/MM/yyyy") } )
     @Html.ValidationMessageFor(model => model)

@@ -40,7 +40,7 @@ namespace Aroma_Violet.Controllers
         // GET: finClientAccounts/Create
         public ActionResult Create()
         {
-            ViewBag.ClientID = new SelectList(db.Clients, "ClientId", "ClientName");
+            ViewBag.ClientID = new SelectList(db.Clients, "ClientId", "ClientInitials");
             return View();
         }
 
@@ -59,7 +59,7 @@ namespace Aroma_Violet.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.ClientID = new SelectList(db.Clients, "ClientId", "ClientName", finClientAccount.ClientID);
+            ViewBag.ClientID = new SelectList(db.Clients, "ClientId", "ClientInitials", finClientAccount.ClientID);
             return View(finClientAccount);
         }
 
@@ -75,7 +75,7 @@ namespace Aroma_Violet.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.ClientID = new SelectList(db.Clients, "ClientId", "ClientName", finClientAccount.ClientID);
+            ViewBag.ClientID = new SelectList(db.Clients, "ClientId", "ClientInitials", finClientAccount.ClientID);
             return View(finClientAccount);
         }
 
@@ -92,7 +92,7 @@ namespace Aroma_Violet.Controllers
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewBag.ClientID = new SelectList(db.Clients, "ClientId", "ClientName", finClientAccount.ClientID);
+            ViewBag.ClientID = new SelectList(db.Clients, "ClientId", "ClientInitials", finClientAccount.ClientID);
             return View(finClientAccount);
         }
 

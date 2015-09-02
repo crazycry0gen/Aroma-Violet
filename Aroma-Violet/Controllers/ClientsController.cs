@@ -21,7 +21,8 @@ namespace Aroma_Violet.Controllers
             if (criteria == null) criteria = string.Empty;
             var lowSearch = criteria.ToLower();
             var clients = db.Clients.Where(m => m.ClientId.ToString() == lowSearch
-                        || m.ClientName.ToLower().Contains(lowSearch)
+                        || m.ClientInitials.ToLower().Contains(lowSearch)
+                        || m.FullNames.ToLower().Contains(lowSearch)
                         || m.ClientSurname.Contains(lowSearch)
                         || m.IDNumber.Contains(lowSearch)
                         ).Take(maxResult)
@@ -90,19 +91,40 @@ namespace Aroma_Violet.Controllers
             return address;
         }
 
+        private void CreateContact(int clientId, string contactType, string contactValue)
+        {
+            if (contactValue?.Length > 0)
+            {
+                string errorMessage = string.Format("Contact type \"{0}\" not defined in lookup", contactType);
+                var type = db.ContactTypes.FirstOrDefault(m => m.ContactTypeName == contactType);
+                if (type == null)
+                    throw new Exception(errorMessage);
+                var newContact = new Contact() { Active = true, ClientID = clientId, ContactName = contactValue, ContactTypeID = type.ContactTypeId };
+                db.Contacts.Add(newContact);
+                db.SaveChanges();
+            }
+        }
+
         // POST: Clients/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "ClientId,ClientName,NickName,FullNames,LanguageID,Employer,DateOfBirth,ClientSurname,SAResident,IDNumber,ClientTypeID,TitleID,EthnicGroupID,IncomeGroupID,PostalAddress,DeliveryAddress,DeliveryAddressLines,ProvinceID,CountryID,Lines,AddressLine,PostalAddressLines,AddressTypeID,DeliveryAddress,PostalAddress")] ClientViewModel clientView)
+        public async Task<ActionResult> Create([Bind(Include = "ClientId,ClientInitials,NickName,FullNames,LanguageID,Employer,DateOfBirth,ClientSurname,SAResident,IDNumber,ClientTypeID,TitleID,EthnicGroupID,IncomeGroupID,PostalAddress,DeliveryAddress,DeliveryAddressLines,ProvinceID,CountryID,Lines,AddressLine,PostalAddressLines,AddressTypeID,DeliveryAddress,PostalAddress,TelWork,Cell,TelHome,EMail")] ClientViewModel clientView)
         {
             var client = clientView.GetBaseClient();
             if (ModelState.IsValid)
             {
                 db.Clients.Add(client);
                 await db.SaveChangesAsync();
-                return RedirectToAction("Index");
+
+                //Create contact
+                CreateContact(client.ClientId, "Tel (Work)", clientView.TelWork);
+                CreateContact(client.ClientId, "Cell", clientView.Cell);
+                CreateContact(client.ClientId, "Tel (Home)", clientView.TelHome);
+                CreateContact(client.ClientId, "EMail", clientView.Email);
+
+                return RedirectToAction("EditList","ClientProduct", new { ClientID = client.ClientId });
             }
 
             ViewBag.ClientTypeID = new SelectList(db.ClientTypes, "ClientTypeId", "ClientTypeName", client.ClientTypeID);
@@ -145,7 +167,7 @@ namespace Aroma_Violet.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "ClientId,ClientName,NickName,FullNames,LanguageID,Employer,DateOfBirth,ClientSurname,SAResident,IDNumber,ClientTypeID,TitleID,EthnicGroupID,IncomeGroupID,ProvinceID,CountryID")] Client client)
+        public async Task<ActionResult> Edit([Bind(Include = "ClientId,ClientInitials,NickName,FullNames,LanguageID,Employer,DateOfBirth,ClientSurname,SAResident,IDNumber,ClientTypeID,TitleID,EthnicGroupID,IncomeGroupID,ProvinceID,CountryID")] Client client)
         {
             if (ModelState.IsValid)
             {

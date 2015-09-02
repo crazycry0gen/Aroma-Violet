@@ -40,7 +40,7 @@ namespace Aroma_Violet.Controllers
         // GET: Contacts/Create
         public ActionResult Create()
         {
-            ViewBag.ClientID = new SelectList(db.Clients, "ClientId", "ClientName");
+            ViewBag.ClientID = new SelectList(db.Clients, "ClientId", "ClientInitials");
             ViewBag.ContactTypeID = new SelectList(db.ContactTypes, "ContactTypeId", "ContactTypeName");
             return View();
         }
@@ -59,7 +59,7 @@ namespace Aroma_Violet.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.ClientID = new SelectList(db.Clients, "ClientId", "ClientName", contact.ClientID);
+            ViewBag.ClientID = new SelectList(db.Clients, "ClientId", "ClientInitials", contact.ClientID);
             ViewBag.ContactTypeID = new SelectList(db.ContactTypes, "ContactTypeId", "ContactTypeName", contact.ContactTypeID);
             return View(contact);
         }
@@ -76,7 +76,7 @@ namespace Aroma_Violet.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.ClientID = new SelectList(db.Clients, "ClientId", "ClientName", contact.ClientID);
+            ViewBag.ClientID = new SelectList(db.Clients, "ClientId", "ClientInitials", contact.ClientID);
             ViewBag.ContactTypeID = new SelectList(db.ContactTypes, "ContactTypeId", "ContactTypeName", contact.ContactTypeID);
             return View(contact);
         }
@@ -94,7 +94,7 @@ namespace Aroma_Violet.Controllers
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewBag.ClientID = new SelectList(db.Clients, "ClientId", "ClientName", contact.ClientID);
+            ViewBag.ClientID = new SelectList(db.Clients, "ClientId", "ClientInitials", contact.ClientID);
             ViewBag.ContactTypeID = new SelectList(db.ContactTypes, "ContactTypeId", "ContactTypeName", contact.ContactTypeID);
             return View(contact);
         }

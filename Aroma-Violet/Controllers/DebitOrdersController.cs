@@ -44,7 +44,7 @@ namespace Aroma_Violet.Controllers
             ViewBag.AccountTypeID = new SelectList(db.AccountTypes, "AccountTypeId", "AccountTypeName");
             ViewBag.BankID = new SelectList(db.Banks, "BankId", "BankName");
             ViewBag.BranchID = new SelectList(db.Branches, "BranchId", "BranchName");
-            ViewBag.ClientID = new SelectList(db.Clients, "ClientId", "ClientName");
+            ViewBag.ClientID = new SelectList(db.Clients, "ClientId", "ClientInitials");
             return View();
         }
 
@@ -67,7 +67,7 @@ namespace Aroma_Violet.Controllers
             ViewBag.AccountTypeID = new SelectList(db.AccountTypes, "AccountTypeId", "AccountTypeName", debitOrder.AccountTypeID);
             ViewBag.BankID = new SelectList(db.Banks, "BankId", "BankName", debitOrder.BankID);
             ViewBag.BranchID = new SelectList(db.Branches, "BranchId", "BranchName", debitOrder.BranchID);
-            ViewBag.ClientID = new SelectList(db.Clients, "ClientId", "ClientName", debitOrder.ClientID);
+            ViewBag.ClientID = new SelectList(db.Clients, "ClientId", "ClientInitials", debitOrder.ClientID);
             return View(debitOrder);
         }
 
@@ -87,7 +87,7 @@ namespace Aroma_Violet.Controllers
             ViewBag.AccountTypeID = new SelectList(db.AccountTypes, "AccountTypeId", "AccountTypeName", debitOrder.AccountTypeID);
             ViewBag.BankID = new SelectList(db.Banks, "BankId", "BankName", debitOrder.BankID);
             ViewBag.BranchID = new SelectList(db.Branches, "BranchId", "BranchName", debitOrder.BranchID);
-            ViewBag.ClientID = new SelectList(db.Clients, "ClientId", "ClientName", debitOrder.ClientID);
+            ViewBag.ClientID = new SelectList(db.Clients, "ClientId", "ClientInitials", debitOrder.ClientID);
             return View(debitOrder);
         }
 
@@ -108,7 +108,7 @@ namespace Aroma_Violet.Controllers
             ViewBag.AccountTypeID = new SelectList(db.AccountTypes, "AccountTypeId", "AccountTypeName", debitOrder.AccountTypeID);
             ViewBag.BankID = new SelectList(db.Banks, "BankId", "BankName", debitOrder.BankID);
             ViewBag.BranchID = new SelectList(db.Branches, "BranchId", "BranchName", debitOrder.BranchID);
-            ViewBag.ClientID = new SelectList(db.Clients, "ClientId", "ClientName", debitOrder.ClientID);
+            ViewBag.ClientID = new SelectList(db.Clients, "ClientId", "ClientInitials", debitOrder.ClientID);
             return View(debitOrder);
         }
 

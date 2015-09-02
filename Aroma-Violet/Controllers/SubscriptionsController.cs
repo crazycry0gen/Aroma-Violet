@@ -18,7 +18,7 @@ namespace Aroma_Violet.Controllers
         // GET: Subscriptions
         public async Task<ActionResult> Index()
         {
-            var subscriptions = db.Subscriptions.Include(s => s.Client).Include(s => s.Product);
+            var subscriptions = db.Subscriptions.Include(s => s.ClientType).Include(s => s.Product);
             return View(await subscriptions.ToListAsync());
         }
 
@@ -40,7 +40,7 @@ namespace Aroma_Violet.Controllers
         // GET: Subscriptions/Create
         public ActionResult Create()
         {
-            ViewBag.ClientID = new SelectList(db.Clients, "ClientId", "ClientName");
+            ViewBag.ClientTypeID = new SelectList(db.ClientTypes, "ClientTypeId", "ClientTypeName");
             ViewBag.ProductID = new SelectList(db.Products, "ProductId", "ProductName");
             return View();
         }
@@ -50,7 +50,7 @@ namespace Aroma_Violet.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "SubscriptionId,ClientID,ProductID,Quantity,Active")] Subscription subscription)
+        public async Task<ActionResult> Create([Bind(Include = "SubscriptionId,ClientTypeID,ProductID,MandatoryQuantity,Price,Active")] Subscription subscription)
         {
             if (ModelState.IsValid)
             {
@@ -59,7 +59,7 @@ namespace Aroma_Violet.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.ClientID = new SelectList(db.Clients, "ClientId", "ClientName", subscription.ClientID);
+            ViewBag.ClientTypeID = new SelectList(db.ClientTypes, "ClientTypeId", "ClientTypeName", subscription.ClientTypeID);
             ViewBag.ProductID = new SelectList(db.Products, "ProductId", "ProductName", subscription.ProductID);
             return View(subscription);
         }
@@ -76,7 +76,7 @@ namespace Aroma_Violet.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.ClientID = new SelectList(db.Clients, "ClientId", "ClientName", subscription.ClientID);
+            ViewBag.ClientTypeID = new SelectList(db.ClientTypes, "ClientTypeId", "ClientTypeName", subscription.ClientTypeID);
             ViewBag.ProductID = new SelectList(db.Products, "ProductId", "ProductName", subscription.ProductID);
             return View(subscription);
         }
@@ -86,7 +86,7 @@ namespace Aroma_Violet.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "SubscriptionId,ClientID,ProductID,Quantity,Active")] Subscription subscription)
+        public async Task<ActionResult> Edit([Bind(Include = "SubscriptionId,ClientTypeID,ProductID,MandatoryQuantity,Price,Active")] Subscription subscription)
         {
             if (ModelState.IsValid)
             {
@@ -94,7 +94,7 @@ namespace Aroma_Violet.Controllers
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewBag.ClientID = new SelectList(db.Clients, "ClientId", "ClientName", subscription.ClientID);
+            ViewBag.ClientTypeID = new SelectList(db.ClientTypes, "ClientTypeId", "ClientTypeName", subscription.ClientTypeID);
             ViewBag.ProductID = new SelectList(db.Products, "ProductId", "ProductName", subscription.ProductID);
             return View(subscription);
         }
