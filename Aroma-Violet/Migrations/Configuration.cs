@@ -9,6 +9,7 @@ namespace Aroma_Violet.Migrations
     {
         public Configuration()
         {
+        
             AutomaticMigrationDataLossAllowed = true;
             AutomaticMigrationsEnabled = true;
             ContextKey = "Aroma_Violet.Models.AromaContext";
@@ -17,10 +18,10 @@ namespace Aroma_Violet.Migrations
         protected override void Seed(Aroma_Violet.Models.AromaContext context)
         {
             
-            context.Titels.AddOrUpdate(
-                p => p.TitelName,
-                new Aroma_Violet.Models.Titel() {TitelName="Mr",Active=true },
-                new Aroma_Violet.Models.Titel() { TitelName = "Mrs", Active = true }
+            context.Titles.AddOrUpdate(
+                p => p.TitleName,
+                new Aroma_Violet.Models.Title() {TitleName="Mr",Active=true },
+                new Aroma_Violet.Models.Title() { TitleName = "Mrs", Active = true }
                 );
 
             context.EthnicGroups.AddOrUpdate(

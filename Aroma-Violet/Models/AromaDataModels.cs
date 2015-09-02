@@ -17,7 +17,7 @@ namespace Aroma_Violet.Models
 
         public DbSet<ClientType> ClientTypes { get; set; }
         public DbSet<Client> Clients { get; set; }
-        public DbSet<Titel> Titels { get; set; }
+        public DbSet<Title> Titles { get; set; }
         public DbSet<EthnicGroup> EthnicGroups { get; set; }
         public DbSet<Language> Languages { get; set; }
         public DbSet<IncomeGroup> IncomeGroups { get; set; }
@@ -82,15 +82,15 @@ namespace Aroma_Violet.Models
         /*public virtual ICollection<Client> Clients { get; set; }*/
     }
 
-    [Table("Titel")]
-    public class Titel
+    [Table("Title")]
+    public class Title
     {
         [Key]
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
-        public int TitelId { get; set; }
+        public int TitleId { get; set; }
         [Required]
-        [DisplayName("Titel")]
-        public string TitelName { get; set; }
+        [DisplayName("Title")]
+        public string TitleName { get; set; }
         public bool Active { get; set; }
 
     }
@@ -298,7 +298,7 @@ namespace Aroma_Violet.Models
         public int ClientId { get; set; }
 
         [Required]
-        [DisplayName("Name")]
+        [DisplayName("Initials")]
         public string ClientName { get; set; }
 
         [DisplayName("Nick Name")]
@@ -309,8 +309,8 @@ namespace Aroma_Violet.Models
 
         [Required]
         [DisplayName("Home Language")]
-        public int HomeLanguageID { get; set; }
-        public virtual Language HomeLanguage { get; set; }
+        public int LanguageID { get; set; }
+        public virtual Language Language { get; set; }
 
         [Required]
         [DisplayName("Employer")]
@@ -339,9 +339,9 @@ namespace Aroma_Violet.Models
         public virtual ClientType ClientType { get; set; }
 
         [Required]
-        [DisplayName("Titel")]
-        public int TitelID { get; set; }
-        public virtual Titel Titel { get; set; }
+        [DisplayName("Title")]
+        public int TitleID { get; set; }
+        public virtual Title Title { get; set; }
 
         [DisplayName("Ethnic Group")]
         public int EthnicGroupID { get; set; }

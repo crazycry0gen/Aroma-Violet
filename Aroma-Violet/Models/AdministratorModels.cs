@@ -18,7 +18,7 @@ namespace Aroma_Violet.Models
             //fixed items for now, could be fetched from DB at a later stage
             this.Add("Client Type", "Index", "ClientTypes");
             this.Add("Ethnic Group", "Index", "EthnicGroups");
-            this.Add("Titel", "Index", "Titels");
+            this.Add("Title", "Index", "Titles");
             this.Add("Language", "Index", "Languages");
             this.Add("Income Group", "Index", "IncomeGroups");
             this.Add("Address Type", "Index", "AddressTypes");

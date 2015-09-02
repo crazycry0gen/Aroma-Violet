@@ -55,6 +55,7 @@ namespace Aroma_Violet.Controllers
         //
         // GET: /Account/Login
         [AllowAnonymous]
+        [LayoutInjecter("_LayoutNoLogo")]
         public ActionResult Login(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;

@@ -13,6 +13,8 @@ namespace Aroma_Violet.Controllers
         {
             if (User.IsInRole("Administrator"))
                 return RedirectToAction("Index", "Administrator");
+            if (User.IsInRole("User"))
+                return RedirectToAction("Index", "User");
             return View();
         }
 

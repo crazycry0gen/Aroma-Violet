@@ -192,7 +192,7 @@
     <Compile Include="Controllers\ProductsController.cs" />
     <Compile Include="Controllers\ProvincesController.cs" />
     <Compile Include="Controllers\SubscriptionsController.cs" />
-    <Compile Include="Controllers\TitelsController.cs" />
+    <Compile Include="Controllers\TitlesController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -201,6 +201,7 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AdministratorModels.cs" />
     <Compile Include="Models\AromaDataModels.cs" />
+    <Compile Include="Models\Attributes.cs" />
     <Compile Include="Models\ClientViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -252,6 +253,8 @@
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <None Include="Properties\PublishProfiles\aroma - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\aroma - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -317,11 +320,11 @@
     <Content Include="Views\EthnicGroups\Details.cshtml" />
     <Content Include="Views\EthnicGroups\Edit.cshtml" />
     <Content Include="Views\EthnicGroups\Index.cshtml" />
-    <Content Include="Views\Titels\Create.cshtml" />
-    <Content Include="Views\Titels\Delete.cshtml" />
-    <Content Include="Views\Titels\Details.cshtml" />
-    <Content Include="Views\Titels\Edit.cshtml" />
-    <Content Include="Views\Titels\Index.cshtml" />
+    <Content Include="Views\Titles\Create.cshtml" />
+    <Content Include="Views\Titles\Delete.cshtml" />
+    <Content Include="Views\Titles\Details.cshtml" />
+    <Content Include="Views\Titles\Edit.cshtml" />
+    <Content Include="Views\Titles\Index.cshtml" />
     <Content Include="Views\Languages\Create.cshtml" />
     <Content Include="Views\Languages\Delete.cshtml" />
     <Content Include="Views\Languages\Details.cshtml" />
@@ -418,6 +421,7 @@
     <Content Include="Views\Shared\EditorTemplates\DateTime.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\Address.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\Language.cshtml" />
+    <Content Include="Views\Shared\_LayoutNoLogo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

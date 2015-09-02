@@ -11,107 +11,107 @@ using Aroma_Violet.Models;
 
 namespace Aroma_Violet.Controllers
 {
-    public class TitelsController : Controller
+    public class TitlesController : Controller
     {
         private AromaContext db = new AromaContext();
 
-        // GET: Titels
+        // GET: Titles
         public async Task<ActionResult> Index()
         {
-            return View(await db.Titels.ToListAsync());
+            return View(await db.Titles.ToListAsync());
         }
 
-        // GET: Titels/Details/5
+        // GET: Titles/Details/5
         public async Task<ActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Titel titel = await db.Titels.FindAsync(id);
-            if (titel == null)
+            Title Title = await db.Titles.FindAsync(id);
+            if (Title == null)
             {
                 return HttpNotFound();
             }
-            return View(titel);
+            return View(Title);
         }
 
-        // GET: Titels/Create
+        // GET: Titles/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Titels/Create
+        // POST: Titles/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "TitelId,TitelName,Active")] Titel titel)
+        public async Task<ActionResult> Create([Bind(Include = "TitleId,TitleName,Active")] Title Title)
         {
             if (ModelState.IsValid)
             {
-                db.Titels.Add(titel);
+                db.Titles.Add(Title);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
-            return View(titel);
+            return View(Title);
         }
 
-        // GET: Titels/Edit/5
+        // GET: Titles/Edit/5
         public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Titel titel = await db.Titels.FindAsync(id);
-            if (titel == null)
+            Title Title = await db.Titles.FindAsync(id);
+            if (Title == null)
             {
                 return HttpNotFound();
             }
-            return View(titel);
+            return View(Title);
         }
 
-        // POST: Titels/Edit/5
+        // POST: Titles/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "TitelId,TitelName,Active")] Titel titel)
+        public async Task<ActionResult> Edit([Bind(Include = "TitleId,TitleName,Active")] Title Title)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(titel).State = EntityState.Modified;
+                db.Entry(Title).State = EntityState.Modified;
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            return View(titel);
+            return View(Title);
         }
 
-        // GET: Titels/Delete/5
+        // GET: Titles/Delete/5
         public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Titel titel = await db.Titels.FindAsync(id);
-            if (titel == null)
+            Title Title = await db.Titles.FindAsync(id);
+            if (Title == null)
             {
                 return HttpNotFound();
             }
-            return View(titel);
+            return View(Title);
         }
 
-        // POST: Titels/Delete/5
+        // POST: Titles/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            Titel titel = await db.Titels.FindAsync(id);
-            db.Titels.Remove(titel);
+            Title Title = await db.Titles.FindAsync(id);
+            db.Titles.Remove(Title);
             await db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
