@@ -1,4 +1,4 @@
-﻿@model Aroma_Violet.Models.Product
+﻿@model Aroma_Violet.Models.EthnicGroup
 
 @{
     ViewBag.Title = "Delete";
@@ -8,32 +8,17 @@
 
 <h3>Are you sure you want to delete this?</h3>
 <div>
-    <h4>Product</h4>
+    <h4>EthnicGroup</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.ProductName)
+            @Html.DisplayNameFor(model => model.EthnicGroupName)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.ProductName)
+            @Html.DisplayFor(model => model.EthnicGroupName)
         </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.ProductCode)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.ProductCode)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.EvolutionCode)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.EvolutionCode)
-        </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Active)
         </dt>

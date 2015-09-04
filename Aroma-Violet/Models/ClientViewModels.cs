@@ -4,6 +4,13 @@ using System.Linq;
 namespace Aroma_Violet.Models
 {
 
+    public class ClientSubscriptionViewModel
+    {
+        public List<ClientSubscription> ClientSubscriptions { get; set; }
+        public int ProductCount { get; internal set; }
+        public ClientSubscription Subscription { get; set; }
+    }
+
     public class ClientViewModel : Client
     {
         private const int _lineCount = 3;

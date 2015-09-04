@@ -71,7 +71,29 @@
 
 <script type="text/javascript">
     $(function () { // will trigger when the document is ready
-        $('.datepicker').datepicker({ autoclose: true }); //Initialise any date pickers
-        
+        $('.datepicker').datepicker({
+            autoclose: true,
+            changeYear: true,
+            dateFormat: 'dd/mm/yy'
+        }); //Initialise any date pickers
+
+       // jQuery.validator.addMethod(
+       //    'date',
+       //    function (value, element, params) {
+       //        if (this.optional(element)) {
+       //            return true;
+       //        };
+       //        var result = false;
+       //        try {
+       //            $.datepicker.parseDate('dd/mm/yy', value);
+       //            result = true;
+       //        } catch (err) {
+       //            result = false;
+       //        }
+       //        return result;
+       //    },
+       //    ''
+       //);
+
     });
 </script>

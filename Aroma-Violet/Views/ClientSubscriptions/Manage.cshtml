@@ -1,0 +1,66 @@
+﻿@model Aroma_Violet.Models.ClientSubscriptionViewModel
+
+@{
+    ViewBag.Title = "Manage";
+    var tableStile = Model.ProductCount > 0?"min-height:300px":"";
+}
+
+<h2>Manage</h2>
+@Html.HiddenFor(model=>model.ProductCount)
+
+<table class="table" style="@tableStile">
+    <tr>
+        <th>
+            Product
+        </th>
+        <th>
+            Quantity
+        </th>
+        <th>
+            Active
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model.ClientSubscriptions) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Product.ProductName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Quantity)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Active)
+        </td>
+        <td>
+           @using (Html.BeginForm())
+            {
+            @Html.AntiForgeryToken()
+            <div class="form-group">
+                <input data-val="true" id="@Guid.NewGuid().ToString()" name="ClientSubscriptionId" type="hidden" value="@item.ClientSubscriptionId" />
+                <input data-val="true" id="@Guid.NewGuid().ToString()" name="Quantity" type="hidden" value="@item.Quantity" />
+                <input data-val="true" id="@Guid.NewGuid().ToString()" name="ProductID" type="hidden" value="@item.ProductID" />
+
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Toggle Active" class="btn btn-default" />
+                </div>
+            </div>
+            }
+        </td>
+    </tr>
+}
+
+</table>
+
+@if(Model.ProductCount > 0)
+{
+<div class="form-group">
+@Html.Partial("partialCreate",Model.Subscription )
+</div>
+}
+
+<div class="form-group">
+    @Html.ActionLink("Go To Client", "Edit", "Clients", new { id=Model.Subscription.ClientID },htmlAttributes:null)|
+    @Html.ActionLink("Go To Banking", "Edit", "BankingDetails", new { ClientID=Model.Subscription.ClientID }, htmlAttributes: null)
+</div>

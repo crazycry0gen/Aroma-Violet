@@ -371,11 +371,6 @@
     <Content Include="Views\Contacts\Details.cshtml" />
     <Content Include="Views\Contacts\Edit.cshtml" />
     <Content Include="Views\Contacts\Index.cshtml" />
-    <Content Include="Views\BankingDetails\Create.cshtml" />
-    <Content Include="Views\BankingDetails\Delete.cshtml" />
-    <Content Include="Views\BankingDetails\Details.cshtml" />
-    <Content Include="Views\BankingDetails\Edit.cshtml" />
-    <Content Include="Views\BankingDetails\Index.cshtml" />
     <Content Include="Views\Banks\Create.cshtml" />
     <Content Include="Views\Banks\Delete.cshtml" />
     <Content Include="Views\Banks\Details.cshtml" />
@@ -428,6 +423,13 @@
     <Content Include="Views\Subscriptions\Details.cshtml" />
     <Content Include="Views\Subscriptions\Edit.cshtml" />
     <Content Include="Views\Subscriptions\Index.cshtml" />
+    <Content Include="Views\ClientSubscriptions\Manage.cshtml" />
+    <Content Include="Views\ClientSubscriptions\partialCreate.cshtml" />
+    <Content Include="Views\BankingDetails\Create.cshtml" />
+    <Content Include="Views\BankingDetails\Delete.cshtml" />
+    <Content Include="Views\BankingDetails\Details.cshtml" />
+    <Content Include="Views\BankingDetails\Edit.cshtml" />
+    <Content Include="Views\BankingDetails\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

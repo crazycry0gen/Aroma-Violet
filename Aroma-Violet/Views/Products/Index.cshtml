@@ -18,6 +18,9 @@
             @Html.DisplayNameFor(model => model.ProductCode)
         </th>
         <th>
+            @Html.DisplayNameFor(model => model.EvolutionCode)
+        </th>
+        <th>
             @Html.DisplayNameFor(model => model.Active)
         </th>
         <th></th>
@@ -31,6 +34,9 @@
         <td>
             @Html.DisplayFor(modelItem => item.ProductCode)
         </td>
+        <td>
+    @Html.DisplayFor(modelItem => item.EvolutionCode)
+</td>
         <td>
             @Html.DisplayFor(modelItem => item.Active)
         </td>

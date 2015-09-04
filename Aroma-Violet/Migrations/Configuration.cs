@@ -95,7 +95,7 @@ namespace Aroma_Violet.Migrations
                 new Aroma_Violet.Models.ContactType() { ContactTypeName = "Fax (Work)", Active = true },
                 new Aroma_Violet.Models.ContactType() { ContactTypeName = "EMail", Active = true }
                 );
-            
+
             context.AccountHolders.AddOrUpdate(
                 p=>p.AccountHolderName,
                 new Aroma_Violet.Models.AccountHolder() {AccountHolderName="Self", Active=true },
@@ -119,6 +119,12 @@ namespace Aroma_Violet.Migrations
                 new Aroma_Violet.Models.Bank() { BankName = "Netbank", Active = true },
                 new Aroma_Violet.Models.Bank() { BankName = "Standard bank", Active = true }
                 );
+
+            context.Branches.AddOrUpdate(
+                p => p.BranchName,
+                new Aroma_Violet.Models.Branch() {BranchName ="Universal", BranchCode= "632005", BankId=context.Banks.First(m=>m.BankName== "ABSA").BankId }
+                );
+
         }
     }
 }

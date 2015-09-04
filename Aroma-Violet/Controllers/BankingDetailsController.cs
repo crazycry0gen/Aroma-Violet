@@ -18,7 +18,7 @@ namespace Aroma_Violet.Controllers
         // GET: BankingDetails
         public async Task<ActionResult> Index()
         {
-            var bankingDetails = db.BankingDetails.Include(b => b.AccountHolder);
+            var bankingDetails = db.BankingDetails.Include(b => b.AccountHolder).Include(b => b.AccountType).Include(b => b.Bank).Include(b => b.Branch).Include(b => b.Client);
             return View(await bankingDetails.ToListAsync());
         }
 
@@ -41,6 +41,14 @@ namespace Aroma_Violet.Controllers
         public ActionResult Create()
         {
             ViewBag.AccountHolderID = new SelectList(db.AccountHolders, "AccountHolderId", "AccountHolderName");
+            ViewBag.AccountTypeID = new SelectList(db.AccountTypes, "AccountTypeId", "AccountTypeName");
+            ViewBag.BankID = new SelectList(db.Banks, "BankId", "BankName");
+            ViewBag.BranchID = new SelectList(db.Branches, "BranchId", "BranchName");
+            ViewBag.CellContactID = new SelectList(db.Contacts, "ContactId", "ContactName");
+            ViewBag.ClientID = new SelectList(db.Clients, "ClientId", "ClientInitials");
+            ViewBag.EmailContactID = new SelectList(db.Contacts, "ContactId", "ContactName");
+            ViewBag.HomeContactID = new SelectList(db.Contacts, "ContactId", "ContactName");
+            ViewBag.WorkContactID = new SelectList(db.Contacts, "ContactId", "ContactName");
             return View();
         }
 
@@ -49,7 +57,7 @@ namespace Aroma_Violet.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "BankingDetailId,AccountHolderID,Active")] BankingDetail bankingDetail)
+        public async Task<ActionResult> Create([Bind(Include = "BankingDetailId,ClientID,AccountHolderID,AccountHolderOtherDetail,Initials,Surname,EmailContactID,WorkContactID,HomeContactID,CellContactID,AccountTypeID,CommencementDate,AccountNumber,BankID,BranchID,SalaryDate,Active")] BankingDetail bankingDetail)
         {
             if (ModelState.IsValid)
             {
@@ -59,12 +67,20 @@ namespace Aroma_Violet.Controllers
             }
 
             ViewBag.AccountHolderID = new SelectList(db.AccountHolders, "AccountHolderId", "AccountHolderName", bankingDetail.AccountHolderID);
+            ViewBag.AccountTypeID = new SelectList(db.AccountTypes, "AccountTypeId", "AccountTypeName", bankingDetail.AccountTypeID);
+            ViewBag.BankID = new SelectList(db.Banks, "BankId", "BankName", bankingDetail.BankID);
+            ViewBag.BranchID = new SelectList(db.Branches, "BranchId", "BranchName", bankingDetail.BranchID);
+            ViewBag.ClientID = new SelectList(db.Clients, "ClientId", "ClientInitials", bankingDetail.ClientID);
             return View(bankingDetail);
         }
 
         // GET: BankingDetails/Edit/5
-        public async Task<ActionResult> Edit(int? id)
+        public async Task<ActionResult> Edit(int? id, int? ClientID)
         {
+            if (!id.HasValue && ClientID.HasValue)
+            {
+                id = db.BankingDetails.FirstOrDefault(m => m.ClientID == ClientID.Value)?.BankingDetailId;
+            }
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -75,6 +91,10 @@ namespace Aroma_Violet.Controllers
                 return HttpNotFound();
             }
             ViewBag.AccountHolderID = new SelectList(db.AccountHolders, "AccountHolderId", "AccountHolderName", bankingDetail.AccountHolderID);
+            ViewBag.AccountTypeID = new SelectList(db.AccountTypes, "AccountTypeId", "AccountTypeName", bankingDetail.AccountTypeID);
+            ViewBag.BankID = new SelectList(db.Banks, "BankId", "BankName", bankingDetail.BankID);
+            ViewBag.BranchID = new SelectList(db.Branches, "BranchId", "BranchName", bankingDetail.BranchID);
+            ViewBag.ClientID = new SelectList(db.Clients, "ClientId", "ClientInitials", bankingDetail.ClientID);
             return View(bankingDetail);
         }
 
@@ -83,15 +103,19 @@ namespace Aroma_Violet.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "BankingDetailId,AccountHolderID,Active")] BankingDetail bankingDetail)
+        public async Task<ActionResult> Edit([Bind(Include = "BankingDetailId,ClientID,AccountHolderID,AccountHolderOtherDetail,Initials,Surname,EmailContact,WorkContact,HomeContact,CellContact,AccountTypeID,CommencementDate,AccountNumber,BankID,BranchID,SalaryDate,Active")] BankingDetail bankingDetail)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(bankingDetail).State = EntityState.Modified;
                 await db.SaveChangesAsync();
-                return RedirectToAction("Index");
+                return RedirectToAction("Edit","Clients", new {id=bankingDetail.ClientID });
             }
             ViewBag.AccountHolderID = new SelectList(db.AccountHolders, "AccountHolderId", "AccountHolderName", bankingDetail.AccountHolderID);
+            ViewBag.AccountTypeID = new SelectList(db.AccountTypes, "AccountTypeId", "AccountTypeName", bankingDetail.AccountTypeID);
+            ViewBag.BankID = new SelectList(db.Banks, "BankId", "BankName", bankingDetail.BankID);
+            ViewBag.BranchID = new SelectList(db.Branches, "BranchId", "BranchName", bankingDetail.BranchID);
+            ViewBag.ClientID = new SelectList(db.Clients, "ClientId", "ClientInitials", bankingDetail.ClientID);
             return View(bankingDetail);
         }
 

@@ -244,6 +244,8 @@ namespace Aroma_Violet.Models
         [DisplayName("Branch Code")]
         public string BranchCode { get; set; }
         public bool Active { get; set; }
+        [Required]
+        public int BankId { get; set; }
 
     }
     #endregion
@@ -296,6 +298,7 @@ namespace Aroma_Violet.Models
     {
         [Key]
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        [DisplayName("Client ID")]
         public int ClientId { get; set; }
 
         [Required]
@@ -388,7 +391,7 @@ namespace Aroma_Violet.Models
         public string Code { get; set; }
 
         [DisplayName("Client")]
-        //public int ClientID { get; set; }
+        public int ClientID { get; set; }
         public virtual Client Client { get; set; }
         
         [DisplayName("AddressType")]
@@ -459,6 +462,9 @@ namespace Aroma_Violet.Models
         [Required]
         [DisplayName("Product Code")]
         public string ProductCode { get; set; }
+        [DisplayName("Evolution Code")]
+        public string EvolutionCode { get; set; }
+
         public bool Active { get; set; }
     }
 
@@ -511,6 +517,7 @@ namespace Aroma_Violet.Models
 
         [Required]
         [DisplayName("Quantity")]
+        [Range(1, 9999)]
         public int Quantity { get; set; }
 
         public bool Active { get; set; }
@@ -523,7 +530,7 @@ namespace Aroma_Violet.Models
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         public int BankingDetailId { get; set; }
 
-
+        [Required]
         [DisplayName("Client")]
         public int ClientID { get; set; }
         public virtual Client Client { get; set; }
@@ -543,7 +550,21 @@ namespace Aroma_Violet.Models
         [Required]
         [DisplayName("Surname")]
         public string Surname { get; set; }
-        
+
+        [DisplayName("Email")]
+        public string EmailContact { get; set; }
+
+        [DisplayName("Work")]
+        public string WorkContact { get; set; }
+
+        [DisplayName("Home")]
+        public string HomeContact { get; set; }
+
+        [DisplayName("Work")]
+        public string CellContact { get; set; }
+
+        /*
+        doesn't make sense to have this relational on banking detail
         [DisplayName("Email")]
         public int EmailContactID { get; set; }
         public virtual Contact Email { get; set; }
@@ -559,7 +580,7 @@ namespace Aroma_Violet.Models
         [DisplayName("Work")]
         public int CellContactID { get; set; }
         public virtual Contact Cell { get; set; }
-
+        */
         [Required]
         [DisplayName("Account Type")]
         public int AccountTypeID { get; set; }
