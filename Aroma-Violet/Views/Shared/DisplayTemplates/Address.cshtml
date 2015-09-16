@@ -1,16 +1,30 @@
 ﻿@model Aroma_Violet.Models.Address
 
 
-    
-        @foreach (var line in (Model.Lines))
-        {
-        <dd>
+    @foreach (var line in (Model.Lines))
+    {
+        <div>
             @line.AddressLineText
-        </dd>
-        }
-        <dd>
-            @Html.DisplayFor(model => model.Code)
-        </dd>
+        </div>
+    }
+    <div>
+        @Html.DisplayFor(model => model.Code)
+    </div>
+    @if (User.IsInRole("User"))
+    {
+        <div>
+            @Html.ActionLink(
+                        linkText: "Edit",
+                        actionName: "Edit",
+                        controllerName: "Addresses",
+                        routeValues: new { id = Model.AddressId.ToString(), ClientId = Model.ClientID },
+                        htmlAttributes: null)
+        </div>
+    }
+
+    
+        
+        
 
     
 

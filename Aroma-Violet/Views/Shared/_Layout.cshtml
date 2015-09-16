@@ -70,12 +70,25 @@
 }
 
 <script type="text/javascript">
-    $(function () { // will trigger when the document is ready
-        $('.datepicker').datepicker({
-            autoclose: true,
-            changeYear: true,
-            dateFormat: 'dd/mm/yy'
-        }); //Initialise any date pickers
+
+    function UpdateDateTime(key)
+    {
+        var day = document.getElementById('d' + key);
+        var month = document.getElementById('m' + key);
+        var year = document.getElementById('y' + key);
+        var newValue = day.value + '/' + month.value + '/' + year.value + ' 00:00:00';
+        var dateTime = document.getElementById(key);
+        //alert(dateTime.value);
+        //alert(newValue);
+        dateTime.value = newValue;
+    }
+
+    //$(function () { // will trigger when the document is ready
+    //    $('.datepicker').datepicker({
+    //        autoclose: true,
+    //        changeYear: true,
+    //        dateFormat: 'dd/mm/yy'
+    //    }); //Initialise any date pickers
 
        // jQuery.validator.addMethod(
        //    'date',
@@ -95,5 +108,5 @@
        //    ''
        //);
 
-    });
+    //});
 </script>

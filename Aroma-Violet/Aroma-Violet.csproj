@@ -204,6 +204,7 @@
     <Compile Include="Models\AromaDataModels.cs" />
     <Compile Include="Models\Attributes.cs" />
     <Compile Include="Models\ClientViewModels.cs" />
+    <Compile Include="Models\Generic.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\MenuModels.cs" />
@@ -430,6 +431,8 @@
     <Content Include="Views\BankingDetails\Details.cshtml" />
     <Content Include="Views\BankingDetails\Edit.cshtml" />
     <Content Include="Views\BankingDetails\Index.cshtml" />
+    <Content Include="Views\Clients\ClientSubscriptions.cshtml" />
+    <Content Include="Views\Clients\BankingDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

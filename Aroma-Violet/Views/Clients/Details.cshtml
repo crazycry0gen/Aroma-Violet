@@ -6,148 +6,170 @@
 
 <h2>Details</h2>
 
-<div>
-    <h4>Client</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.ClientType.ClientTypeName)
-        </dt>
+<table>
+    <tr>
+        <th><h4>Client</h4></th>
+        <th><h4>Subscriptions</h4></th>
+    </tr>
+    <tr>
+        <td rowspan="2">
+            <div>
 
-        <dd>
-            @Html.DisplayFor(model => model.ClientType.ClientTypeName)
-        </dd>
+                <hr />
+                <dl class="dl-horizontal">
+                    <dt>
+                        @Html.DisplayNameFor(model => model.ClientType.ClientTypeName)
+                    </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Country.CountryName)
-        </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.ClientType.ClientTypeName)
+                    </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Country.CountryName)
-        </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Country.CountryName)
+                    </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.EthnicGroup.EthnicGroupName)
-        </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Country.CountryName)
+                    </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.EthnicGroup.EthnicGroupName)
-        </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.EthnicGroup.EthnicGroupName)
+                    </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.IncomeGroup.IncomeGroupName)
-        </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.EthnicGroup.EthnicGroupName)
+                    </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.IncomeGroup.IncomeGroupName)
-        </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.IncomeGroup.IncomeGroupName)
+                    </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Province.ProvinceName)
-        </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.IncomeGroup.IncomeGroupName)
+                    </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Province.ProvinceName)
-        </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Province.ProvinceName)
+                    </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Title.TitleName)
-        </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Province.ProvinceName)
+                    </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Title.TitleName)
-        </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Title.TitleName)
+                    </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.ClientInitials)
-        </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Title.TitleName)
+                    </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.ClientInitials)
-        </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.ClientInitials)
+                    </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.NickName)
-        </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.ClientInitials)
+                    </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.NickName)
-        </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.NickName)
+                    </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.FullNames)
-        </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.NickName)
+                    </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.FullNames)
-        </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.FullNames)
+                    </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.LanguageID)
-        </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.FullNames)
+                    </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.LanguageID)
-        </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Language.LanguageName)
+                    </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Employer)
-        </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Language.LanguageName)
+                    </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Employer)
-        </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Employer)
+                    </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.DateOfBirth)
-        </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Employer)
+                    </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.DateOfBirth)
-        </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.DateOfBirth)
+                    </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.ClientSurname)
-        </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.DateOfBirth)
+                    </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.ClientSurname)
-        </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.ClientSurname)
+                    </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.SAResident)
-        </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.ClientSurname)
+                    </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.SAResident)
-        </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.SAResident)
+                    </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.IDNumber)
-        </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.SAResident)
+                    </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.IDNumber)
-        </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.IDNumber)
+                    </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.PostalAddress.AddressId)
-        </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.IDNumber)
+                    </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.PostalAddress)
-        </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.PostalAddress.AddressId)
+                    </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.DeliveryAddress.AddressId)
-        </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.PostalAddress)
+                    </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.DeliveryAddress)
-        </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.DeliveryAddress.AddressId)
+                    </dt>
 
-    </dl>
-</div>
+                    <dd>
+                        @Html.DisplayFor(model => model.DeliveryAddress)
+                    </dd>
+
+                </dl>
+            </div>
+        </td>
+        <td>
+            <div>
+                @Html.Partial("ClientSubscriptions", Model.ClientSubscriptions.Where(m=>m.Active))
+            </div>
+        </td>
+    </tr>
+@foreach (var detail in Model.BankingDetails)
+{
+    <tr>
+        <td>@Html.Partial("BankingDetails", detail)</td>
+    </tr>
+}
+</table>
+
 <p>
 @if (User.IsInRole("User"))
 {

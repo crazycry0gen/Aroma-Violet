@@ -45,6 +45,7 @@ namespace Aroma_Violet.Models
         public DbSet<SystemSMS> SystemSMSes { get; set; }
         public DbSet<SupportTicketStatus> SupportTicketStatuses { get; set; }
         public DbSet<SupportTicket> SupportTickets { get; set; }
+        public DbSet<ClientRelationship> ClientRelationShips { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -293,6 +294,25 @@ namespace Aroma_Violet.Models
         public Guid? Source { get; set; }
     }
 
+    [Table("ClientRelationship")]
+    public class ClientRelationship
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        [DisplayName("Client Relationship ID")]
+        public Guid ClientRelationshipId { get; set; }
+
+        [Required]
+        [DisplayName("Parent ID")]
+        public int ParentID { get; set; }
+
+        [Required]
+        [DisplayName("Child ID")]
+        public int ChildID { get; set; }
+
+        public bool Active { get; set; }
+    }
+
     [Table("Client")]
     public class Client
     {
@@ -375,6 +395,15 @@ namespace Aroma_Violet.Models
         [DisplayName("Country")]
         public int CountryID { get; set; }
         public virtual Country Country { get; set; }
+
+        [DisplayName("Subscriptions")]
+        public virtual ICollection<ClientSubscription> ClientSubscriptions { get; set; }
+
+        [DisplayName("Banking Detail")]
+        //public int BankingDetailID { get; set; }
+        public virtual ICollection<BankingDetail> BankingDetails { get;set;}
+
+        public bool Active { get; set; }
     }
 
 
@@ -387,7 +416,7 @@ namespace Aroma_Violet.Models
 
         [Required]
         [DisplayName("Code")]
-        [Range(100, 99999)]
+        [Range(0, 99999)]
         public string Code { get; set; }
 
         [DisplayName("Client")]
@@ -494,7 +523,11 @@ namespace Aroma_Violet.Models
         [DisplayName("Price")]
         [DataType(DataType.Currency)]
         public decimal Price { get; set; }
-        
+
+        [DisplayName("Valid From Date")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
+        public DateTime ValidFromDate { get; set; }
+
         public bool Active { get; set; }
     }
 
@@ -507,8 +540,8 @@ namespace Aroma_Violet.Models
 
         [Required]
         [DisplayName("Client")]
-        public int ClientID { get; set; }
-        public virtual ClientType Client { get; set; }
+        public int? ClientID { get; set; }
+        public virtual Client Client { get; set; }
         
         [Required]/*TODO: check logic - I'm using product id instead of subscriptionId. If a client wants products outside of the standards subscription we must be able to accomodate*/
         [DisplayName("Product")]

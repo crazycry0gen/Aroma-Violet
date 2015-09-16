@@ -95,6 +95,8 @@ namespace Aroma_Violet.Controllers
             ViewBag.BankID = new SelectList(db.Banks, "BankId", "BankName", bankingDetail.BankID);
             ViewBag.BranchID = new SelectList(db.Branches, "BranchId", "BranchName", bankingDetail.BranchID);
             ViewBag.ClientID = new SelectList(db.Clients, "ClientId", "ClientInitials", bankingDetail.ClientID);
+            ViewBag.YearStart = DateTime.Now.Year;
+            ViewBag.YearEnd = DateTime.Now.Year + 1;
             return View(bankingDetail);
         }
 

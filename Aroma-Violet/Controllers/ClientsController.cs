@@ -44,7 +44,7 @@ namespace Aroma_Violet.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Client client = await db.Clients.FindAsync(id);
+            Client client = await db.Clients.Include(maxResult=>maxResult.ClientSubscriptions).Include(m=>m.BankingDetails).FirstAsync(m=>m.ClientId==id);
             if (client == null)
             {
                 return HttpNotFound();
@@ -70,7 +70,7 @@ namespace Aroma_Violet.Controllers
             var newClient = new ClientViewModel();
             newClient.PostalAddress = GetNewAddress("Postal");
             newClient.DeliveryAddress = GetNewAddress("Physical");
-            newClient.DateOfBirth = DateTime.Now;
+            newClient.DateOfBirth = DateTime.Parse("1 Jan 1950");
 
             return View(newClient);
         }
@@ -103,13 +103,32 @@ namespace Aroma_Violet.Controllers
             var type = db.ContactTypes.FirstOrDefault(m => m.ContactTypeName == contactType);
             if (type == null)
                 throw new Exception(errorMessage);
+            int oldContactActivatedId = 0;
+            var checkExisting = (from item in db.Contacts
+                                 where item.ContactTypeID == type.ContactTypeId
+                                 && item.ClientID == clientId
+                                 select item).ToArray();
+            for (int i=0;i< checkExisting.Length; i++)
+            {
+                if (checkExisting[i].ContactName.ToLower() == contactValue.ToLower())
+                {
+                    checkExisting[i].Active = true;
+                    oldContactActivatedId = checkExisting[i].ContactId;
+                }
+                else
+                {
+                    checkExisting[i].Active = false;
+                }
+            }
+            if(checkExisting.Length>0) db.SaveChanges();
+            if (oldContactActivatedId > 0) return oldContactActivatedId;
             var newContact = new Contact() { Active = active, ClientID = clientId, ContactName = contactValue, ContactTypeID = type.ContactTypeId };
             db.Contacts.Add(newContact);
             db.SaveChanges();
             return newContact.ContactId;
         }
 
-        private void CreateClientBankingDetails(int clientId, string initials, string surname, int cellContactId,int homeContactId,int workContactId, int emailContactId)
+        private void CreateClientBankingDetails(int clientId, string initials, string surname, int cellContactId, int homeContactId, int workContactId, int emailContactId)
         {
             const string accountHolderText = "Self";
             const string accountTypeText = "Cheque";
@@ -141,29 +160,30 @@ namespace Aroma_Violet.Controllers
                 throw new Exception(errorMessage);
             }
 
-            var bankingDetail = new BankingDetail()
+            if (db.BankingDetails.Where(m => m.ClientID == clientId).Count() == 0)
             {
-                Initials = initials,
-                Surname = surname,
-                AccountHolderID = accountHolder.AccountHolderId,
-                AccountTypeID = accountType.AccountTypeId,
-                BankID = bank.BankId,
-                ClientID = clientId,
-                CommencementDate = DateTime.Now.AddMonths(1),
-                SalaryDate = DateTime.Now,
-                AccountNumber = "0",
-                BranchID = branch.BranchId,
-                CellContact = db.Contacts.First(m=>m.ContactId== cellContactId).ContactName,
-                HomeContact= db.Contacts.First(m => m.ContactId == homeContactId).ContactName,
-                WorkContact= db.Contacts.First(m => m.ContactId == workContactId).ContactName,
-                EmailContact= db.Contacts.First(m => m.ContactId == emailContactId).ContactName,
-                Active=false
-            };
+                var bankingDetail = new BankingDetail()
+                {
+                    Initials = initials,
+                    Surname = surname,
+                    AccountHolderID = accountHolder.AccountHolderId,
+                    AccountTypeID = accountType.AccountTypeId,
+                    BankID = bank.BankId,
+                    ClientID = clientId,
+                    CommencementDate = DateTime.Now.AddMonths(1),
+                    SalaryDate = DateTime.Now,
+                    AccountNumber = "0",
+                    BranchID = branch.BranchId,
+                    CellContact = db.Contacts.First(m => m.ContactId == cellContactId).ContactName,
+                    HomeContact = db.Contacts.First(m => m.ContactId == homeContactId).ContactName,
+                    WorkContact = db.Contacts.First(m => m.ContactId == workContactId).ContactName,
+                    EmailContact = db.Contacts.First(m => m.ContactId == emailContactId).ContactName,
+                    Active = false
+                };
 
-
-
-            db.BankingDetails.Add(bankingDetail);
-            db.SaveChanges();
+                db.BankingDetails.Add(bankingDetail);
+                db.SaveChanges();
+            }
         }
 
         // POST: Clients/Create
@@ -171,13 +191,34 @@ namespace Aroma_Violet.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "ClientId,ClientInitials,NickName,FullNames,LanguageID,Employer,DateOfBirth,ClientSurname,SAResident,IDNumber,ClientTypeID,TitleID,EthnicGroupID,IncomeGroupID,PostalAddress,DeliveryAddress,DeliveryAddressLines,ProvinceID,CountryID,Lines,AddressLine,PostalAddressLines,AddressTypeID,DeliveryAddress,PostalAddress,TelWork,Cell,TelHome,EMail")] ClientViewModel clientView)
+        public async Task<ActionResult> Create([Bind(Include = "ClientId,ClientInitials,NickName,FullNames,LanguageID,Employer,DateOfBirth,ClientSurname,SAResident,IDNumber,ClientTypeID,TitleID,EthnicGroupID,IncomeGroupID,PostalAddress,DeliveryAddress,DeliveryAddressLines,ProvinceID,CountryID,Lines,AddressLine,PostalAddressLines,AddressTypeID,DeliveryAddress,PostalAddress,TelWork,Cell,TelHome,EMail,ResellerID")] ClientViewModel clientView)
         {
             var client = clientView.GetBaseClient();
             if (ModelState.IsValid)
             {
-                db.Clients.Add(client);
-                await db.SaveChangesAsync();
+                //check if client exists on IDNo and update else add
+                var existingClient = (from item in db.Clients
+                                      where item.IDNumber == client.IDNumber
+                                      select item).FirstOrDefault();
+                if (existingClient == null)
+                {
+
+                    db.Clients.Add(client);
+                    await db.SaveChangesAsync();
+                    
+                }
+                else
+                {
+                    existingClient = Generic.CopyObject(client, existingClient,"ClientId");
+                    db.Entry(existingClient).State = EntityState.Modified;
+                    await db.SaveChangesAsync();
+                    client = existingClient;
+                }
+                //Create relationship
+                if (clientView.ResellerID.HasValue)
+                {
+                    CreateRelationship(clientView.ResellerID.Value, client.ClientId);
+                }
 
                 //Create contact
                 var workContactId = CreateContact(client.ClientId, "Tel (Work)", clientView.TelWork);
@@ -185,9 +226,8 @@ namespace Aroma_Violet.Controllers
                 var homeContactId = CreateContact(client.ClientId, "Tel (Home)", clientView.TelHome);
                 var emailContactId = CreateContact(client.ClientId, "EMail", clientView.Email);
 
-                CreateClientBankingDetails(client.ClientId,client.ClientInitials, client.ClientSurname, cellContactId,homeContactId, workContactId, emailContactId);
-
-                return RedirectToAction("Manage","ClientSubscriptions", new { ClientID = client.ClientId });
+                CreateClientBankingDetails(client.ClientId, client.ClientInitials, client.ClientSurname, cellContactId, homeContactId, workContactId, emailContactId);
+                return RedirectToAction("Manage", "ClientSubscriptions", new { ClientID = client.ClientId });
             }
             
             ViewBag.ClientTypeID = new SelectList(db.ClientTypes, "ClientTypeId", "ClientTypeName", client.ClientTypeID);
@@ -196,13 +236,41 @@ namespace Aroma_Violet.Controllers
             ViewBag.IncomeGroupID = new SelectList(db.IncomeGroups, "IncomeGroupId", "IncomeGroupName", client.IncomeGroupID);
             ViewBag.ProvinceID = new SelectList(db.Provinces, "ProvinceId", "ProvinceName", client.ProvinceID);
             ViewBag.TitleID = new SelectList(db.Titles, "TitleId", "TitleName", client.TitleID);
-            ViewBag.LanguageID = new SelectList(db.Languages, "LanguageID", "LanguageName");
+            ViewBag.LanguageID = new SelectList(db.Languages, "LanguageID", "LanguageName",client.LanguageID);
             ViewBag.AddressTypeID = new SelectList(db.AddressTypes, "AddressTypeID", "AddressTypeName");
             ViewBag.PreviousYearCount = 80;
             ViewBag.NextYearCount = 0;
             return View(clientView);
             
             
+        }
+
+        private void CreateRelationship(int parentId, int childId)
+        {
+            var relationships = (from item in db.ClientRelationShips
+                                 where item.ChildID == childId
+                                 select item).ToArray();
+            var curRel = (from item in relationships
+                          where item.ParentID == parentId
+                          select item).FirstOrDefault();
+            if (curRel != null)
+            {
+                curRel.Active = true;
+                relationships = relationships.Except(new ClientRelationship[] { curRel }).ToArray();
+            }
+            else
+            {
+                curRel = new ClientRelationship() { ParentID = parentId, ChildID = childId, Active = true, ClientRelationshipId = Guid.NewGuid() };
+                db.ClientRelationShips.Add(curRel);
+            }
+            if (relationships != null)
+            {
+                foreach (var rel in relationships)
+                {
+                    rel.Active = false;
+                }
+            }
+            db.SaveChanges();
         }
 
         // GET: Clients/Edit/5
@@ -217,14 +285,23 @@ namespace Aroma_Violet.Controllers
             {
                 return HttpNotFound();
             }
+            ClientViewModel clientView = client as ClientViewModel;
+
+            var rel = (from item in db.ClientRelationShips
+                       where item.ChildID == client.ClientId
+                       && item.Active
+                       select item).FirstOrDefault();
+
+            if (rel != null) clientView.ResellerID = rel.ParentID;
+
             ViewBag.ClientTypeID = new SelectList(db.ClientTypes, "ClientTypeId", "ClientTypeName", client.ClientTypeID);
             ViewBag.CountryID = new SelectList(db.Countries, "CountryId", "CountryName", client.CountryID);
             ViewBag.EthnicGroupID = new SelectList(db.EthnicGroups, "EthnicGroupId", "EthnicGroupName", client.EthnicGroupID);
             ViewBag.IncomeGroupID = new SelectList(db.IncomeGroups, "IncomeGroupId", "IncomeGroupName", client.IncomeGroupID);
             ViewBag.ProvinceID = new SelectList(db.Provinces, "ProvinceId", "ProvinceName", client.ProvinceID);
             ViewBag.TitleID = new SelectList(db.Titles, "TitleId", "TitleName", client.TitleID);
-            ViewBag.LanguageID = new SelectList(db.Languages, "LanguageID", "LanguageName");
-            return View(client);
+            ViewBag.LanguageID = new SelectList(db.Languages, "LanguageID", "LanguageName", client.LanguageID);
+            return View(clientView);
         }
 
         // POST: Clients/Edit/5
@@ -232,8 +309,9 @@ namespace Aroma_Violet.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "ClientId,ClientInitials,NickName,FullNames,LanguageID,Employer,DateOfBirth,ClientSurname,SAResident,IDNumber,ClientTypeID,TitleID,EthnicGroupID,IncomeGroupID,ProvinceID,CountryID")] Client client)
+        public async Task<ActionResult> Edit([Bind(Include = "ClientId, ResellerID,ClientInitials,NickName,FullNames,LanguageID,Employer,DateOfBirth,ClientSurname,SAResident,IDNumber,ClientTypeID,TitleID,EthnicGroupID,IncomeGroupID,ProvinceID,CountryID")] ClientViewModel clientView)
         {
+            var client = clientView.GetBaseClient();
             if (ModelState.IsValid)
             {
                 db.Entry(client).State = EntityState.Modified;
@@ -246,7 +324,7 @@ namespace Aroma_Violet.Controllers
             ViewBag.IncomeGroupID = new SelectList(db.IncomeGroups, "IncomeGroupId", "IncomeGroupName", client.IncomeGroupID);
             ViewBag.ProvinceID = new SelectList(db.Provinces, "ProvinceId", "ProvinceName", client.ProvinceID);
             ViewBag.TitleID = new SelectList(db.Titles, "TitleId", "TitleName", client.TitleID);
-            ViewBag.LanguageID = new SelectList(db.Languages, "LanguageID", "LanguageName");
+            ViewBag.LanguageID = new SelectList(db.Languages, "LanguageID", "LanguageName", client.LanguageID);
 
             var curClient = db.Clients.First(m => m.ClientId == client.ClientId);
             client.PostalAddress = curClient.PostalAddress;

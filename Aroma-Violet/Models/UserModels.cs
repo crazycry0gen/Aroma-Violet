@@ -17,6 +17,7 @@ namespace Aroma_Violet.Models
             this.Text = "Menu";
             //fixed items for now, could be fetched from DB at a later stage
             this.Add("Capture Application", "Create", "Clients");
+            this.Add("Client", "Index", "Clients");
         }
     }
 

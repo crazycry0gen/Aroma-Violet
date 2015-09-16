@@ -17,7 +17,7 @@ namespace Aroma_Violet.Migrations
 
         protected override void Seed(Aroma_Violet.Models.AromaContext context)
         {
-
+            
             context.ClientTypes.AddOrUpdate(
                 p=>p.ClientTypeName,
                 new Aroma_Violet.Models.ClientType() {Active=true, ClientTypeName = "Distributor" },
@@ -38,7 +38,7 @@ namespace Aroma_Violet.Migrations
                 new Aroma_Violet.Models.EthnicGroup() {EthnicGroupName="Indian", Active=true },
                 new Aroma_Violet.Models.EthnicGroup() {EthnicGroupName="White", Active=true }
                 );
-
+            
             context.Languages.AddOrUpdate(
                 p=>p.LanguageName,
                 new Aroma_Violet.Models.Language() { LanguageName = "Zulu", Active = true },
@@ -95,7 +95,7 @@ namespace Aroma_Violet.Migrations
                 new Aroma_Violet.Models.ContactType() { ContactTypeName = "Fax (Work)", Active = true },
                 new Aroma_Violet.Models.ContactType() { ContactTypeName = "EMail", Active = true }
                 );
-
+            
             context.AccountHolders.AddOrUpdate(
                 p=>p.AccountHolderName,
                 new Aroma_Violet.Models.AccountHolder() {AccountHolderName="Self", Active=true },
@@ -120,11 +120,14 @@ namespace Aroma_Violet.Migrations
                 new Aroma_Violet.Models.Bank() { BankName = "Standard bank", Active = true }
                 );
 
-            context.Branches.AddOrUpdate(
-                p => p.BranchName,
-                new Aroma_Violet.Models.Branch() {BranchName ="Universal", BranchCode= "632005", BankId=context.Banks.First(m=>m.BankName== "ABSA").BankId }
-                );
-
+            var bank = context.Banks.First(m => m.BankName == "ABSA");
+            if (bank != null)
+            {
+                context.Branches.AddOrUpdate(
+                    p => p.BranchName,
+                    new Aroma_Violet.Models.Branch() { BranchName = "Universal", BranchCode = "632005", BankId= bank.BankId}
+                    );
+            }
         }
     }
 }

@@ -70,7 +70,19 @@ namespace Aroma_Violet.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Address address = await db.Addresses.Where(m=>m.AddressId== id).Include(m=>m.Client).SingleOrDefaultAsync();
+            Address address = await db.Addresses.Where(m=>m.AddressId== id).Include(m=>m.Client).Include(m=>m.Lines).SingleOrDefaultAsync();
+            if (address.ClientID == 0)
+            {
+                var client = (from item in db.Clients
+                              where item.DeliveryAddress.AddressId == address.AddressId
+                              || item.PostalAddress.AddressId == address.AddressId
+                              select item).FirstOrDefault();
+                if (client != null)
+                {
+                    address.ClientID = client.ClientId;
+                    db.SaveChanges();
+                }
+            }
             if (address == null)
             {
                 return HttpNotFound();
@@ -89,9 +101,14 @@ namespace Aroma_Violet.Controllers
 
             if (ModelState.IsValid)
             {
+                var lines = db.AddressLines.Where(m=>m.AddressID == address.AddressId).OrderBy(m=>m.Order).ToArray();
+                lines[0].AddressLineText = Line1;
+                lines[1].AddressLineText = Line2;
+                lines[2].AddressLineText = Line3;
                 db.Entry(address).State = EntityState.Modified;
                 await db.SaveChangesAsync();
-                return RedirectToAction("Index");
+
+                return RedirectToAction("Edit","Clients",routeValues:new{id=ClientId });
             }
             ViewBag.AddressTypeID = new SelectList(db.AddressTypes, "AddressTypeId", "AddressTypeName", address.AddressTypeID);
             return View(address);

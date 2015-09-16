@@ -41,8 +41,10 @@ namespace Aroma_Violet.Controllers
         public ActionResult Create()
         {
             ViewBag.ClientTypeID = new SelectList(db.ClientTypes, "ClientTypeId", "ClientTypeName");
-            ViewBag.ProductID = new SelectList(db.Products, "ProductId", "ProductName");
-            return View();
+            ViewBag.ProductID = new SelectList(db.Products.Where(m=>m.Active), "ProductId", "ProductName");
+            var subscription = new Subscription() { ValidFromDate = DateTime.Now, Active = true};
+            
+            return View(subscription);
         }
 
         // POST: Subscriptions/Create
@@ -50,7 +52,7 @@ namespace Aroma_Violet.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "SubscriptionId,ClientTypeID,ProductID,MandatoryQuantity,Price,Active")] Subscription subscription)
+        public async Task<ActionResult> Create([Bind(Include = "SubscriptionId,ClientTypeID,ProductID,MandatoryQuantity,ValidFromDate,Price,Active")] Subscription subscription)
         {
             if (ModelState.IsValid)
             {
@@ -86,7 +88,7 @@ namespace Aroma_Violet.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "SubscriptionId,ClientTypeID,ProductID,MandatoryQuantity,Price,Active")] Subscription subscription)
+        public async Task<ActionResult> Edit([Bind(Include = "SubscriptionId,ClientTypeID,ProductID,ValidFromDate,MandatoryQuantity,Price,Active")] Subscription subscription)
         {
             if (ModelState.IsValid)
             {

@@ -56,6 +56,15 @@ textarea
 
 }
 
+.DisplayGroup {
+    border:solid;
+    border-color:lightgray;
+    border-width:1px;
+    border-radius:5px;
+    text-indent:10px;
+    width:60%;
+}
+
 table {
     width:100%;
     table-layout: fixed;

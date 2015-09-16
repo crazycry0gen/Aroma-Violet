@@ -1,4 +1,40 @@
 ﻿@model DateTime
 
-    @Html.TextBoxFor(model => model, new { @class = "form-control datepicker", placeholder = "Enter date here...",Value=Model.ToString("dd/MM/yyyy") } )
-    @Html.ValidationMessageFor(model => model)
+@{ 
+    var uniqueName = Guid.NewGuid().ToString();
+    var days = new int[31];
+    var months = new int[12];
+
+    if (ViewBag.YearStart == null) { ViewBag.YearStart = 1940; }
+    if (ViewBag.YearEnd == null) { ViewBag.YearEnd = DateTime.Now.Year; }
+
+    var counter = 0;
+    for (int i = 0; i < 31;i++)
+    {
+        if (counter < days.Length) {  days[counter] = counter + 1;    }
+        if (counter < months.Length) { months[counter] = counter + 1; }
+        counter++;
+    }
+    var yearList = new List<int>();
+    for (int i = ViewBag.YearStart; i <= ViewBag.YearEnd; i++)
+    {
+        yearList.Add(i);
+    }
+    var years = yearList.ToArray();
+
+    ViewBag.DPDays = new SelectList(days, Model.Day);
+    ViewBag.DPMonths = new SelectList(months, Model.Month);
+    ViewBag.DPYears = new SelectList(years, Model.Year);
+}
+
+
+        <div class = "form-control" style="width:280px;">
+            @Html.HiddenFor(model => model, htmlAttributes: new { id = uniqueName })
+            @Html.DropDownList("DPDays",null, htmlAttributes: new {id="d"+ uniqueName, onChange=string.Format("UpdateDateTime('{0}')",uniqueName) })
+            @Html.DropDownList("DPMonths", null, htmlAttributes: new { id = "m" + uniqueName, onChange = string.Format("UpdateDateTime('{0}')", uniqueName) })
+            @Html.DropDownList("DPYears", null, htmlAttributes: new { id = "y" + uniqueName, onChange = string.Format("UpdateDateTime('{0}')", uniqueName) })
+        </div>
+
+        @*Html.TextBoxFor(model => model, new { @class = "form-control datepicker", placeholder = "Enter date here...",Value=Model.ToString("dd/MM/yyyy") } )*@
+        
+        
