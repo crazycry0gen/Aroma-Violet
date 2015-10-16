@@ -8,6 +8,8 @@
 <h2>Manage</h2>
 @Html.HiddenFor(model=>model.ProductCount)
 
+@Html.ValidationMessage("Banking not active", new { @class = "text-danger" })
+
 <table class="table" style="@tableStile">
     <tr>
         <th>

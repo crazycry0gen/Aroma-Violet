@@ -31,9 +31,10 @@ namespace Aroma_Violet.Controllers
                         .Include(c => c.EthnicGroup)
                         .Include(c => c.IncomeGroup)
                         .Include(c => c.Province)
+                        .Include(c=>c.BankingDetails)
                         .Include(c => c.Title);
             ViewBag.Criteria = criteria;
-
+            
             return View(await clients.ToListAsync());
         }
 
@@ -44,12 +45,23 @@ namespace Aroma_Violet.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Client client = await db.Clients.Include(maxResult=>maxResult.ClientSubscriptions).Include(m=>m.BankingDetails).FirstAsync(m=>m.ClientId==id);
+            Client client = await db.Clients.Include(maxResult => maxResult.ClientSubscriptions).Include(m => m.BankingDetails).FirstAsync(m => m.ClientId == id);
             if (client == null)
             {
                 return HttpNotFound();
             }
-            return View(client);
+            ViewBag.ResellerID = (from item in db.ClientRelationShips
+                                  where item.ChildID == client.ClientId
+                                  && item.Active
+                                  select item.ParentID).FirstOrDefault();
+
+            ViewBag.ContactInfo = (from item in db.ContactTypes.Where(m => m.Active).ToArray()
+                                   select new string[] { item.ContactTypeName, db.Contacts.Where(m=>m.Active
+                                                                                                && m.ContactTypeID == item.ContactTypeId
+                                                                                                && m.ClientID==id).Select(m=>m.ContactName).FirstOrDefault()
+                                                        }).ToArray();
+        
+    return View(client);
         }
 
         // GET: Clients/Create
@@ -294,6 +306,13 @@ namespace Aroma_Violet.Controllers
 
             if (rel != null) clientView.ResellerID = rel.ParentID;
 
+            clientView.Contacts = (from item in db.ContactTypes.Where(m => m.Active).ToArray()
+                                   select new ClientContactView {ClientContactTypeName =  item.ContactTypeName,ClientContactTypeId = item.ContactTypeId, ClientContactValue=  db.Contacts.Where(m=>m.Active
+                                                                                                && m.ContactTypeID == item.ContactTypeId
+                                                                                                && m.ClientID==id).Select(m=>m.ContactName).FirstOrDefault()}).ToArray();
+
+
+
             ViewBag.ClientTypeID = new SelectList(db.ClientTypes, "ClientTypeId", "ClientTypeName", client.ClientTypeID);
             ViewBag.CountryID = new SelectList(db.Countries, "CountryId", "CountryName", client.CountryID);
             ViewBag.EthnicGroupID = new SelectList(db.EthnicGroups, "EthnicGroupId", "EthnicGroupName", client.EthnicGroupID);
@@ -302,6 +321,23 @@ namespace Aroma_Violet.Controllers
             ViewBag.TitleID = new SelectList(db.Titles, "TitleId", "TitleName", client.TitleID);
             ViewBag.LanguageID = new SelectList(db.Languages, "LanguageID", "LanguageName", client.LanguageID);
             return View(clientView);
+        }
+
+        [HttpPost]
+        public void UpdateContact(int clientId, int contactTypeId, string value)
+        {
+            var curContact = (from Contact item in db.Contacts
+                              where item.ClientID == clientId
+                              && item.ContactTypeID == contactTypeId
+                                && item.Active
+                              select item).FirstOrDefault();
+            if (curContact == null)
+            {
+                curContact = new Contact() { Active=true, ClientID=clientId, ContactTypeID = contactTypeId };
+                db.Contacts.Add(curContact);
+            }
+            curContact.ContactName = value;
+            db.SaveChanges();
         }
 
         // POST: Clients/Edit/5

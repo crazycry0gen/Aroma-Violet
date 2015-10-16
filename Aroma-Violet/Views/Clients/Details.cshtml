@@ -2,6 +2,7 @@
 
 @{
     ViewBag.Title = "Details";
+    var contactInfo = ViewBag.ContactInfo;
 }
 
 <h2>Details</h2>
@@ -17,7 +18,58 @@
 
                 <hr />
                 <dl class="dl-horizontal">
+
                     <dt>
+                        @Html.DisplayNameFor(model => model.Active)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Active)
+                    </dd>
+                    <dt>
+                        <label>Reseller / Distributor Code</label>
+                    </dt>
+
+                    <dd>
+                        @ViewBag.ResellerID
+                    </dd>
+                    <dt>
+                        <label>Client Code</label>
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.ClientId)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.ClientInitials)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.ClientInitials)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Title.TitleName)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Title.TitleName)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.FullNames)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.FullNames)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.NickName)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.NickName)
+                    </dd><dt>
                         @Html.DisplayNameFor(model => model.ClientType.ClientTypeName)
                     </dt>
 
@@ -25,14 +77,7 @@
                         @Html.DisplayFor(model => model.ClientType.ClientTypeName)
                     </dd>
 
-                    <dt>
-                        @Html.DisplayNameFor(model => model.Country.CountryName)
-                    </dt>
-
-                    <dd>
-                        @Html.DisplayFor(model => model.Country.CountryName)
-                    </dd>
-
+                    
                     <dt>
                         @Html.DisplayNameFor(model => model.EthnicGroup.EthnicGroupName)
                     </dt>
@@ -49,45 +94,7 @@
                         @Html.DisplayFor(model => model.IncomeGroup.IncomeGroupName)
                     </dd>
 
-                    <dt>
-                        @Html.DisplayNameFor(model => model.Province.ProvinceName)
-                    </dt>
 
-                    <dd>
-                        @Html.DisplayFor(model => model.Province.ProvinceName)
-                    </dd>
-
-                    <dt>
-                        @Html.DisplayNameFor(model => model.Title.TitleName)
-                    </dt>
-
-                    <dd>
-                        @Html.DisplayFor(model => model.Title.TitleName)
-                    </dd>
-
-                    <dt>
-                        @Html.DisplayNameFor(model => model.ClientInitials)
-                    </dt>
-
-                    <dd>
-                        @Html.DisplayFor(model => model.ClientInitials)
-                    </dd>
-
-                    <dt>
-                        @Html.DisplayNameFor(model => model.NickName)
-                    </dt>
-
-                    <dd>
-                        @Html.DisplayFor(model => model.NickName)
-                    </dd>
-
-                    <dt>
-                        @Html.DisplayNameFor(model => model.FullNames)
-                    </dt>
-
-                    <dd>
-                        @Html.DisplayFor(model => model.FullNames)
-                    </dd>
 
                     <dt>
                         @Html.DisplayNameFor(model => model.Language.LanguageName)
@@ -138,7 +145,7 @@
                     </dd>
 
                     <dt>
-                        @Html.DisplayNameFor(model => model.PostalAddress.AddressId)
+                        @Html.DisplayNameFor(model => model.PostalAddress)
                     </dt>
 
                     <dd>
@@ -146,12 +153,38 @@
                     </dd>
 
                     <dt>
-                        @Html.DisplayNameFor(model => model.DeliveryAddress.AddressId)
+                        @Html.DisplayNameFor(model => model.DeliveryAddress)
                     </dt>
 
                     <dd>
                         @Html.DisplayFor(model => model.DeliveryAddress)
                     </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Province.ProvinceName)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Province.ProvinceName)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Country.CountryName)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Country.CountryName)
+                    </dd>
+
+                    @foreach (var nfo in contactInfo)
+                    {
+                    <dt>
+                        @nfo[0]
+                    </dt>
+
+                    <dd>
+                        @nfo[1]
+                    </dd>
+                    }
 
                 </dl>
             </div>

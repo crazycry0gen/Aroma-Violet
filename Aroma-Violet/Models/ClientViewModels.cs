@@ -10,10 +10,17 @@ namespace Aroma_Violet.Models
         public int ProductCount { get; internal set; }
         public ClientSubscription Subscription { get; set; }
     }
+    
+    public class ClientContactView
+    {
+        public string ClientContactTypeName { get; set; }
+        public string ClientContactValue { get; set; }
+        public int ClientContactTypeId { get; set; } 
+    }
 
     public class ClientViewModel : Client
     {
-        private const int _lineCount = 3;
+        private const int _lineCount = 4;
 
         public ClientViewModel()
         {
@@ -42,6 +49,7 @@ namespace Aroma_Violet.Models
         public string Email { get; set; }
 
         public int? ResellerID { get; set; }
+        public ClientContactView[] Contacts { get; internal set; }
 
         private string GetAddressLine(Address add, int index)
         {

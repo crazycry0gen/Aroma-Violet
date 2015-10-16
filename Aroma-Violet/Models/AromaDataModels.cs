@@ -662,7 +662,7 @@ namespace Aroma_Violet.Models
         public Guid UserID { get; set; }
 
         [DisplayName("Created")]
-        public string Created { get; set; }
+        public DateTime Created { get; set; }
     }
 
 
@@ -714,7 +714,6 @@ namespace Aroma_Violet.Models
         public virtual Client Client { get; set; }
 
         [DisplayName("Account")]
-        public int AccountID { get; set; }
         public virtual finAccount Account { get; set; }
 
         public bool Active { get; set; }
@@ -748,6 +747,9 @@ namespace Aroma_Violet.Models
 
         [DisplayName("Journal Date")]
         public DateTime JournalDate { get; set; }
+
+        [DisplayName("Comment")]
+        public string Comment { get; set; }
 
         public bool Active { get; set; }
 

@@ -26,6 +26,10 @@ namespace Aroma_Violet
             newCulture.DateTimeFormat.ShortDatePattern = "dd/MM/yyyy";
             newCulture.DateTimeFormat.DateSeparator = "/";
             Thread.CurrentThread.CurrentCulture = newCulture;
+            ViewEngines.Engines.Clear();
+            ViewEngines.Engines.Add(new RazorViewEngine());
+
+
         }
     }
 }
