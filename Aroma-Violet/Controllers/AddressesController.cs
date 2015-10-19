@@ -96,15 +96,31 @@ namespace Aroma_Violet.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "AddressId,Code,ClientID,AddressTypeID,Active,Lines,ClientId,Line1,Line2,Line3 ")] Address address, int? ClientId, string Line1, string Line2, string Line3)
+        public async Task<ActionResult> Edit([Bind(Include = "AddressId,Code,ClientID,AddressTypeID,Active,Lines,ClientId,Line1,Line2,Line3,Line4 ")] Address address, int? ClientId, string Line1, string Line2, string Line3, string Line4)
         {
 
             if (ModelState.IsValid)
             {
-                var lines = db.AddressLines.Where(m=>m.AddressID == address.AddressId).OrderBy(m=>m.Order).ToArray();
-                lines[0].AddressLineText = Line1;
-                lines[1].AddressLineText = Line2;
-                lines[2].AddressLineText = Line3;
+                var inputLines = new string[]
+                    {
+                        Line1,
+                        Line2,
+                        Line3,
+                        Line4
+                    };
+                var lines = db.AddressLines.Where(m => m.AddressID == address.AddressId).OrderBy(m => m.Order).ToArray();
+                while (lines.Length < inputLines.Length)
+                {
+                    var order = (from item in lines
+                                 select item.Order).Max() + 1;
+                    db.AddressLines.Add(new AddressLine() {Active=true, AddressID = address.AddressId, AddressLineText=string.Empty, Order= order });
+                    db.SaveChanges();
+                    lines = db.AddressLines.Where(m => m.AddressID == address.AddressId).OrderBy(m => m.Order).ToArray();
+                }
+                for (int i = 0; i < inputLines.Length; i++)
+                {
+                    lines[i].AddressLineText = inputLines[i];
+                }
                 db.Entry(address).State = EntityState.Modified;
                 await db.SaveChangesAsync();
 

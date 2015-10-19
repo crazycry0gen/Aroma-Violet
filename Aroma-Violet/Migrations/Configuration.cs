@@ -120,14 +120,19 @@ namespace Aroma_Violet.Migrations
                 new Aroma_Violet.Models.Bank() { BankName = "Standard bank", Active = true }
                 );
 
-            var bank = context.Banks.First(m => m.BankName == "ABSA");
-            if (bank != null)
+            try
             {
-                context.Branches.AddOrUpdate(
-                    p => p.BranchName,
-                    new Aroma_Violet.Models.Branch() { BranchName = "Universal", BranchCode = "632005", BankId= bank.BankId}
-                    );
+                var bank = context.Banks.First(m => m.BankName == "ABSA");
+                if (bank != null)
+                {
+                    context.Branches.AddOrUpdate(
+                        p => p.BranchName,
+                        new Aroma_Violet.Models.Branch() { BranchName = "Universal", BranchCode = "632005", BankId = bank.BankId }
+                        );
+                }
             }
+            catch
+            { }
         }
     }
 }
