@@ -25,5 +25,55 @@ namespace Aroma_Violet.Models
             }
             return toObject;
         }
+
+        public static t GetSetting<t>(this AromaContext context, string key)
+        {
+            var val = default(t);
+
+            var settingEntry = (from item in context.SystemSettings
+                                where item.SettingKey == key
+                                select item).FirstOrDefault();
+            if (settingEntry == null)
+            {
+                settingEntry = new SystemSetting() { SettingKey = key, SettingValue = val.ToString() };
+                context.SystemSettings.Add(settingEntry);
+                context.SaveChanges();
+                return val;
+            }
+            return context.GetSetting<t>(settingEntry.SettingId);
+        }
+
+        public static t GetSetting<t>(this AromaContext context, int keyId)
+        {
+            var val = default(t);
+            var type = typeof(t);
+            var settingEntry = (from item in context.SystemSettings
+                                where item.SettingId == keyId
+                                select item).First();
+            try
+            {
+                val = (t)(object)settingEntry.SettingValue;
+            }
+            catch  { }
+            return val;
+        }
+
+        public static void Log<t>(this AromaContext context, enumLGActivity activity, t Id, string note)
+        {
+            if (context.GetSetting<bool>(1))
+            {
+                var newEntry = new LGActivityLog() { ActivityId = (int)activity, Note = note, iDate = DateTime.Now };
+                if (typeof(t) == typeof(int)) newEntry.IntId = (int)(object)Id;
+                if (typeof(t) == typeof(Guid)) newEntry.GuidId = (Guid)(object)Id;
+                context.ActivityLogs.Add(newEntry);
+                context.SaveChanges();
+            }
+        }
+
+        public enum enumLGActivity:int
+        {
+            CreateClient=1,
+            UpdateClient=2
+        }
     }
 }

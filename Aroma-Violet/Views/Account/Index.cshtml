@@ -1,0 +1,37 @@
+﻿@model List<Aroma_Violet.Models.UserRoleViewModel>
+
+@{
+    ViewBag.Title = "Index";
+    var roles = ViewBag.Roles;
+    var users = Model.OrderBy(m=>m.Username).ToArray();
+}
+
+<h2>Index</h2>
+
+<table>
+    <tr>
+        <th>User</th>
+        @foreach (var role in roles)
+        {
+            <th>@role</th>
+        }
+    </tr>
+    @for (int i = 0; i < users.Length; i++)
+    {
+
+        
+    <tr>
+        <td>@users[i].Username</td>
+        
+        @for (int r = 0; r < roles.Length; r++)
+        {
+            var inRole = users[i].Roles.Contains(roles[r]);
+            var inRoleText = inRole ? "checked" : "";
+            var changeText = inRole ? "X" : "<-";
+            <td><a href="@Url.Action("ChangeRole",new { userid=@users[i].Id,  role = roles[r],  addUser = !inRole })">@changeText</a></td>
+        }
+    </tr>
+    }
+</table>
+
+

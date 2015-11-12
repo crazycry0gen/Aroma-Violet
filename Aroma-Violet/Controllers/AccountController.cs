@@ -9,6 +9,8 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Aroma_Violet.Models;
+using System.Collections.Generic;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace Aroma_Violet.Controllers
 {
@@ -20,6 +22,42 @@ namespace Aroma_Violet.Controllers
 
         public AccountController()
         {
+        }
+
+        [Authorize]
+        [HttpGet]
+        public ActionResult Index()
+        {
+            var users = UserManager.Users.ToArray();
+            var context = new ApplicationDbContext();
+            var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
+            var roles = roleManager.Roles.ToArray();
+            var userRoles = new List<UserRoleViewModel>();
+            ViewBag.Roles = roles.Select(m=>m.Name).ToArray();
+            foreach (var user in users)
+            {
+                var data = new UserRoleViewModel() {
+                    Id = user.Id,
+                    Username = user.UserName,
+                    Roles = user.Roles.Select(m=>roles.First(r=>r.Id== m.RoleId).Name).ToList()
+                };
+            userRoles.Add(data);
+            }
+            return View(userRoles);
+        }
+
+        public ActionResult ChangeRole(string userid, string role, bool addUser)
+        {
+
+            if (addUser)
+            {
+                UserManager.AddToRole(userid, role);
+            }
+            else
+            {
+                UserManager.RemoveFromRole(userid, role);
+            }
+            return RedirectToAction("Index");
         }
 
         public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )

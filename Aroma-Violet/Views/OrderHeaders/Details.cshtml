@@ -1,0 +1,58 @@
+﻿@model Aroma_Violet.Models.OrderHeader
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>OrderHeader</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Client.ClientInitials)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Client.ClientInitials)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OrderStatus.OrderStatusName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OrderStatus.OrderStatusName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Total)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Total)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UserId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UserId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OrderDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OrderDate)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.OrderHeaderId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

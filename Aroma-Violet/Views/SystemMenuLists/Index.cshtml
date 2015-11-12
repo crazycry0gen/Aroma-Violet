@@ -1,0 +1,95 @@
+﻿@model IEnumerable<Aroma_Violet.Models.SystemMenuList>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    <span class="field-validation-valid text-danger" data-valmsg-replace="true" id="UpdateResponse"></span>
+</p>
+<table class="table">
+    <tr>
+        <th>
+            Menu Item
+        </th>
+        @foreach (var role in ViewBag.Roles)
+        {
+            <th>
+                @role.Value
+            </th>
+        }
+    
+    </tr>
+
+@foreach (var menuItem in ViewBag.MenuItems) {
+    <tr>
+        <td>
+            <label>@menuItem.Text</label>
+        </td>
+        @foreach (var role in ViewBag.Roles)
+        {
+            <td>
+                @{var checkedText = Model.Where(m=>m.SystemMenuListItem.Text==menuItem.Text && m.RoleId.Equals(Guid.Parse(role.Key))).Count()==0?string.Empty:"checked";}
+                <input type="checkbox" id="@menuItem.Text" @checkedText onchange="UpdateMenu('@role.Key','@menuItem.Text') "/>
+
+            </td>
+        }
+       
+    </tr>
+}
+
+</table>
+
+
+<script type="text/javascript">
+    function UpdateMenu( roleId, systemMenuListItemId) {
+
+        var checkBox = document.getElementById(systemMenuListItemId);
+       
+        wrapper = {
+            status: checkBox.checked,
+            roleId: roleId,
+            menuText: systemMenuListItemId
+        };
+
+        url = '@Url.Action("UpdateMenu", "systemMenuLists")';
+        data = JSON.stringify(wrapper);
+
+        $.ajax({
+            url: url,
+            type: 'POST',
+            contentType: 'application/json; charset=utf-8',
+            data: data,
+            success: function (rdata) {
+                var elementPreview = document.getElementById("UpdateResponse");
+                elementPreview.innerHTML = rdata;
+            }
+        });
+        @*var dropDown = document.getElementById('SystemSMSTemplateID');
+        var textbox = document.getElementById('SMSText');
+
+        wrapper = {
+            SMSText: textbox.innerText,
+            SystemSMSTemplateID: dropDown.value,
+            clientId: clientId
+        };
+        url = '@Url.Action("Preview", "systemSMS")';
+        data = JSON.stringify(wrapper);
+
+
+        $.ajax({
+            url: url,
+            type: 'POST',
+            contentType: 'application/json; charset=utf-8',
+            data: data,
+            success: function (rdata) {
+                var elementPreview = document.getElementById("SMSPreview");
+                elementPreview.innerHTML = rdata;
+            }
+
+        });*@
+    }
+
+</script>

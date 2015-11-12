@@ -36,7 +36,8 @@
             @Html.DisplayFor(modelItem => item.Active)
         </td>
         <td>
-           @using (Html.BeginForm())
+            <a class="btn btn-default" href="@Url.Action("Edit","ClientSubscriptions", new {id=item.ClientSubscriptionId, returnUrl = ViewContext.HttpContext.Request.Url.PathAndQuery })">Edit</a>
+           @*@using (Html.BeginForm())
             {
             @Html.AntiForgeryToken()
             <div class="form-group">
@@ -48,7 +49,7 @@
                     <input type="submit" value="Toggle Active" class="btn btn-default" />
                 </div>
             </div>
-            }
+            }*@
         </td>
     </tr>
 }

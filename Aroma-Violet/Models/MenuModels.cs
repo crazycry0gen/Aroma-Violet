@@ -14,7 +14,25 @@ namespace Aroma_Violet.Models
             this.Add(newItem);
             return newItem;
         }
+        public void Save(AromaContext context)
+        {
+            foreach (var listItem in this)
+            {
+                var dbItem = context.SystemMenuListItems.FirstOrDefault(m => m.Text == listItem.Text);
+                if (dbItem == null)
+                {
+                    dbItem = new SystemMenuListItem() { Text = listItem.Text, SystemMenuListItemId = Guid.NewGuid() };
+                    context.SystemMenuListItems.Add(dbItem);
+                }
+                dbItem.ActionName = listItem.ActionName;
+                dbItem.ControllerName = listItem.ControllerName;
+                context.SaveChanges();
+            }
+        }
+
     }
+
+
 
     public class ApplicationMenuItem
     {
@@ -30,4 +48,17 @@ namespace Aroma_Violet.Models
         public string ActionName { get; set; }
         public string ControllerName { get; set; }
     }
+
+    public static class ExtendContextWithMenuItems
+    {
+        public static ApplicationMenuList GetApplicationMenuList(this AromaContext context)
+        {
+            var items = context.SystemMenuListItems.Where(m=>m.Active).OrderByDescending(m => m.Order).ThenBy(m => m.Text).ToArray();
+            var convertedItems = items.Select(m => new ApplicationMenuItem(m.Text, m.ActionName, m.ControllerName)).ToArray();
+            var ret = new ApplicationMenuList();
+            ret.AddRange(convertedItems);
+            return ret;
+        }
+    }
+
 }

@@ -25,6 +25,7 @@ namespace Aroma_Violet.Controllers
                         || m.FullNames.ToLower().Contains(lowSearch)
                         || m.ClientSurname.Contains(lowSearch)
                         || m.IDNumber.Contains(lowSearch)
+                        || m.ClientType.ClientTypeName.Contains(lowSearch)
                         ).Take(maxResult)
                         .Include(c => c.ClientType)
                         .Include(c => c.Country)
@@ -97,6 +98,8 @@ namespace Aroma_Violet.Controllers
             address.AddressType = type;
             address.AddressTypeID = type.AddressTypeId;
             address.Lines = new List<AddressLine>();
+            address.Lines.Add(new AddressLine());
+            address.Lines.Add(new AddressLine());
             address.Lines.Add(new AddressLine());
             address.Lines.Add(new AddressLine());
             address.Lines.Add(new AddressLine());
@@ -205,13 +208,19 @@ namespace Aroma_Violet.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind(Include = "ClientId,ClientInitials,NickName,FullNames,LanguageID,Employer,DateOfBirth,ClientSurname,SAResident,IDNumber,ClientTypeID,TitleID,EthnicGroupID,IncomeGroupID,PostalAddress,DeliveryAddress,DeliveryAddressLines,ProvinceID,CountryID,Lines,AddressLine,PostalAddressLines,AddressTypeID,DeliveryAddress,PostalAddress,TelWork,Cell,TelHome,EMail,ResellerID")] ClientViewModel clientView)
         {
+            
             var client = clientView.GetBaseClient();
+            db.Log(Generic.enumLGActivity.CreateClient, client.ClientId, "Base client fetch");
             if (ModelState.IsValid)
             {
-                //check if client exists on IDNo and update else add
-                var existingClient = (from item in db.Clients
-                                      where item.IDNumber == client.IDNumber
-                                      select item).FirstOrDefault();
+
+                ////check if client exists on IDNo and update else add
+                //var existingClient = (from item in db.Clients
+                //                      where item.IDNumber == client.IDNumber
+                //                      select item).FirstOrDefault();
+
+                Client existingClient = null;
+
                 if (existingClient == null)
                 {
 

@@ -190,9 +190,18 @@
     <Compile Include="Controllers\IncomeGroupsController.cs" />
     <Compile Include="Controllers\LanguagesController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\OrderHeadersController.cs" />
+    <Compile Include="Controllers\OrderLinesController.cs" />
+    <Compile Include="Controllers\OrderStatusController.cs" />
+    <Compile Include="Controllers\PostalCodesController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
     <Compile Include="Controllers\ProvincesController.cs" />
     <Compile Include="Controllers\SubscriptionsController.cs" />
+    <Compile Include="Controllers\SupportTicketsController.cs" />
+    <Compile Include="Controllers\SystemMenuListsController.cs" />
+    <Compile Include="Controllers\SystemSMSController.cs" />
+    <Compile Include="Controllers\SystemSMSTemplatesController.cs" />
+    <Compile Include="Controllers\SystemTicketTemplatesController.cs" />
     <Compile Include="Controllers\TitlesController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
@@ -208,6 +217,8 @@
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\MenuModels.cs" />
+    <Compile Include="Models\SMSManagerModels.cs" />
+    <Compile Include="Models\TemplateModels.cs" />
     <Compile Include="Models\UserModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -272,7 +283,13 @@
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Web.config" />
+    <Content Include="SQL Scripts\dbo.spfinCreateJournal.sql" />
+    <Content Include="SQL Scripts\dbo.spfinCreateJournal_Base.sql" />
+    <Content Include="SQL Scripts\dbo.tpfinJournal.sql" />
+    <Content Include="SQL Scripts\dbo.tpfinJournal_Base.sql" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -435,6 +452,54 @@
     <Content Include="Views\Clients\ClientSubscriptions.cshtml" />
     <Content Include="Views\Clients\BankingDetails.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\DateTime.cshtml" />
+    <Content Include="Views\SupportTickets\Index.cshtml" />
+    <Content Include="Views\SupportTickets\Create.cshtml" />
+    <Content Include="Views\SystemTicketTemplates\Create.cshtml" />
+    <Content Include="Views\SystemTicketTemplates\Delete.cshtml" />
+    <Content Include="Views\SystemTicketTemplates\Details.cshtml" />
+    <Content Include="Views\SystemTicketTemplates\Edit.cshtml" />
+    <Content Include="Views\SystemTicketTemplates\Index.cshtml" />
+    <Content Include="Views\SystemSMSTemplates\Create.cshtml" />
+    <Content Include="Views\SystemSMSTemplates\Delete.cshtml" />
+    <Content Include="Views\SystemSMSTemplates\Details.cshtml" />
+    <Content Include="Views\SystemSMSTemplates\Edit.cshtml" />
+    <Content Include="Views\SystemSMSTemplates\Index.cshtml" />
+    <Content Include="Views\Shared\VariableList.cshtml" />
+    <Content Include="Views\SystemSMS\Create.cshtml" />
+    <Content Include="Views\SystemSMS\Delete.cshtml" />
+    <Content Include="Views\SystemSMS\Details.cshtml" />
+    <Content Include="Views\SystemSMS\Edit.cshtml" />
+    <Content Include="Views\SystemSMS\Index.cshtml" />
+    <Content Include="Views\PostalCodes\Create.cshtml" />
+    <Content Include="Views\PostalCodes\Delete.cshtml" />
+    <Content Include="Views\PostalCodes\Details.cshtml" />
+    <Content Include="Views\PostalCodes\Edit.cshtml" />
+    <Content Include="Views\PostalCodes\Index.cshtml" />
+    <Content Include="Views\SystemSMS\Manage.cshtml" />
+    <Content Include="Views\Shared\SMSDistributionItemModel.cshtml" />
+    <Content Include="Views\Account\Index.cshtml" />
+    <Content Include="Views\SystemMenuLists\Create.cshtml" />
+    <Content Include="Views\SystemMenuLists\Delete.cshtml" />
+    <Content Include="Views\SystemMenuLists\Details.cshtml" />
+    <Content Include="Views\SystemMenuLists\Edit.cshtml" />
+    <Content Include="Views\SystemMenuLists\Index.cshtml" />
+    <Content Include="Views\SupportTickets\Edit.cshtml" />
+    <Content Include="Views\OrderStatus\Create.cshtml" />
+    <Content Include="Views\OrderStatus\Delete.cshtml" />
+    <Content Include="Views\OrderStatus\Details.cshtml" />
+    <Content Include="Views\OrderStatus\Edit.cshtml" />
+    <Content Include="Views\OrderStatus\Index.cshtml" />
+    <Content Include="Views\OrderHeaders\Create.cshtml" />
+    <Content Include="Views\OrderHeaders\Delete.cshtml" />
+    <Content Include="Views\OrderHeaders\Details.cshtml" />
+    <Content Include="Views\OrderHeaders\Edit.cshtml" />
+    <Content Include="Views\OrderHeaders\Index.cshtml" />
+    <Content Include="Views\OrderLines\Create.cshtml" />
+    <Content Include="Views\OrderLines\Delete.cshtml" />
+    <Content Include="Views\OrderLines\Details.cshtml" />
+    <Content Include="Views\OrderLines\Edit.cshtml" />
+    <Content Include="Views\OrderLines\Index.cshtml" />
+    <Content Include="Views\OrderHeaders\partialCreate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

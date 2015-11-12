@@ -1,0 +1,60 @@
+﻿@model IEnumerable<Aroma_Violet.Models.SystemSMSTemplate>
+
+@{
+    ViewBag.Title = "Index";
+    int clientId = 0;
+    if (ViewBag.ClientID != null)
+    {
+        clientId = ViewBag.ClientID;
+    }
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create", new {  clientId = clientId })
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Description)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Text)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Active)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Description)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Text)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Active)
+        </td>
+        <td>
+            
+            @if (clientId > 0)
+            {
+                <div>
+                    @Html.ActionLink("Edit with Preview", "Edit", new { id = item.SystemSMSTemplateId, clientId = clientId })
+                </div>
+            }
+            else
+            {
+                <div>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.SystemSMSTemplateId })
+                </div>
+            }
+        </td>
+    </tr>
+}
+
+</table>

@@ -1,0 +1,14 @@
+﻿@model List<string>
+
+<div>
+    <table class="simTextArea">
+        @foreach (var variable in Model)
+        {
+            <tr>
+                <td>
+                    @variable
+                </td>
+            </tr>
+        }
+    </table>
+</div>

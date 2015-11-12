@@ -41,8 +41,7 @@
 }
 /* Set width on the form input elements since they're 100% wide by default */
 input,
-select,
-textarea
+select
  {
     max-width: 280px;
     /*width: 13px;
@@ -53,7 +52,40 @@ textarea
     position: relative;
     top: -1px;
     *overflow: hidden;
+}
 
+textarea
+ {
+    max-width: 280px;
+    border:solid;
+    border-color:lightgray;
+    border-width:1px;
+    border-radius:5px;
+    width:280px;
+    height:200px;
+    padding: 0;
+    margin:0;
+    vertical-align: bottom;
+    position: relative;
+    top: -1px;
+    *overflow: hidden;
+}
+
+.simTextArea {
+    border:solid;
+    border-color:lightgray;
+    border-width:1px;
+    border-radius:5px;
+    width:3000px;
+    height:200px;
+}
+
+.holder {
+border:solid;
+    border-color:lightgray;
+    border-width:1px;
+    border-radius:5px;
+    
 }
 
 .DisplayGroup {

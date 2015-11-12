@@ -96,7 +96,7 @@ namespace Aroma_Violet.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "AddressId,Code,ClientID,AddressTypeID,Active,Lines,ClientId,Line1,Line2,Line3,Line4 ")] Address address, int? ClientId, string Line1, string Line2, string Line3, string Line4)
+        public async Task<ActionResult> Edit([Bind(Include = "AddressId,Code,ClientID,AddressTypeID,Active,Lines,ClientId,Line1,Line2,Line3,Line4 ")] Address address, int? ClientId, string Line1, string Line2, string Line3, string Line4, string Line5)
         {
 
             if (ModelState.IsValid)
@@ -106,7 +106,8 @@ namespace Aroma_Violet.Controllers
                         Line1,
                         Line2,
                         Line3,
-                        Line4
+                        Line4,
+                        Line5
                     };
                 var lines = db.AddressLines.Where(m => m.AddressID == address.AddressId).OrderBy(m => m.Order).ToArray();
                 while (lines.Length < inputLines.Length)

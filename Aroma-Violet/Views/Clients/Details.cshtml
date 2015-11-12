@@ -208,6 +208,10 @@
 {
     <div>
         @Html.ActionLink("Edit", "Edit", new { id = Model.ClientId }) |
-    </div>                                                         }
-    @Html.ActionLink("Back to List", "Index")
+        @Html.ActionLink("Back to List", "Index")|
+        @Html.ActionLink("Send SMS", "Manage", "SystemSMS", new { clientId = Model.ClientId }, htmlAttributes:null)|
+        @Html.ActionLink("Test SMS Template", "Index", "SystemSMSTemplates", new { clientId = Model.ClientId }, htmlAttributes: null)|
+        @Html.ActionLink("View Orders", "Index", "OrderHeaders", new { clientId = Model.ClientId }, htmlAttributes: null)
+    </div>
+}
 </p>

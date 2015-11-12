@@ -1,0 +1,63 @@
+﻿@model IEnumerable<Aroma_Violet.Models.PostalCode>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+<h2>CSV Bulk Upload</h2>
+
+</p>
+ @using (Html.BeginForm("Index", "PostalCodes", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+    <div></div>
+    @Html.AntiForgeryToken()
+        <div class="form-group">
+            <label class="control-label col-md-2">Filter</label>
+            <div class="col-md-10">
+                <input type="Text" value="@ViewBag.filter" name="filterPostalCodes" id="filterPostalCodes" class="form-control" />
+                <input type="submit"  name="SubmitFilter" id="SubmitFilter" value="Filter" class="btn btn-default" />
+            </div>
+        </div>
+        }
+    
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.PostalCodeName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Active)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.PostalCodeName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Active)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.PostalCodeId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.PostalCodeId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.PostalCodeId })
+        </td>
+    </tr>
+}
+    <tr>
+        <td>
+            @{ using (Html.BeginForm("FileUpload", "PostalCodes", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    <input type="file" name="FileUpload" class="form-control" />
+                    <input type="submit" name="Submit" id="Submit" value="Upload" class="btn btn-default" />
+                }
+            }
+        </td>
+    </tr>
+</table>

@@ -1,0 +1,98 @@
+﻿@model Aroma_Violet.Models.SystemSMS
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>SystemSMS</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ClientID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ClientID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Number)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Number)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SMSDescription)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SMSDescription)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.iDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.iDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Sent)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Sent)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LastSendAttempt)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LastSendAttempt)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LastSendMessage)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LastSendMessage)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Active)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Active)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Source)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Source)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SystemSMSStatusId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SystemSMSStatusId)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.SystemSMSId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

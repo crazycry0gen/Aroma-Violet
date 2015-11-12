@@ -1,0 +1,327 @@
+﻿@model Aroma_Violet.Models.SMSManagerViewModel
+
+
+@{
+    ViewBag.Title = "Manage";
+    var sendText = "Send" + (Model.ClientID > 0 ? " to client " + Model.ClientID.ToString() : "");
+    var variableList = string.Empty;
+    var templates = ViewBag.Templates as string[];
+    foreach (var v in Model.Variables)
+    {
+        variableList += string.Format("{0}\r\n", v);
+    }
+}
+
+<h2>Manage</h2>
+
+<h1>SMS</h1>
+
+@using (Html.BeginForm())
+{
+    <div class="holder" id="SelectedCountryData"></div>
+    <div class="holder" id="SelectedProvinceData"></div>
+    <div class="holder" id="SelectedAreaData"></div>
+    <div class="holder" id="SelectedCodeData" ></div>
+
+    <div hidden>
+        @for (int c = 0; c < templates.Length; c++)
+        {
+            <div id="template-@c">@templates[c]</div>
+        }
+    </div>
+
+    @Html.HiddenFor(m=>m.ClientID)
+
+<table>
+    <tr>
+        <th>
+            @Html.LabelFor(model => model.LastSendAttempt)
+        </th>
+        <th>
+            @Html.LabelFor(model => model.LastSMSAdded)
+        </th>
+        <th>
+            @Html.LabelFor(model => model.LastSuccessfulSend)
+        </th>
+        <th>
+            @Html.LabelFor(model => model.UnsentSMSCount)
+        </th>
+        <th>
+            SMS Length
+        </th>
+    </tr>
+    <tr>
+        <td>
+            @if (Model.LastSendAttempt == null)
+            {
+                <label>None</label>
+            }
+            else
+            {
+                Html.DisplayFor(model => model.LastSendAttempt);
+            }
+        </td>
+        <td>
+            @if (Model.LastSMSAdded == null)
+            {
+                <label>None</label>
+            }
+            else
+            {
+                <label>
+                    @Html.DisplayFor(model => model.LastSMSAdded)
+                </label>
+            }
+        </td>
+        <td>
+            @if (Model.LastSuccessfulSend == null)
+            {
+                <label>None</label>
+            }
+            else
+            {
+                <label>
+                    @Html.DisplayFor(model => model.LastSuccessfulSend)
+                </label>
+            }
+        </td>
+        <td>
+             @Html.DisplayFor(model => model.UnsentSMSCount)
+        </td>
+        <td id="SMSLenthDisplay">
+            0
+        </td>
+    </tr>
+    <tr>
+    <td colspan="4"><label>Current selection will generate <label id="SMSCount">@Model.ClientSMSCount</label> SMSes</label></td>    
+    </tr>
+
+        <tr>
+            <td>
+                <label>Template</label>
+            </td>
+            <td>
+                        @Html.DropDownList("SystemSMSTemplateID", null, htmlAttributes: new { @class = "form-control", onchange="CheckList(this)" })
+                       
+            </td>
+        </tr>
+    <tr>
+        <td></td>
+        <td>
+            <textarea name="SMSText" id="SMSText" rows="2" cols="20" onkeyup="GetSMSLength('SMSText')" ></textarea>
+        </td>
+        <td>
+            <textarea>@variableList</textarea>
+        </td>
+        <td>
+            @if (Model.ClientID > 0)
+            {
+            <textarea id="SMSPreview" rows="2" cols="20" htmlattributes="{ class = form-control }" readonly></textarea>
+            }
+        </td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>
+            
+            <input type="submit" class="btn btn-default" value="@sendText"/>
+        </td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>
+            @if (Model.ClientID > 0)
+            {
+            <a href="#" onclick="DisplayPreview('@Model.ClientID')" class="btn btn-default">Preview SMS</a>
+            }
+        </td>
+    </tr>
+    </table>
+<div>
+    @if (Model.ClientID == 0)
+       {
+    <div id="RowCountries" class="holder">
+       
+            @for (int i = 0; i < Model.Countries.Count; i++)
+            {
+                var muKey = Guid.NewGuid().ToString();
+                var type = (int)Model.Countries[i].ItemType;
+                <div id="tableDataCountries-@i" > 
+                    <input type="checkbox" id="@muKey" class='checks' value="@Model.Countries[i].Id" onclick="PersistChecks('SelectedCountryData', 'RowCountries','0')" /><a href="#"  onclick="GoFetchSMSDistributionItems('@Model.Countries[i].Id','@type','@muKey')">@Model.Countries[i].Description</a>
+                </div>
+            }
+
+    </div>
+    }
+    <div class="holder" id="SelectAllProvences" style="visibility:hidden">
+        <a href="#"  class="btn btn-default"  onclick="Toggle('RowProvences')" >Toggle Provences</a>
+        <div id="RowProvences"></div>
+    </div>
+    
+    <div class="holder" id="SelectAllAreas" style="visibility:hidden">
+        <a href="#" class="btn btn-default"  onclick="Toggle('RowAreas')" >Toggle Areas</a>
+        <div id="RowAreas"></div>
+    </div>
+    
+    <div class="holder" id="SelectAllCodes" style="visibility:hidden">
+        <a href="#" class="btn btn-default"  onclick="Toggle('RowCodes')" >Toggle Codes</a>
+        <div id="RowCodes"></div>
+    </div>
+</div>
+}
+
+<script type="text/javascript">
+
+    function GetSMSLength(controlId)
+    {
+
+        var control = document.getElementById(controlId);
+        var length = control.textContent.length;
+        DisplaySMSLenth(length);
+
+    }
+
+    function DisplaySMSLenth(len)
+    {
+        var td = document.getElementById("SMSLenthDisplay");
+        td.innerText = len;
+    }
+
+    function CheckList(daList)
+    {
+        var textBox = document.getElementById("SMSText");
+        var div = document.getElementById("template-" + daList.value);
+        if (daList.value == 0) {
+            textBox.style.visibility = 'visible';
+            div.innerText = textBox.textContent;
+                    }
+        else {
+            textBox.style.visibility = 'hidden';
+        }
+        
+        DisplaySMSLenth(div.innerText.length);
+    }
+
+    function PersistChecks(holderKey,tdKey, type)
+    {
+        variables = ["selectedCountries", "selectedProvinces", "selectedAreas", "selectedCodes"];
+        id = 0;
+        innerHtml = "";
+        holder = document.getElementById(holderKey);
+        var tableData = document.getElementById(tdKey);
+        if (tableData != null) {
+            var checkboxes = tableData.getElementsByClassName('checks');
+            for (c = 0; c < checkboxes.length; c++) {
+                if (checkboxes[c].checked == true)
+                {
+                    var elementHtml = "<input name=\"" + variables[type] + "[" + id + "]\" class=\"text-box single-line\" id=\"" + variables[type] + "_" + id + "_\" type=\"number\" hidden value=\"" + checkboxes[c].value + "\" data-val=\"true\">";
+                    //elementHtml = "Test";
+                    innerHtml = innerHtml + elementHtml;
+                    id++;
+                }
+            }
+        }
+        holder.innerHTML = innerHtml;
+        //alert(innerHtml);
+    }
+
+    function Toggle(tdkey)
+    {
+        var tableData = document.getElementById(tdkey);
+        if (tableData != null){
+            var checkboxes = tableData.getElementsByClassName('checks');
+            for (c = 0; c < checkboxes.length; c++) {
+                checkboxes[c].checked = !checkboxes[c].checked;
+            }
+        }
+    }
+
+    function DisplayPreview( clientId)
+    {
+
+        var dropDown = document.getElementById('SystemSMSTemplateID');
+        var textbox = document.getElementById('SMSText');
+
+        wrapper = {
+            SMSText: textbox.innerText,
+            SystemSMSTemplateID: dropDown.value,
+            clientId: clientId
+        };
+        url = '@Url.Action("Preview", "systemSMS")';
+        data = JSON.stringify(wrapper);
+
+
+        $.ajax({
+            url: url,
+            type: 'POST',
+            contentType: 'application/json; charset=utf-8',
+            data: data,
+            success: function (rdata) {
+                var elementPreview = document.getElementById("SMSPreview");
+                elementPreview.innerHTML = rdata;
+                DisplaySMSLenth(rdata.length);
+            }
+
+        });
+    }
+
+    function GoFetchSMSDistributionItems(parentId, type, key)
+    {
+
+
+        wrapper = {
+            parentId: parentId,
+            type: type
+        };
+        url = '@Url.Action("FetchSMSDistributionItems", "systemSMS")';
+        data = JSON.stringify(wrapper);
+
+        $.ajax({
+            url: url,
+            type: 'POST',
+            contentType: 'application/json; charset=utf-8',
+            data: data,
+            success: function (rdata) {
+                var rowNames = ["RowProvences", "RowAreas", "RowCodes"];
+                var controlBox = ["SelectAllProvences", "SelectAllAreas", "SelectAllCodes"];
+                var datavals = ["SelectedProvinceData", "SelectedAreaData", "SelectedCodeData"];
+                parentRow = document.getElementById(rowNames[type]);
+                for (i = 0; i < rdata.length; i++)
+                {
+                    tdkey = 'td-' + rdata[i].id + '-' + rdata[i].type;
+                    var tableData = document.getElementById(tdkey);
+                    if (tableData == null) {
+                        inset = "<a hrf='#'  onclick=\"GoFetchSMSDistributionItems('" + rdata[i].id + "','" + rdata[i].type + "','ch-" + tdkey + "')\" >" + rdata[i].description + "</a>";
+                        if (type == 2)
+                        {
+                            inset = rdata[i].description ;
+                        }
+                        //newTdText = "<td id='" + tdkey + "' colspan='" + rdata[i].childCount + "'><input type='checkbox' id='ch-" + tdkey + "' onchange='GoFetchSMSDistributionItems('" + rdata[i].id + "','" + rdata[i].type + "','ch-" + tdkey + "') value='" + rdata[i].id + "' />" + rdata[i].description + "</td>";
+                        newTdText = "<div style=\"display:inline-block;min-width:200px\" id='" + tdkey + "'><input type='checkbox' class='checks' id='ch-" + tdkey + "' value='" + rdata[i].id + "' onclick=\"PersistChecks('" + datavals[rdata[i].type - 1] + "', '" + rowNames[rdata[i].type - 1] + "','" + rdata[i].type + "' )\"/>" + inset + "</div>";
+                        parentRow.innerHTML = parentRow.innerHTML + newTdText;
+                        tableData = document.getElementById(tdkey);
+
+                        controlBoxElement = document.getElementById(controlBox[type]);
+                        controlBoxElement.style.visibility = 'visible';
+                    }
+                    else {
+                        var checkbox = document.getElementById(key);
+                        var checkboxes = tableData.getElementsByClassName('checks');
+                        for (c = 0; c < checkboxes.length; c++) {
+                            checkboxes[c].checked = checkbox.checked;
+                        }
+                    }
+
+                    //if (!checkbox.checked) {
+                    //    tableData.style.visibility = 'hidden';
+                    //} else {
+                    //    //tableData.style.visibility = 'visible';
+
+                    //}
+
+                }
+
+            }
+        });
+    }
+</script>

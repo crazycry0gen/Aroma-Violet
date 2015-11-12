@@ -1,0 +1,135 @@
+﻿@model Aroma_Violet.Models.SystemSMSTemplate
+
+@{
+    ViewBag.Title = "Edit";
+    List<string> variables = ViewBag.TemplateVariables as List<string>;
+    string preview = ViewBag.Preview as string;
+    int? clientId = @ViewBag.ClientID;
+}
+
+<h2>Edit</h2>
+
+@using (Html.BeginForm(null,null,FormMethod.Post, new {id="EditTemplateForm" }))
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>SMS Template</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.SystemSMSTemplateId)
+        <input type="text" name="preview" id="preview" value="false" hidden />
+        <table>
+            <tr>
+                <td>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Text, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.TextAreaFor(model => model.Text, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Text, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    </td>
+                <td>
+                    @if (preview != null)
+                    {
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Length</label>
+                            <div class="col-md-10">
+                                <input readonly class="form-control" value="@preview.Length" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                        <label class = "control-label col-md-2">Preview</label>
+                        <div class="col-md-10">
+                            <textarea name="PreviewText" id="PreviewText" rows="2" cols="20" htmlattributes="{ class = form-control }" readonly>@preview</textarea>
+                        </div>
+                        </div>
+
+                       
+                    }
+                </td>
+                <td>
+                    <div class="form-group">
+                        <label class="control-label col-md-2"></label>
+                        <div class="col-md-10">
+                            <label class="form-control">Available Variables</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2"></label>
+                        <div class="col-md-10">
+                            @Html.Partial("VariableList", variables)
+                        </div>
+                    </div>
+                    
+                </td>
+            </tr>
+            <tr>
+                
+                <td>
+                    
+                    <div class="form-group">
+                        <label class="control-label col-md-2" >Preview Using</label>
+                        <div class="col-md-10">
+                            <input type="text" name="clientId" id="clientId" value="@ViewBag.ClientID" class="form-control"  />
+                        </div>
+                    </div>
+
+                </td>
+                
+                
+                
+            </tr>
+            <tr>
+                <td>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Active, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            <div class="checkbox">
+                                @Html.EditorFor(model => model.Active)
+                                @Html.ValidationMessageFor(model => model.Active, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    @*@if (clientId.HasValue && clientId.Value > 0)
+                    {*@
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input id="previewButton" type="button" value="Preview" class="btn btn-default" />
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" value="Save" class="btn btn-default" />
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+
+    </div>
+   
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index", new {clientId=clientId })
+</div>
+
+<script type="text/javascript">
+    $('#previewButton').click(function () {
+        $('#preview').val("true");
+        $('#EditTemplateForm').submit();
+    });
+</script>

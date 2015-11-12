@@ -71,7 +71,7 @@
 
 </body>
 </html>
-}
+
 
 <script type="text/javascript">
 
@@ -105,6 +105,16 @@
             contentType: 'application/json; charset=utf-8',
             data: data
         });
+    }
+
+    function TogleVisible(id)
+    {
+        var element = document.getElementById(id);
+        if (element.style.display == 'block')
+            e.style.display = 'none';
+        else
+            e.style.display = 'block';
+
     }
 
     //$(function () { // will trigger when the document is ready

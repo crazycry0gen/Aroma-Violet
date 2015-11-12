@@ -1,0 +1,138 @@
+﻿@model IEnumerable<Aroma_Violet.Models.SystemSMS>
+
+@{
+    ViewBag.Title = "Index";
+    var Statuses = new string[] { "New", "Sent", "Cancelled" };
+}
+
+<h2>Index</h2>
+
+<p>
+    @*@Html.ActionLink("Create New", "Create")*@
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.ClientID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Number)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SMSDescription)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.iDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Sent)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LastSendAttempt)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LastSendMessage)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Active)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SystemSMSStatusId)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.ClientID)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Number)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SMSDescription)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.iDate)
+        </td>
+        @if (item.Sent == null)
+        {
+            <td>Not sent</td>
+        }
+        else
+        {
+        <td>
+            @Html.DisplayFor(modelItem => item.Sent)
+        </td>
+        }
+        @if (item.LastSendAttempt == null)
+        {
+        <td>
+            Not Attempted
+        </td>
+        }
+        else
+        {
+            <td>
+                @Html.DisplayFor(modelItem => item.LastSendAttempt)
+
+               
+            </td>
+        }
+        <td>
+            @Html.DisplayFor(modelItem => item.LastSendMessage)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Active)
+        </td>
+        <td>
+            @Statuses[item.SystemSMSStatusId-1]
+        </td>
+        @*@if (User.IsInRole("Administrator"))
+        {
+        <td>
+            
+           @Html.ActionLink("Edit", "Edit", new { id = item.SystemSMSId }) |
+            
+            @Html.ActionLink("Delete", "Delete", new { id=item.SystemSMSId })
+        </td>
+        }
+        else
+        {
+            <td></td>
+        }*@
+    </tr>
+}
+
+</table>
+
+@using (Html.BeginForm())
+{
+    <div>
+        @if (ViewBag.Start > 0 && Model.Count()<10)
+        {
+            <div>
+                @Html.ActionLink("Fetch Previous", "Index", new { clientId = ViewBag.ClientID, Start = ViewBag.Start - 10 })
+            </div>
+            
+        }
+
+        @if (ViewBag.Start > 0 && Model.Count() == 10)
+        {
+            <div>
+                @Html.ActionLink("Fetch Previous", "Index", new { clientId = ViewBag.ClientID, Start = ViewBag.Start - 10 })|
+                @Html.ActionLink("Fetch Next", "Index", new { clientId = ViewBag.ClientID, Start = ViewBag.Start + 10 });
+            </div>
+            
+        }
+
+        @if (ViewBag.Start == 0 && Model.Count() == 10)
+        {
+            <div>
+                @Html.ActionLink("Fetch Next", "Index", new { clientId = ViewBag.ClientID, Start = ViewBag.Start + 10 })
+            </div>
+
+        }
+    </div>
+}

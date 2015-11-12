@@ -41,7 +41,7 @@ namespace Aroma_Violet.Controllers
         public ActionResult Create()
         {
             ViewBag.ClientTypeID = new SelectList(db.ClientTypes, "ClientTypeId", "ClientTypeName");
-            ViewBag.ProductID = new SelectList(db.Products.Where(m=>m.Active), "ProductId", "ProductName");
+            ViewBag.ProductID = new SelectList(db.Products.Where(m=>m.Active), "ProductID", "ProductName");
             var subscription = new Subscription() { ValidFromDate = DateTime.Now, Active = true};
             
             return View(subscription);
@@ -62,7 +62,7 @@ namespace Aroma_Violet.Controllers
             }
 
             ViewBag.ClientTypeID = new SelectList(db.ClientTypes, "ClientTypeId", "ClientTypeName", subscription.ClientTypeID);
-            ViewBag.ProductID = new SelectList(db.Products, "ProductId", "ProductName", subscription.ProductID);
+            ViewBag.ProductID = new SelectList(db.Products, "ProductID", "ProductName", subscription.ProductID);
             return View(subscription);
         }
 
@@ -79,7 +79,7 @@ namespace Aroma_Violet.Controllers
                 return HttpNotFound();
             }
             ViewBag.ClientTypeID = new SelectList(db.ClientTypes, "ClientTypeId", "ClientTypeName", subscription.ClientTypeID);
-            ViewBag.ProductID = new SelectList(db.Products, "ProductId", "ProductName", subscription.ProductID);
+            ViewBag.ProductID = new SelectList(db.Products, "ProductID", "ProductName", subscription.ProductID);
             return View(subscription);
         }
 
@@ -97,7 +97,7 @@ namespace Aroma_Violet.Controllers
                 return RedirectToAction("Index");
             }
             ViewBag.ClientTypeID = new SelectList(db.ClientTypes, "ClientTypeId", "ClientTypeName", subscription.ClientTypeID);
-            ViewBag.ProductID = new SelectList(db.Products, "ProductId", "ProductName", subscription.ProductID);
+            ViewBag.ProductID = new SelectList(db.Products, "ProductID", "ProductName", subscription.ProductID);
             return View(subscription);
         }
 

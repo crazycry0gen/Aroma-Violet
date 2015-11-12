@@ -17,7 +17,29 @@ namespace Aroma_Violet.Migrations
 
         protected override void Seed(Aroma_Violet.Models.AromaContext context)
         {
+
+            context.OrderStatuses.AddOrUpdate(
+                p=>p.OrderStatusName,
+                new Models.OrderStatus() {Active=true, OrderStatusName = "New" },
+                new Models.OrderStatus() { Active = true, OrderStatusName = "Ready To Ship" },
+                new Models.OrderStatus() { Active = true, OrderStatusName = "Completed" }
+                );
+
+            context.SupportTicketStatuses.AddOrUpdate(
+                p=>p.SupportTicketStatusName,
+                new Models.SupportTicketStatus() {Active=true, SupportTicketStatusName = "New" },
+                new Models.SupportTicketStatus() { Active = true, SupportTicketStatusName = "Assigned" },
+                new Models.SupportTicketStatus() { Active = true, SupportTicketStatusName = "Complete" }
+                );
+
             
+            context.SystemSMSStatuses.AddOrUpdate(
+                 p=>p.SystemSMSStatusName,
+                 new Models.SystemSMSStatus() {Active=true, SystemSMSStatusName = "New" },
+                 new Models.SystemSMSStatus() { Active = true, SystemSMSStatusName = "Sent" },
+                 new Models.SystemSMSStatus() { Active = true, SystemSMSStatusName = "Cancelled" }
+
+                );  
             context.ClientTypes.AddOrUpdate(
                 p=>p.ClientTypeName,
                 new Aroma_Violet.Models.ClientType() {Active=true, ClientTypeName = "Distributor" },
@@ -118,6 +140,18 @@ namespace Aroma_Violet.Migrations
                 new Aroma_Violet.Models.Bank() { BankName = "FNB", Active = true },
                 new Aroma_Violet.Models.Bank() { BankName = "Netbank", Active = true },
                 new Aroma_Violet.Models.Bank() { BankName = "Standard bank", Active = true }
+                );
+
+            context.SystemSettings.AddOrUpdate(
+                p=>p.SettingKey,
+                new Models.SystemSetting() {SettingKey="Enable Logging",SettingValue= "false" }
+                );
+
+            context.Activities.AddOrUpdate(
+                p=>p.Activity,
+                new Models.LGActivity() {Activity="Create Client" },
+                new Models.LGActivity() { Activity = "Update Client" }
+
                 );
 
             try

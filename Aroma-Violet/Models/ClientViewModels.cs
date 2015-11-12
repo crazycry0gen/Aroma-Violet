@@ -3,7 +3,8 @@ using System.Linq;
 
 namespace Aroma_Violet.Models
 {
-    
+
+   
     public class ClientSubscriptionViewModel
     {
         public List<ClientSubscription> ClientSubscriptions { get; set; }
@@ -20,7 +21,7 @@ namespace Aroma_Violet.Models
 
     public class ClientViewModel : Client
     {
-        private const int _lineCount = 4;
+        private const int _lineCount = 5;
 
         public ClientViewModel()
         {

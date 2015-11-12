@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Aroma_Violet.Models
@@ -108,5 +109,12 @@ namespace Aroma_Violet.Models
         [EmailAddress]
         [Display(Name = "Email")]
         public string Email { get; set; }
+    }
+
+    public class UserRoleViewModel
+    {
+        public string Username { get; set; }
+        public List<string> Roles { get; set; }
+        public string Id { get; internal set; }
     }
 }

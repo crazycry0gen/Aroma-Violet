@@ -24,6 +24,8 @@ namespace Aroma_Violet.Models
         public DbSet<AddressType> AddressTypes { get; set; }
         public DbSet<Address> Addresses { get; set; }
         public DbSet<AddressLine> AddressLines { get; set; }
+        public DbSet<PostalCode> PostalCodes { get; set; }
+        public DbSet<PostalArea> PostalAreas { get; set; }
         public DbSet<Province> Provinces { get; set; }
         public DbSet<Country> Countries { get; set; }
         public DbSet<ContactType> ContactTypes { get; set; }
@@ -44,18 +46,137 @@ namespace Aroma_Violet.Models
         public DbSet<DebitOrder> DebitOrders { get; set; }
         public DbSet<SystemSMS> SystemSMSes { get; set; }
         public DbSet<SupportTicketStatus> SupportTicketStatuses { get; set; }
+        public DbSet<SystemSMSStatus> SystemSMSStatuses { get; set; }
         public DbSet<SupportTicket> SupportTickets { get; set; }
         public DbSet<ClientRelationship> ClientRelationShips { get; set; }
-
+        public DbSet<SystemSMSTemplate> SystemSMSTemplates { get; set; }
+        public DbSet<SystemTicketTemplate> SystemTicketTemplates { get; set; }
+        public DbSet<ClientGuid> ClientGuids { get; set; }
+        public DbSet<SystemSetting> SystemSettings { get; set; }
+        public DbSet<LGActivityLog> ActivityLogs { get; set; }
+        public DbSet<LGActivity> Activities { get; set; }
+        public DbSet<SystemMenuList> SystemMenuList {get;set;}
+        public DbSet<SystemMenuListItem> SystemMenuListItems {get;set; }
+        public DbSet<OrderHeader> OrderHeaders { get;set; }
+        public DbSet<OrderLine> OrderLines { get;set; }
+        public DbSet<OrderStatus> OrderStatuses { get;set; }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
             modelBuilder.Conventions.Remove<ManyToManyCascadeDeleteConvention>();
         }
-        
+
+
+
     }
 
+    #region Order
+    
+
+    [Table("OrderHeader")]
+    public class OrderHeader
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public Guid OrderHeaderId { get; set; }
+
+        [DisplayName("Reseller / Distributor Code")]
+        public int ClientID { get; set; }
+        public virtual Client Client { get; set; }
+
+        [DisplayName("Total")]
+        [DataType(DataType.Currency)]
+        public decimal Total { get; set; }
+
+        [DisplayName("Order Lines")]
+        public virtual ICollection<OrderLine> OrderLines { get; set; }
+
+        [DisplayName("Shiping Address")]
+        public virtual Address Address { get; set; }
+
+        [DisplayName("Order Status")]
+        public int OrderStatusId { get; set; }
+        public virtual OrderStatus OrderStatus { get; set; }
+
+        [DisplayName("User")]
+        public Guid UserId { get; set; }
+
+        [DisplayName("Order Date")]
+        public DateTime OrderDate { get; set; }
+
+        public bool Active { get; set; }
+    }
+
+    [Table("OrderLine")]
+    public class OrderLine
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public int OrderLineId { get; set; }
+
+        [DisplayName("Order Header")]
+        public Guid OrderHeaderId { get; set; }
+        public virtual OrderHeader OrderHeader { get; set; }
+
+        [DisplayName("Product")]
+        public int ProductID { get; set; }
+        public virtual Product Product { get; set; }
+
+        [DisplayName("Unit Cost")]
+        [DataType(DataType.Currency)]
+        public decimal UnitCost { get; set; }
+
+        [DisplayName("Quantity")]
+        public int Quantity { get; set; }
+
+        public bool Active { get; set; }
+
+    }
+
+  
+    #endregion
+
+    #region Menu Control
+    [Table("SystemMenuListItem")]
+    public class SystemMenuListItem
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public Guid SystemMenuListItemId { get; set; }
+        public string Text { get; set; }
+        public string ActionName { get; set; }
+        public string ControllerName { get; set; }
+        public int Order { get; set; }
+        public bool Active { get; set; }
+
+    }
+
+    [Table("SystemMenuList")]
+    public class SystemMenuList
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public int SystemMenuListId { get; set; }
+        public Guid RoleId { get; set; }
+        public Guid SystemMenuListItemId { get; set; }
+        public virtual SystemMenuListItem SystemMenuListItem { get; set; }
+        public bool Active { get; set; }
+    }
+    #endregion
+
     #region Lookup tables
+    [Table("OrderStatus")]
+    public class OrderStatus
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public int OrderStatusId { get; set; }
+
+        [DisplayName("Order Status")]
+        public string OrderStatusName { get; set; }
+
+        public bool Active { get; set; }
+    }
 
 
     [Table("SupportTicketStatus")]
@@ -66,6 +187,18 @@ namespace Aroma_Violet.Models
         public int SupportTicketStatusId { get; set; }
         [DisplayName("Name")]
         public string SupportTicketStatusName { get; set; }
+        public bool Active { get; set; }
+
+    }
+
+    [Table("SystemSMSStatus")]
+    public class SystemSMSStatus
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public int SystemSMSStatusId { get; set; }
+        [DisplayName("Name")]
+        public string SystemSMSStatusName { get; set; }
         public bool Active { get; set; }
 
     }
@@ -152,6 +285,36 @@ namespace Aroma_Violet.Models
 
     }
 
+    [Table("PostalCode")]
+    public class PostalCode
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public int PostalCodeId { get; set; }
+        [Required]
+        [DisplayName("Postal Code")]
+        public string PostalCodeName { get; set; }
+        public virtual PostalArea PostalArea { get; set; }
+        public virtual Province Province { get; set; }
+        public virtual Country Country { get; set; }
+
+        public bool Active { get; set; }
+
+    }
+
+    [Table("PostalArea")]
+    public class PostalArea
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public int PostalAreaId { get; set; }
+        [Required]
+        [DisplayName("Postal Area")]
+        public string PostalAreaName { get; set; }
+        public bool Active { get; set; }
+
+    }
+
     [Table("Province")]
     public class Province
     {
@@ -177,7 +340,7 @@ namespace Aroma_Violet.Models
         public bool Active { get; set; }
 
     }
-
+    
     [Table("ContactType")]
     public class ContactType
     {
@@ -260,20 +423,46 @@ namespace Aroma_Violet.Models
         [Key]
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         public Guid SupportTicketId { get; set; }
-        public string Heading { get; set; }
-        public string Text { get; set; }
+        public string Description { get; set; }
 
-        [DisplayName("Client")]
-        public int? ClientID { get; set; }
+        [DisplayName("Reseller / Distributor Code")]
+        public int ClientID { get; set; }
         public virtual Client Client { get; set; }
         
         [DisplayName("Assigned User")]
-        public Guid AssignedUserID { get; set; }
+        public Guid? UserID { get; set; }
         
-        [DisplayName("SupportTicketStatus")]
+        [DisplayName("Status")]
         public int SupportTicketStatusID { get; set; }
         public virtual SupportTicketStatus SupportTicketStatus { get; set; }
+
+        [DisplayName("Created")]
+        public DateTime iDate { get; set; }
     }
+    
+
+    [Table("SystemTicketTemplate")]
+    public class SystemTicketTemplate
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public int SystemQueryTemplateId { get; set; }
+        public string Description { get; set; }
+        public string Text { get; set; }
+        public bool Active { get; set; }
+    }
+
+    [Table("SystemSMSTemplate")]
+    public class SystemSMSTemplate
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public int SystemSMSTemplateId { get; set; }
+        public string Description { get; set; }
+        public string Text { get; set; }
+        public bool Active { get; set; }
+    }
+
 
     [Table("SystemSMS")]
     public class SystemSMS
@@ -281,17 +470,24 @@ namespace Aroma_Violet.Models
         [Key]
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         public int SystemSMSId { get; set; }
+        [DisplayName("Reseller / Distributor Code")]
+        public int ClientID { get; set; }
         [DisplayName("Number")]
         public string Number { get; set; }
-        public string Text { get; set; }
-        public DateTime Created { get; set; }
+        [DisplayName("Text")]
+        public string SMSDescription { get; set; }
+        [DisplayName("Created")]
+        public DateTime iDate { get; set; }
         public DateTime? Sent { get; set; }
         [DisplayName("Last Send Attempt")]
         public DateTime? LastSendAttempt { get; set; }
-        [DisplayName("Message")]
+        [DisplayName("Last send Message")]
         public string LastSendMessage { get; set; }
         public bool Active { get; set; }
         public Guid? Source { get; set; }
+        [DisplayName("Status")]
+        public int SystemSMSStatusId { get; set; }
+        public virtual SystemSMSStatus SystemSMSStatus { get; set; }
     }
 
     [Table("ClientRelationship")]
@@ -313,12 +509,23 @@ namespace Aroma_Violet.Models
         public bool Active { get; set; }
     }
 
+    [Table("ClientGuid")]
+    public class ClientGuid
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        [DisplayName("Client Key")]
+        public Guid ClientKey { get; set; }
+        [DisplayName("Reseller / Distributor Code")]
+        public int ClientId { get; set; }
+    }
+
     [Table("Client")]
     public class Client
     {
         [Key]
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
-        [DisplayName("Client ID")]
+        [DisplayName("Reseller / Distributor Code")]
         public int ClientId { get; set; }
 
         [Required]
@@ -403,6 +610,12 @@ namespace Aroma_Violet.Models
         //public int BankingDetailID { get; set; }
         public virtual ICollection<BankingDetail> BankingDetails { get;set;}
 
+        [DisplayName("Company Name")]
+        public string CompanyName { get; set; }
+
+        [DisplayName("Registration Number")]
+        public string RegistrationNumber { get; set; }
+
         public bool Active { get; set; }
     }
 
@@ -419,7 +632,7 @@ namespace Aroma_Violet.Models
         [Range(0, 99999)]
         public string Code { get; set; }
 
-        [DisplayName("Client")]
+        [DisplayName("Reseller / Distributor Code")]
         public int ClientID { get; set; }
         public virtual Client Client { get; set; }
         
@@ -462,7 +675,7 @@ namespace Aroma_Violet.Models
         public int ContactId { get; set; }
 
         [Required]
-        [DisplayName("Client")]
+        [DisplayName("Reseller / Distributor Code")]
         public int ClientID { get; set; }
         public virtual Client Client { get; set; }
 
@@ -484,7 +697,7 @@ namespace Aroma_Violet.Models
     {
         [Key]
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
-        public int ProductId { get; set; }
+        public int ProductID { get; set; }
         [Required]
         [DisplayName("Product")]
         public string ProductName { get; set; }
@@ -539,7 +752,7 @@ namespace Aroma_Violet.Models
         public int ClientSubscriptionId { get; set; }
 
         [Required]
-        [DisplayName("Client")]
+        [DisplayName("Reseller / Distributor Code")]
         public int? ClientID { get; set; }
         public virtual Client Client { get; set; }
         
@@ -564,7 +777,7 @@ namespace Aroma_Violet.Models
         public int BankingDetailId { get; set; }
 
         [Required]
-        [DisplayName("Client")]
+        [DisplayName("Reseller / Distributor Code")]
         public int ClientID { get; set; }
         public virtual Client Client { get; set; }
 
@@ -680,7 +893,7 @@ namespace Aroma_Violet.Models
         public Guid UserID { get; set; }
 
         [DisplayName("Created")]
-        public string Created { get; set; }
+        public DateTime Created { get; set; }
     }
     #endregion
 
@@ -709,7 +922,7 @@ namespace Aroma_Violet.Models
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         public Guid ClientAccountId { get; set; }
 
-        [DisplayName("Client")]
+        [DisplayName("Reseller / Distributor Code")]
         public int ClientID { get; set; } 
         public virtual Client Client { get; set; }
 
@@ -765,7 +978,7 @@ namespace Aroma_Violet.Models
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         public Guid DebitOrderId { get; set; }
 
-        [DisplayName("Client")]
+        [DisplayName("Reseller / Distributor Code")]
         public int ClientID { get; set; }
         public virtual Client Client { get; set; }
 
@@ -819,4 +1032,48 @@ namespace Aroma_Violet.Models
 
     }
     #endregion
-}
+
+    #region Loging and settings
+    [Table("SystemSetting")]
+    public class SystemSetting
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public int SettingId { get; set; }
+
+        public string SettingKey { get; set; }
+        public string SettingValue { get; set; }
+
+    }
+
+    [Table("lgActivity")]
+    public class LGActivity
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public int ActivityLogId { get; set; }
+
+        public string Activity { get; set; }
+
+    }
+
+    [Table("lgActivityLog")]
+    public class LGActivityLog
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public Guid ActivityLogId { get; set; }
+
+        public int ActivityId { get; set; }
+        
+        public int? IntId { get; set; }
+        
+        public Guid? GuidId { get; set; }
+        
+        public string Note { get; set; } 
+
+        public DateTime iDate { get; set; }
+    }
+
+        #endregion
+    }
