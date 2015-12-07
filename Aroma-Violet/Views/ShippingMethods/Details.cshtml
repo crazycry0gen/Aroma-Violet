@@ -1,4 +1,4 @@
-﻿@model Aroma_Violet.Models.finClientAccount
+﻿@model Aroma_Violet.Models.ShippingMethod
 
 @{
     ViewBag.Title = "Details";
@@ -7,23 +7,23 @@
 <h2>Details</h2>
 
 <div>
-    <h4>finClientAccount</h4>
+    <h4>ShippingMethod</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Client.ClientInitials)
+            @Html.DisplayNameFor(model => model.ShippingMethodName)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Client.ClientInitials)
+            @Html.DisplayFor(model => model.ShippingMethodName)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.AccountID)
+            @Html.DisplayNameFor(model => model.ExtraCost)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.AccountID)
+            @Html.DisplayFor(model => model.ExtraCost)
         </dd>
 
         <dt>
@@ -37,6 +37,6 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.ClientAccountId }) |
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ShippingMethodId }) |
     @Html.ActionLink("Back to List", "Index")
 </p>

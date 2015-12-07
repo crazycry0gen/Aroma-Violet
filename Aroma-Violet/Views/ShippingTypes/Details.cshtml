@@ -1,0 +1,26 @@
+﻿@model Aroma_Violet.Models.ShippingType
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>ShippingType</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ShippingTypeName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ShippingTypeName)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ShippingTypeId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

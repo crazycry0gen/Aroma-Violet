@@ -1,0 +1,42 @@
+﻿@model Aroma_Violet.Models.SystemProcedureMessage
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>SystemProcedureMessage</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.SystemProcedure.ProcedureName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SystemProcedure.ProcedureName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MessageDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MessageDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Message)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Message)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.SystemProcedureMessageId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

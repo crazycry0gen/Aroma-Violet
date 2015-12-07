@@ -1,0 +1,74 @@
+﻿@model Aroma_Violet.Models.PickingListDetail
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>PickingListDetail</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Client.ClientInitials)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Client.ClientInitials)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Product.ProductName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Product.ProductName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TotalItems)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TotalItems)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TransferQuantity)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TransferQuantity)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OrderHeaderId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OrderHeaderId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TrackingNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TrackingNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Active)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Active)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.PickingListDetailId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

@@ -54,7 +54,7 @@ namespace Aroma_Violet.Controllers
             var currentUserId = Guid.Parse(IdentityExtensions.GetUserId(User.Identity));
             ViewBag.ClientID = new SelectList(db.Clients, "ClientId", "ClientInitials");
             ViewBag.OrderStatusId = new SelectList(db.OrderStatuses, "OrderStatusId", "OrderStatusName");
-            var newOrder = new OrderHeader() {Active = true, OrderDate = DateTime.Now, OrderStatusId=1, UserId=currentUserId };
+            var newOrder = new OrderHeader() {Active = true, OrderDate = DateTime.Now, OrderStatusId=1, UserId=currentUserId,ShippingTypeId=1 };
             ViewBag.ProductList = new SelectList(db.Products.Where(m=>m.Active), "ProductID", "ProductName");
 
             return View(newOrder);
@@ -65,7 +65,7 @@ namespace Aroma_Violet.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "OrderHeaderId,ClientID,Total,OrderStatusId,UserId,OrderDate")] OrderHeader orderHeader)
+        public async Task<ActionResult> Create([Bind(Include = "OrderHeaderId,ClientID,Total,OrderStatusId,UserId,OrderDate,ShippingTypeId")] OrderHeader orderHeader)
         {
             if (ModelState.IsValid)
             {
@@ -117,7 +117,7 @@ namespace Aroma_Violet.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "OrderHeaderId,ClientID,Total,OrderStatusId,UserId,OrderDate,Active")] OrderHeader orderHeader)
+        public async Task<ActionResult> Edit([Bind(Include = "OrderHeaderId,ClientID,Total,OrderStatusId,UserId,OrderDate,Active,ShippingTypeId")] OrderHeader orderHeader)
         {
             if (ModelState.IsValid)
             {

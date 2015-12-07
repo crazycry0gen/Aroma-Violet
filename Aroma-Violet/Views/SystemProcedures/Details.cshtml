@@ -1,0 +1,67 @@
+﻿@model Aroma_Violet.Models.SystemProcedure
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>SystemProcedure</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.IntervalSpecifier.IntervalSpecifierName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IntervalSpecifier.IntervalSpecifierName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ProcedureName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ProcedureName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Proceduredescription)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Proceduredescription)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Interval)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Interval)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Active)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Active)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LastRun)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LastRun)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.SystemProcedureId }) |
+    @Html.ActionLink("Back to List", "Index")|
+    @Html.ActionLink("View Messages", "Index", "SystemProcedureMessages", new { id = Model.SystemProcedureId }, htmlAttributes:null)
+</p>

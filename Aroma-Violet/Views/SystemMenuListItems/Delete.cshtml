@@ -1,4 +1,4 @@
-﻿@model Aroma_Violet.Models.finClientAccount
+﻿@model Aroma_Violet.Models.SystemMenuListItem
 
 @{
     ViewBag.Title = "Delete";
@@ -8,23 +8,39 @@
 
 <h3>Are you sure you want to delete this?</h3>
 <div>
-    <h4>finClientAccount</h4>
+    <h4>SystemMenuListItem</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Client.ClientInitials)
+            @Html.DisplayNameFor(model => model.Text)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Client.ClientInitials)
+            @Html.DisplayFor(model => model.Text)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.AccountID)
+            @Html.DisplayNameFor(model => model.ActionName)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.AccountID)
+            @Html.DisplayFor(model => model.ActionName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ControllerName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ControllerName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Order)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Order)
         </dd>
 
         <dt>

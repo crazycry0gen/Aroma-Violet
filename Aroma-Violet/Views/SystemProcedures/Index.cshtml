@@ -1,0 +1,63 @@
+﻿@model IEnumerable<Aroma_Violet.Models.SystemProcedure>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+
+        <th>
+            @Html.DisplayNameFor(model => model.ProcedureName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Proceduredescription)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Interval)
+        </th>
+       
+        <th>
+            @Html.DisplayNameFor(model => model.Active)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LastRun)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        
+        <td>
+            @Html.DisplayFor(modelItem => item.ProcedureName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Proceduredescription)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Interval)
+            @Html.DisplayFor(modelItem => item.IntervalSpecifier.IntervalSpecifierName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Active)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LastRun)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.SystemProcedureId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.SystemProcedureId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.SystemProcedureId })|
+            @Html.ActionLink("View Messages", "Index", "SystemProcedureMessages", new { id = item.SystemProcedureId }, htmlAttributes: null)
+
+        </td>
+    </tr>
+}
+
+</table>

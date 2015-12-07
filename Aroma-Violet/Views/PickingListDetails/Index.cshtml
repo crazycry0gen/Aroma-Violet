@@ -1,0 +1,69 @@
+﻿@model IEnumerable<Aroma_Violet.Models.PickingListDetail>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Client.ClientInitials)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Product.ProductName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TotalItems)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TransferQuantity)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.OrderHeaderId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TrackingNumber)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Active)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Client.ClientInitials)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Product.ProductName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TotalItems)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TransferQuantity)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.OrderHeaderId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TrackingNumber)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Active)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.PickingListDetailId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.PickingListDetailId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.PickingListDetailId })
+        </td>
+    </tr>
+}
+
+</table>

@@ -17,7 +17,7 @@ namespace Aroma_Violet.Controllers
         private AromaContext db = new AromaContext();
         [Authorize]
         [HttpGetAttribute]
-        public async Task<ActionResult> Manage(int? clientId)
+        public async Task<ActionResult> Manage(int? clientId, int smsCount=0)
         {
             if ((SMSDistributionViewModel.Items== null || SMSDistributionViewModel.Items.Count==0 ) && !clientId.HasValue)
             {
@@ -26,6 +26,8 @@ namespace Aroma_Violet.Controllers
                 SMSDistributionViewModel.Items.AddRange(await db.Provinces.Where(m => m.Active).Select(m=>new SMSDistributionItemModel() {Id= m.ProvinceId, Description=m.ProvinceName, ItemType=SMSDistributionViewModel.enumSMSDistributionItemType.Province}).ToListAsync());
                 SMSDistributionViewModel.Items.AddRange(await db.PostalAreas.Where(m => m.Active).Select(m=>new SMSDistributionItemModel() {Id= m.PostalAreaId, Description=m.PostalAreaName, ItemType=SMSDistributionViewModel.enumSMSDistributionItemType.PostalArea}).ToListAsync());
                 SMSDistributionViewModel.Items.AddRange(await db.PostalCodes.Where(m => m.Active).Select(m=>new SMSDistributionItemModel() {Id= m.PostalCodeId, Description=m.PostalCodeName, ItemType=SMSDistributionViewModel.enumSMSDistributionItemType.PostalCode}).ToListAsync());
+                SMSDistributionViewModel.Items.AddRange(await db.ClientTypes.Where(m => m.Active).Select(m => new SMSDistributionItemModel() { Id = m.ClientTypeId, Description = m.ClientTypeName, ItemType = SMSDistributionViewModel.enumSMSDistributionItemType.ClientType }).ToListAsync());
+
                 SMSDistributionViewModel.RelationShips = (from item in db.PostalCodes.Where(m=>m.Active).ToArray()
                                                   select new int[] { item.Country.CountryId, item.Province.ProvinceId, item.PostalArea.PostalAreaId, item.PostalCodeId }).ToArray();
             }
@@ -35,7 +37,8 @@ namespace Aroma_Violet.Controllers
             manager.LastSendAttempt = await db.SystemSMSes.Where(m => m.SystemSMSStatusId==1).Select(m=> (DateTime?)m.LastSendAttempt).MaxAsync();
             manager.LastSMSAdded = await db.SystemSMSes.Select(m => (DateTime?)m.iDate).MaxAsync();
             manager.LastSuccessfulSend = await db.SystemSMSes.Where(m => m.SystemSMSStatusId == 2).Select(m => (DateTime?)m.LastSendAttempt).MaxAsync();
-            manager.ClientSMSCount = await db.Clients.Where(m => m.Active).CountAsync();
+            manager.ClientSMSCount = smsCount;
+            manager.ClientSMSMaxCount = await db.Clients.Where(m => m.Active).CountAsync();
             manager.SystemSMSTemplateID = 0;
             var itemList = await db.SystemSMSTemplates.ToListAsync();
             itemList.Insert(0,new SystemSMSTemplate() { SystemSMSTemplateId = 0, Description = "Custom",Text=string.Empty });
@@ -47,16 +50,22 @@ namespace Aroma_Violet.Controllers
             {
                 manager.Countries = new List<SMSDistributionItemModel>();
                 ViewBag.Client = db.Clients.FirstOrDefault(m=>m.ClientId==clientId.Value);
-                if (ViewBag.Client != null)
-                {
-                    manager.ClientID = clientId.Value;
-                }
+            }
+
+            if (ViewBag.Client != null)
+            {
+                manager.ClientID = clientId.Value;
+                manager.ClientSMSCount = 1;
+                manager.ClientSMSMaxCount = 1;
             }
             else
             {
                 manager.Countries = SMSDistributionViewModel.Items.Where(m => m.ItemType == SMSDistributionViewModel.enumSMSDistributionItemType.Country).ToList();
-                            }
+                manager.ClientTypes = SMSDistributionViewModel.Items.Where(m => m.ItemType == SMSDistributionViewModel.enumSMSDistributionItemType.ClientType).ToList();
+
+            }
             manager.Variables = SystemSMSTemplateModel.GetVariableList();
+
             return View(manager);
         }
 
@@ -79,7 +88,7 @@ namespace Aroma_Violet.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Manage(int[] selectedCountries, int[] selectedProvinces, int[] selectedAreas, int[] selectedCodes, string SMSText, int SystemSMSTemplateID, int? clientId)
+        public async Task<ActionResult> Manage(int[] selectedCountries, int[] selectedProvinces, int[] selectedAreas, int[] selectedCodes,int[] selectedClientTypes, string SMSText, int SystemSMSTemplateID, int? clientId, bool GetSMSCount)
         {
 
             var userId = Guid.Parse( User.Identity.GetUserId());
@@ -94,6 +103,7 @@ namespace Aroma_Violet.Controllers
             selectedItems.AddRange(SMSDistributionViewModel.Find(selectedProvinces, SMSDistributionViewModel.enumSMSDistributionItemType.Province));
             selectedItems.AddRange(SMSDistributionViewModel.Find(selectedAreas, SMSDistributionViewModel.enumSMSDistributionItemType.PostalArea));
             selectedItems.AddRange(SMSDistributionViewModel.Find(selectedCodes, SMSDistributionViewModel.enumSMSDistributionItemType.PostalCode));
+            
             var parents = (from item in selectedItems.Where(m=>m.Parent!=null).ToArray()
                            select item.Parent.Key).ToArray();
             selectedItems.RemoveAll(m => parents.Contains(m.Key));
@@ -116,38 +126,50 @@ namespace Aroma_Violet.Controllers
             {
                 clients = (from item in await db.Clients.Where(m => m.Active).ToArrayAsync()
                             where codes.Contains(item.DeliveryAddress.Code)
-                            select item).ToArray();
+                            && selectedClientTypes.Contains(item.ClientTypeID)
+                           select item).ToArray();
+
             }
-            var smsesSubs = (from item in clients
-                         select new SystemSMSTemplateModel(SMSText,item));
 
-            var entries = (from item in smsesSubs
-                           select new SystemSMS()
-                           {
-                               Active = true,
-                               ClientID = item.ClientID,
-                               iDate = DateTime.Now,
-                               Number = item.Cell,
-                               SMSDescription = item.Generate(),
-                               
-                               Source = userId,
-                               SystemSMSStatusId = 1
-                           }).ToArray();
+            if (GetSMSCount)
+            {
+             return RedirectToAction("Manage", new { smsCount = clients.Length, clientid = clientId });
+            }
+            else
+            {
 
-            var links = (from item in entries
-                         select new SystemLink()
-                         {
-                             UserID = userId,
-                             Created=DateTime.Now,
-                             LinkId=Guid.NewGuid(),
-                             Parent = ClientKey(item.ClientID)
-                         }).ToArray();
+                var smsesSubs = (from item in clients
+                                 select new SystemSMSTemplateModel(SMSText, item));
 
-            db.SystemSMSes.AddRange(entries);
-            db.SystemLinks.AddRange(links);
-            db.SaveChanges();
+                var entries = (from item in smsesSubs
+                               select new SystemSMS()
+                               {
+                                   Active = true,
+                                   ClientID = item.ClientID,
+                                   iDate = DateTime.Now,
+                                   Number = item.Cell,
+                                   SMSDescription = item.Generate(),
 
-            return RedirectToAction("Index", new { clientId = clientId});
+                                   Source = userId,
+                                   SystemSMSStatusId = 1
+                               }).ToArray();
+
+                var links = (from item in entries
+                             select new SystemLink()
+                             {
+                                 UserID = userId,
+                                 Created = DateTime.Now,
+                                 LinkId = Guid.NewGuid(),
+                                 Parent = ClientKey(item.ClientID)
+                             }).ToArray();
+
+                db.SystemSMSes.AddRange(entries);
+                db.SystemLinks.AddRange(links);
+                db.SaveChanges();
+
+                return RedirectToAction("Index", new { clientId = clientId });
+            }
+
         }
 
         public Guid ClientKey(int clientId)
@@ -189,7 +211,7 @@ namespace Aroma_Violet.Controllers
         }
 
         [HttpPost]
-        public int GetClientCountPerProvences(List<int> ProvinceIDs)
+        public int GetClientCountPerProvinces(List<int> ProvinceIDs)
         {
             var postalCodes = db.PostalCodes.Where(m => ProvinceIDs.Contains(m.Province.ProvinceId)).Select(m => m.PostalCodeName).ToArray();
             var count = db.Clients.Where(m => m.Active && postalCodes.Contains(m.DeliveryAddress.Code)).Count();

@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="Novus1" Class="AromaVioletDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=(LocalDb)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\aspnet-Aroma-Violet.mdf;Initial Catalog=Novus1;Integrated Security=True" SettingsObjectName="NovusStoredProcedureExec.Properties.Settings" SettingsPropertyName="Novus1ConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.SystemSetting" Member="SystemSettings">
+    <Type Name="SystemSetting">
+      <Column Name="SettingId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="SettingKey" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="SettingValue" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.SystemProcedure" Member="SystemProcedures">
+    <Type Name="SystemProcedure">
+      <Column Name="SystemProcedureId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="ProcedureName" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Proceduredescription" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="IntervalSpecifierId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Interval" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Active" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="LastRun" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Association Name="SystemProcedure_SystemProcedureMessage" Member="SystemProcedureMessages" ThisKey="SystemProcedureId" OtherKey="SystemProcedureId" Type="SystemProcedureMessage" />
+      <Association Name="SystemIntervalSpecifier_SystemProcedure" Member="SystemIntervalSpecifier" ThisKey="IntervalSpecifierId" OtherKey="IntervalSpecifierId" Type="SystemIntervalSpecifier" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.SystemProcedureMessage" Member="SystemProcedureMessages">
+    <Type Name="SystemProcedureMessage">
+      <Column Name="SystemProcedureMessageId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="SystemProcedureId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="MessageDate" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="Message" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Association Name="SystemProcedure_SystemProcedureMessage" Member="SystemProcedure" ThisKey="SystemProcedureId" OtherKey="SystemProcedureId" Type="SystemProcedure" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.SystemIntervalSpecifier" Member="SystemIntervalSpecifiers">
+    <Type Name="SystemIntervalSpecifier">
+      <Column Name="IntervalSpecifierId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="IntervalSpecifierName" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="MilisecondConverter" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="SystemIntervalSpecifier_SystemProcedure" Member="SystemProcedures" ThisKey="IntervalSpecifierId" OtherKey="IntervalSpecifierId" Type="SystemProcedure" />
+    </Type>
+  </Table>
+</Database>

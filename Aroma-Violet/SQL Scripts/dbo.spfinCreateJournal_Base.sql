@@ -30,19 +30,21 @@ AS
 		JournalId,
 		MovementSource,
 		UserID,
-		Comment			
+		Comment,
+		[Index]			
 		)
 		select
 			FromAccountID,
 			1,
-			Amount,
+			Amount*-1,
 			ToEntryID,
 			FromEffectiveDate,
 			JournalDate,
 			FromEntryID,
 			MovementSource,
 			UserID,
-			Comment
+			Comment,
+			1
 		from
 			#ntableInput
 
@@ -56,7 +58,8 @@ AS
 		JournalId,
 		MovementSource,
 		UserID,
-		Comment			
+		Comment,
+		[Index]			
 		)
 		select
 			ToAccountID,
@@ -68,7 +71,8 @@ AS
 			ToEntryID,
 			MovementSource,
 			UserID,
-			Comment
+			Comment,
+			2
 		from
 			#ntableInput
 	end

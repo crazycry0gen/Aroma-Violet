@@ -75,6 +75,7 @@ namespace Aroma_Violet.Controllers
         {
             ViewBag.ClientID = new SelectList(db.Clients, "ClientId", "ClientClientId");
             ViewBag.SupportTicketStatusID = new SelectList(db.SupportTicketStatuses, "SupportTicketStatusId", "SupportTicketStatusName");
+            ViewBag.SupportTicketTypeId = new SelectList(db.SupportTicketTypes, "SupportTicketTypeId", "SupportTicketTypeName");
             var newTicket = new SupportTicket() {iDate = DateTime.Now, SupportTicketStatus = db.SupportTicketStatuses.Where(m=>m.SupportTicketStatusName=="New").First() };
             newTicket.SupportTicketStatusID = newTicket.SupportTicketStatus.SupportTicketStatusId;
             if (clientId > 0)
@@ -87,7 +88,7 @@ namespace Aroma_Violet.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "SupportTicketId,Description,ClientID,UserID,SupportTicketStatusID,iDate")] SupportTicket supportTicket)
+        public async Task<ActionResult> Create([Bind(Include = "SupportTicketId,Description,ClientID,UserID,SupportTicketStatusID,SupportTicketTypeId,iDate")] SupportTicket supportTicket)
         {
             var client = db.Clients.FirstOrDefault(m=>m.ClientId == supportTicket.ClientID);
             if (client == null)
@@ -105,6 +106,7 @@ namespace Aroma_Violet.Controllers
 
             ViewBag.ClientID = new SelectList(db.Clients, "ClientId", "ClientInitials", supportTicket.ClientID);
             ViewBag.SupportTicketStatusID = new SelectList(db.SupportTicketStatuses, "SupportTicketStatusId", "SupportTicketStatusName", supportTicket.SupportTicketStatusID);
+            ViewBag.SupportTicketTypeId = new SelectList(db.SupportTicketTypes, "SupportTicketTypeId", "SupportTicketTypeName");
             return View(supportTicket);
         }
 
@@ -139,6 +141,7 @@ namespace Aroma_Violet.Controllers
             }
             ViewBag.ClientID = new SelectList(db.Clients, "ClientId", "ClientInitials", supportTicket.ClientID);
             ViewBag.SupportTicketStatusID = new SelectList(db.SupportTicketStatuses, "SupportTicketStatusId", "SupportTicketStatusName", supportTicket.SupportTicketStatusID);
+            ViewBag.SupportTicketTypeId = new SelectList(db.SupportTicketTypes, "SupportTicketTypeId", "SupportTicketTypeName", supportTicket.SupportTicketTypeId);
 
             var context = new ApplicationDbContext();
             var data = (from item in context.Users
@@ -156,7 +159,7 @@ namespace Aroma_Violet.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "SupportTicketId,Description,ClientID,UserID,SupportTicketStatusID,iDate")] SupportTicket supportTicket, Guid? currentUserId, int statusMap)
+        public async Task<ActionResult> Edit([Bind(Include = "SupportTicketId,Description,ClientID,UserID,SupportTicketStatusID,SupportTicketTypeId,iDate")] SupportTicket supportTicket, Guid? currentUserId, int statusMap)
         {
             if (ModelState.IsValid)
             {
@@ -170,6 +173,7 @@ namespace Aroma_Violet.Controllers
             }
             ViewBag.ClientID = new SelectList(db.Clients, "ClientId", "ClientInitials", supportTicket.ClientID);
             ViewBag.SupportTicketStatusID = new SelectList(db.SupportTicketStatuses, "SupportTicketStatusId", "SupportTicketStatusName", supportTicket.SupportTicketStatusID);
+            ViewBag.SupportTicketTypeId = new SelectList(db.SupportTicketTypes, "SupportTicketTypeId", "SupportTicketTypeName", supportTicket.SupportTicketTypeId);
             ViewBag.currentUserId = currentUserId;
             ViewBag.statusMap = statusMap;
 

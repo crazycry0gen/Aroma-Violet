@@ -1,0 +1,138 @@
+﻿@model Aroma_Violet.Models.AccountMovementViewModel
+
+@{ 
+    
+
+}
+
+<h2>Client Account Movement</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m=>m.ClientId)
+    <div>
+        <div class="form-group">
+            <label class="control-label col-md-2">From</label>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.FromDate, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.FromDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">To</label>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ToDate, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ToDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Filter" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+    <table  class="findisp">
+        <tr>
+            <td></td>
+        </tr>
+        <tr class="findispHead">
+            
+            <th>Client:</th><td class="findispHead">@Model.ClientId</td>
+            
+        </tr>
+        <tr>
+            <th>Comment</th>
+            <th>Journal Date</th>
+            @for (int i = 0; i < Model.Accounts.Count; i++)
+            {
+                <th>
+                    @Model.Accounts[i].AccountDescription
+                </th>
+            }
+        </tr>
+        <tr>
+            
+            <th>Opening Balance</th>
+            <td></td>
+            @for (int i = 0; i < Model.Accounts.Count; i++)
+            {
+                <td>
+                    @if (Model.Accounts[i].IsClientAccount)
+                    {
+                    @Html.DisplayFor(m => m.Accounts[i].OpenBalance)
+                    }
+                </td>
+            }
+        </tr>
+        @for (int row = 0; row < Model.Journals.Count - 1; row += 2)
+        {
+            <tr class="findisp">
+                <td style="text-align:left;">
+                    @Html.DisplayFor(m=>m.Journals[row].Comment)
+                </td>
+                <td>
+                    @Html.DisplayFor(m=>m.Journals[row].JournalDate)
+                </td>
+            @for (int i = 0; i < Model.Accounts.Count; i++)
+            {
+                if (Model.Accounts[i].AccountId.Equals(Model.Journals[row].AccountID))
+                {
+                    string tclass = Model.Journals[row].EffectiveDate > DateTime.Now ? "futureJournal" : "findisp";
+                    <td id="@Model.Accounts[i].AccountId-@Model.Journals[row].JournalId" onclick="FetchExtraInfo('@Model.Journals[row].JournalId')" class="@tclass">
+                        @Html.DisplayFor(m=>m.Journals[row].Amount)
+                        <div id="Extra-@Model.Journals[row].JournalId"></div>
+                    </td>
+                }
+                else if (Model.Accounts[i].AccountId.Equals(Model.Journals[row + 1].AccountID))
+                {
+                    string tclass = Model.Journals[row+1].EffectiveDate > DateTime.Now ? "futureJournal" : "findisp";
+                    <td id="@Model.Accounts[i].AccountId-@Model.Journals[row+1].JournalId" onclick="FetchExtraInfo('@Model.Journals[row+1].JournalId')" class="@tclass">
+                        @Html.DisplayFor(m=>m.Journals[row + 1].Amount)
+                        <div id="Extra-@Model.Journals[row+1].JournalId"></div>
+                    </td>
+                }
+                else
+                {
+                    <td class="findisp"></td>
+                }
+            }
+        </tr>
+        
+        }
+        <tr class="fintot">
+         
+            <th>Closing Balance</th>
+            <td></td>
+            @for (int i = 0; i < Model.Accounts.Count; i++)
+            {
+                <td>
+                        @if (Model.Accounts[i].IsClientAccount)
+                    {
+                    @Html.DisplayFor(m => m.Accounts[i].Balance)
+                     }
+                </td>
+            }
+        </tr>
+    </table>
+
+    <p>
+        <div>
+            @Html.ActionLink("To Client detail", "Details", "Clients", new { id = Model.ClientId }, htmlAttributes: null)
+        </div>
+    </p>
+
+}
+
+<script>
+    function FetchExtraInfo(JournalId)
+    {
+        var clientData = {
+            journalId:JournalId
+        }
+        var responceElement = "Extra-" + JournalId;
+
+        var url = '@Url.Action("GetJournalExtraInfo","AccountMovement")';
+        callServerMethod(clientData, url, responceElement);
+    }
+</script>

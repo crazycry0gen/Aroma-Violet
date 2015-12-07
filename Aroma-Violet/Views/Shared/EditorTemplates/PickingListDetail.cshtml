@@ -1,0 +1,20 @@
+﻿@model Aroma_Violet.Models.PickingListDetail
+   
+    
+    @Html.HiddenFor(m=>m.OrderLineId)
+    @Html.HiddenFor(m=>m.ProductID)
+    @Html.HiddenFor(m=>m.ClientID)
+    @Html.HiddenFor(m=>m.TotalItems)
+    @Html.HiddenFor(m=>m.PickingListHeaderId)
+    @Html.HiddenFor(m => m.PickingListDetailId)
+    @Html.HiddenFor(m => m.OrderLineId)
+    
+    <tr class="rc-@Model.PickingListHeader.">
+        <td>@Html.DisplayFor(model => model.Product.ProductName, new { @class = "form-control" })</td>
+        <td>@Html.DisplayFor(model => model.ClientID, new { @class = "form-control" })</td>
+        <td>@Html.DisplayFor(model => model.TotalItems, new { @class = "form-control" })</td>
+        <td>@Html.EditorFor(model => model.TransferQuantity, new { htmlAttributes = new { @class = "form-control" } })</td>
+        <td>@Html.EditorFor(model => model.TrackingNumber, new { htmlAttributes = new { @class = "form-control" } })</td>
+        <td>@Html.EditorFor(model => model.Active)</td>
+    </tr>
+

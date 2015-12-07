@@ -7,6 +7,7 @@ namespace Aroma_Violet.Migrations
 
     internal sealed class Configuration : DbMigrationsConfiguration<Aroma_Violet.Models.AromaContext>
     {
+
         public Configuration()
         {
         
@@ -17,12 +18,42 @@ namespace Aroma_Violet.Migrations
 
         protected override void Seed(Aroma_Violet.Models.AromaContext context)
         {
+            context.ShippingMethods.AddOrUpdate(
+                p=>p.ShippingMethodName,
+                new Models.ShippingMethod() { ShippingMethodName="Fastway Red",Active=true,ExtraCost=0},
+                new Models.ShippingMethod() { ShippingMethodName="Fastway Blue",Active=true,ExtraCost=0 }
+                );
+
+            context.ShippingTypes.AddOrUpdate(
+                p=>p.ShippingTypeName,
+                new Models.ShippingType() { ShippingTypeName="TeleSales"},
+                new Models.ShippingType() { ShippingTypeName="Subscription Products"},
+                new Models.ShippingType() { ShippingTypeName="Online(WebSale)"}
+                );
+
+            context.DebitOrderPeriodStatuses.AddOrUpdate(
+                p=>p.Description,
+                new Models.DebitOrderPeriodStatus() {Description="New" },
+                new Models.DebitOrderPeriodStatus() {Description = "Processed"}
+                );
+
+            context.SystemIntervalSpecifiers.AddOrUpdate(
+                p=>p.IntervalSpecifierName,
+                new Models.SystemIntervalSpecifier() { IntervalSpecifierName="Milisecond" , MilisecondConverter=1},
+                new Models.SystemIntervalSpecifier() { IntervalSpecifierName = "Second", MilisecondConverter=1000 },
+                new Models.SystemIntervalSpecifier() { IntervalSpecifierName = "Minute", MilisecondConverter=60000 },
+                new Models.SystemIntervalSpecifier() { IntervalSpecifierName = "Hour", MilisecondConverter=3600000 },
+                new Models.SystemIntervalSpecifier() { IntervalSpecifierName = "Day", MilisecondConverter = 86400000 }
+
+                );
 
             context.OrderStatuses.AddOrUpdate(
                 p=>p.OrderStatusName,
                 new Models.OrderStatus() {Active=true, OrderStatusName = "New" },
                 new Models.OrderStatus() { Active = true, OrderStatusName = "Ready To Ship" },
-                new Models.OrderStatus() { Active = true, OrderStatusName = "Completed" }
+                new Models.OrderStatus() { Active = true, OrderStatusName = "Completed" },
+                new Models.OrderStatus() { Active = true, OrderStatusName = "Picked" },
+                new Models.OrderStatus() { Active = true, OrderStatusName = "Canceled" }
                 );
 
             context.SupportTicketStatuses.AddOrUpdate(
@@ -32,7 +63,10 @@ namespace Aroma_Violet.Migrations
                 new Models.SupportTicketStatus() { Active = true, SupportTicketStatusName = "Complete" }
                 );
 
-            
+            context.SupportTicketTypes.AddOrUpdate(
+                p=>p.SupportTicketTypeName,
+                new Models.SupportTicketType() {SupportTicketTypeName="Other" }
+                );
             context.SystemSMSStatuses.AddOrUpdate(
                  p=>p.SystemSMSStatusName,
                  new Models.SystemSMSStatus() {Active=true, SystemSMSStatusName = "New" },

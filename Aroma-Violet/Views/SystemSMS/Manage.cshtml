@@ -18,6 +18,8 @@
 
 @using (Html.BeginForm())
 {
+    
+    <div class="holder" id="SelectedClientTypeData"></div>
     <div class="holder" id="SelectedCountryData"></div>
     <div class="holder" id="SelectedProvinceData"></div>
     <div class="holder" id="SelectedAreaData"></div>
@@ -31,7 +33,7 @@
     </div>
 
     @Html.HiddenFor(m=>m.ClientID)
-
+    @Html.Hidden("GetSMSCount", false)
 <table>
     <tr>
         <th>
@@ -93,7 +95,13 @@
         </td>
     </tr>
     <tr>
-    <td colspan="4"><label>Current selection will generate <label id="SMSCount">@Model.ClientSMSCount</label> SMSes</label></td>    
+    <td colspan="4">
+        <div hidden>
+            <input id="btnUpdateCount" hidden type="submit" value="Update Count" class="btn btn-default" />
+            <label id="lblCountDisplay">Current selection will generate <label id="SMSCount">@Model.ClientSMSCount</label> out of a posible <label>@Model.ClientSMSMaxCount</label> SMSes</label>
+
+        </div>
+    </td>    
     </tr>
 
         <tr>
@@ -106,7 +114,20 @@
             </td>
         </tr>
     <tr>
-        <td></td>
+        <td>
+            
+            <div class="holder" id="RowClientTypes" >
+                @for (int i = 0; i < Model.ClientTypes.Count; i++)
+                {
+                    var muKey = Guid.NewGuid().ToString();
+                    var type = (int)Model.ClientTypes[i].ItemType;
+                    <div id="tableDataClientTypes-@i">
+                        <input type="checkbox" id="@muKey" class='checks' value="@Model.ClientTypes[i].Id" onclick="PersistChecks('SelectedClientTypeData', 'RowClientTypes', '4')" />@Model.ClientTypes[i].Description
+                    </div>
+                }
+</div>
+
+</td>
         <td>
             <textarea name="SMSText" id="SMSText" rows="2" cols="20" onkeyup="GetSMSLength('SMSText')" ></textarea>
         </td>
@@ -121,7 +142,9 @@
         </td>
     </tr>
     <tr>
-        <td></td>
+        <td>
+           
+        </td>
         <td>
             
             <input type="submit" class="btn btn-default" value="@sendText"/>
@@ -153,9 +176,9 @@
 
     </div>
     }
-    <div class="holder" id="SelectAllProvences" style="visibility:hidden">
-        <a href="#"  class="btn btn-default"  onclick="Toggle('RowProvences')" >Toggle Provences</a>
-        <div id="RowProvences"></div>
+    <div class="holder" id="SelectAllProvinces" style="visibility:hidden">
+        <a href="#"  class="btn btn-default"  onclick="Toggle('RowProvinces')" >Toggle Provinces</a>
+        <div id="RowProvinces"></div>
     </div>
     
     <div class="holder" id="SelectAllAreas" style="visibility:hidden">
@@ -167,6 +190,7 @@
         <a href="#" class="btn btn-default"  onclick="Toggle('RowCodes')" >Toggle Codes</a>
         <div id="RowCodes"></div>
     </div>
+   
 </div>
 }
 
@@ -204,7 +228,7 @@
 
     function PersistChecks(holderKey,tdKey, type)
     {
-        variables = ["selectedCountries", "selectedProvinces", "selectedAreas", "selectedCodes"];
+        variables = ["selectedCountries", "selectedProvinces", "selectedAreas", "selectedCodes","selectedClientTypes"];
         id = 0;
         innerHtml = "";
         holder = document.getElementById(holderKey);
@@ -223,6 +247,9 @@
         }
         holder.innerHTML = innerHtml;
         //alert(innerHtml);
+        SetVisible("btnUpdateCount",'true');
+        SetVisible("lblCountDisplay",'false');
+        
     }
 
     function Toggle(tdkey)
@@ -282,8 +309,8 @@
             contentType: 'application/json; charset=utf-8',
             data: data,
             success: function (rdata) {
-                var rowNames = ["RowProvences", "RowAreas", "RowCodes"];
-                var controlBox = ["SelectAllProvences", "SelectAllAreas", "SelectAllCodes"];
+                var rowNames = ["RowProvinces", "RowAreas", "RowCodes"];
+                var controlBox = ["SelectAllProvinces", "SelectAllAreas", "SelectAllCodes"];
                 var datavals = ["SelectedProvinceData", "SelectedAreaData", "SelectedCodeData"];
                 parentRow = document.getElementById(rowNames[type]);
                 for (i = 0; i < rdata.length; i++)

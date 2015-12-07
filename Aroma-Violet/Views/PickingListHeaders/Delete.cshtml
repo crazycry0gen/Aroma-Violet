@@ -1,0 +1,64 @@
+﻿@model Aroma_Violet.Models.PickingListHeader
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>PickingListHeader</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ShippingMethod.ShippingMethodName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ShippingMethod.ShippingMethodName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ShippingType.ShippingTypeName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ShippingType.ShippingTypeName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PickingDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PickingDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ShippedDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ShippedDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PickingListDetailId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PickingListDetailId)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

@@ -1,0 +1,51 @@
+﻿@model IEnumerable<Aroma_Violet.Models.Rebate>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.ClientType.ClientTypeName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Product.ProductName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Amount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AccountId)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.ClientType.ClientTypeName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Product.ProductName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Amount)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Account.AccountName)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.RebateId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.RebateId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.RebateId })
+        </td>
+    </tr>
+}
+
+</table>

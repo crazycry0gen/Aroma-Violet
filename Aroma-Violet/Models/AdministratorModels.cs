@@ -23,7 +23,7 @@ namespace Aroma_Violet.Models
             var roleId = Guid.Parse(role.Id);
             using (var db = new AromaContext())
             {
-                var menuItems = db.SystemMenuList.Where(m => m.Active && m.RoleId.Equals(roleId)).Select(m=>m.SystemMenuListItem).ToArray();
+                var menuItems = db.SystemMenuList.Where(m => m.Active && m.RoleId.Equals(roleId)).Select(m=>m.SystemMenuListItem).OrderBy(m=>m.Text).ToArray();
                 foreach (var mnuItem in menuItems)
                 {
                     this.Add(mnuItem.Text, mnuItem.ActionName,mnuItem.ControllerName);

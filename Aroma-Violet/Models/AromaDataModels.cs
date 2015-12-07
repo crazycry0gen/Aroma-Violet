@@ -55,11 +55,24 @@ namespace Aroma_Violet.Models
         public DbSet<SystemSetting> SystemSettings { get; set; }
         public DbSet<LGActivityLog> ActivityLogs { get; set; }
         public DbSet<LGActivity> Activities { get; set; }
-        public DbSet<SystemMenuList> SystemMenuList {get;set;}
-        public DbSet<SystemMenuListItem> SystemMenuListItems {get;set; }
-        public DbSet<OrderHeader> OrderHeaders { get;set; }
-        public DbSet<OrderLine> OrderLines { get;set; }
-        public DbSet<OrderStatus> OrderStatuses { get;set; }
+        public DbSet<SystemMenuList> SystemMenuList { get; set; }
+        public DbSet<SystemMenuListItem> SystemMenuListItems { get; set; }
+        public DbSet<OrderHeader> OrderHeaders { get; set; }
+        public DbSet<OrderLine> OrderLines { get; set; }
+        public DbSet<OrderStatus> OrderStatuses { get; set; }
+        public DbSet<SystemIntervalSpecifier> SystemIntervalSpecifiers { get; set; }
+        public DbSet<SystemProcedure> SystemProcedures { get; set; }
+        public DbSet<SystemProcedureMessage> SystemProcedureMessages { get; set; }
+        public DbSet<SupportTicketType> SupportTicketTypes { get; set; }
+        public DbSet<DebitOrderPeriodDetail> DebitOrderPeriodDetails { get; set; }
+        public DbSet<DebitOrderPeriodStatus> DebitOrderPeriodStatuses { get; set; }
+        public DbSet<PublicHolidays> PublicHolidays { get; set; }
+        public DbSet<Rebate> Rebates { get; set; }
+        public DbSet<ShippingType> ShippingTypes { get; set; }
+        public DbSet<ShippingMethod> ShippingMethods { get; set; }
+        public DbSet<PickingListHeader> PickingListHeaders { get; set; }
+        public DbSet<PickingListDetail> PickingListDetails { get; set; }
+        public DbSet<ShippingMethodPostalCode> ShippingMethodPostalCodes { get; set; }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
@@ -70,10 +83,174 @@ namespace Aroma_Violet.Models
 
     }
 
-    #region Order
-    
+    #region System Control
 
-    [Table("OrderHeader")]
+    [Table("SystemProcedure")]
+    public class SystemProcedure
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public Guid SystemProcedureId { get; set; }
+
+        [DisplayName("Name")]
+        public string ProcedureName { get; set; }
+        [DisplayName("Descriprion")]
+        public string Proceduredescription { get; set; }
+        [DisplayName("Interval Specifier")]
+        public int IntervalSpecifierId { get; set; }
+        public virtual SystemIntervalSpecifier IntervalSpecifier {get;set;}
+        [DisplayName("Interval")]
+        public int Interval { get; set; }
+        public bool Active { get; set; }
+        [DisplayName("Last Run")]
+        public DateTime LastRun { get; set; }
+    }
+
+
+    [Table("SystemProcedureMessage")]
+    public class SystemProcedureMessage
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public Guid SystemProcedureMessageId { get; set; }
+
+        [DisplayName("System Procedure")]
+        public Guid SystemProcedureId { get; set; }
+        public virtual SystemProcedure SystemProcedure { get; set; }
+
+        [DisplayName("Message Date")]
+        public DateTime MessageDate { get; set; }
+
+        public string Message { get; set; }
+    }
+
+        [Table("SystemIntervalSpecifier")]
+    public class SystemIntervalSpecifier
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public int IntervalSpecifierId { get; set; }
+
+        [DisplayName("Name")]
+        public string IntervalSpecifierName { get; set; }
+
+        [DisplayName("Milisecond Converter")]
+        public int MilisecondConverter { get; set; }
+    }
+    #endregion
+
+    #region Shipping
+    [Table("ShippingMethodPostalCode")]
+    public class ShippingMethodPostalCode
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public int ShippingMethodPostalCodeId { get; set; }
+
+        [DisplayName("Postal Code")]
+        public int PostalCodeId { get; set; }
+        public virtual PostalCode PostalCode { get;set;}
+
+        [DisplayName("Shipping Method")]
+        public int ShippingMethodId { get; set; }
+        public virtual ShippingMethod ShippingMethod { get; set; }
+
+        [DisplayName("Extra Cost")]
+        [DataType(DataType.Currency)]
+        public decimal ExtraCost { get; set; }
+
+        public bool Active { get; set; }
+
+    }
+
+    [Table("PickingListHeader")]
+    public class PickingListHeader
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public int PickingListHeaderId { get; set; }
+        
+        [DisplayName("Shipping Type")]
+        public int ShippingTypeId { get; set; }
+        public virtual ShippingType ShippingType { get; set; }
+
+        [DisplayName("Shipping Method")]
+        public int ShippingMethodId { get; set; }
+        public virtual ShippingMethod ShippingMethod { get; set; }
+
+        [DisplayName("Picking Date")]
+        public DateTime? PickingDate { get; set; }
+
+        [DisplayName("Shipped Date")]
+        public DateTime? ShippedDate { get; set; }
+
+        [DisplayName("Detail")]
+        public virtual IEnumerable< PickingListDetail> PickingListDetail { get; set; }
+    }
+    [Table("PickingListDetail")]
+    public class PickingListDetail
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public int PickingListDetailId { get; set; }
+
+        [DisplayName("Picking List Header")]
+        public int PickingListHeaderId { get; set; }
+        public virtual PickingListHeader PickingListHeader { get; set; }
+
+        [DisplayName("Product")]
+        public int ProductID { get; set; }
+        public virtual Product Product { get; set; }
+
+        [DisplayName("Total Items")]
+        public int TotalItems { get; set; }
+
+        [DisplayName("Transfer Quantity")]
+        public int TransferQuantity { get; set; }
+        [DisplayName("Reseller / Distributor Code")]
+
+        public int ClientID { get; set; }
+        public virtual Client Client { get; set; }
+
+        [DisplayName("Shiping Address")]
+        public virtual Address Address { get; set; }
+
+        [DisplayName("Order")]
+        public int OrderLineId { get; set; }
+        public virtual IEnumerable<OrderLine> OrderLine { get; set; }
+
+        [DisplayName("Tracking Number")]
+        public string TrackingNumber { get; set; }
+        public bool Active { get; set; }
+    }
+    #endregion
+
+    #region Order
+    [Table("ShippingMethod")]
+    public class ShippingMethod
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public int ShippingMethodId { get; set; }
+        [DisplayName("Shipping Method")]
+        public string ShippingMethodName { get; set; }
+        [DisplayName("Extra Cost")]
+        [DataType(DataType.Currency)]
+        public decimal ExtraCost { get; set; }
+        public bool Active { get; set; }
+    }
+
+    [Table("ShippingType")]
+    public class ShippingType
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public int ShippingTypeId { get; set; }
+        [DisplayName("Shipping Type")]
+        public string ShippingTypeName { get; set; }
+    }
+
+        [Table("OrderHeader")]
     public class OrderHeader
     {
         [Key]
@@ -103,6 +280,10 @@ namespace Aroma_Violet.Models
 
         [DisplayName("Order Date")]
         public DateTime OrderDate { get; set; }
+
+        [DisplayName("Shipping Type")]
+        public int ShippingTypeId { get; set; }
+        public virtual ShippingType ShippingType { get; set; }
 
         public bool Active { get; set; }
     }
@@ -178,6 +359,17 @@ namespace Aroma_Violet.Models
         public bool Active { get; set; }
     }
 
+    [Table("SupportTicketType")]
+    public class SupportTicketType
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public int SupportTickettypeId { get; set; }
+
+        [DisplayName("Support Ticket Type")]
+        public string SupportTicketTypeName { get; set; }
+
+    }
 
     [Table("SupportTicketStatus")]
     public class SupportTicketStatus
@@ -429,6 +621,10 @@ namespace Aroma_Violet.Models
         public int ClientID { get; set; }
         public virtual Client Client { get; set; }
         
+        [DisplayName("Type")]
+        public int SupportTicketTypeId { get; set; }
+        public virtual SupportTicketType SupportTicketType { get; set; }
+
         [DisplayName("Assigned User")]
         public Guid? UserID { get; set; }
         
@@ -617,6 +813,8 @@ namespace Aroma_Violet.Models
         public string RegistrationNumber { get; set; }
 
         public bool Active { get; set; }
+
+        public bool IgnoreRebate { get; set; }
     }
 
 
@@ -899,7 +1097,26 @@ namespace Aroma_Violet.Models
 
     #region Financial tables
 
-    /*TODO: Add finAccount to administrator control functions; view edit delete ....*/
+    [Table("Rebate")]
+    public class Rebate
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public int RebateId { get; set; }
+        [DisplayName("Client Type")]
+        public int ClientTypeId { get; set; }
+        public virtual ClientType ClientType { get; set; }
+        [DisplayName("Product")]
+        public int ProductID { get; set; }
+        public virtual Product Product {get;set;}
+        [DisplayName("Amount")]
+        [DataType(DataType.Currency)]
+        public decimal Amount { get; set; }
+        [DisplayName("Account")]
+        public Guid AccountId { get; set; }
+        public virtual finAccount Account { get; set; }
+    }
+
     [Table("finAccount")]
     public class finAccount
     {
@@ -915,7 +1132,48 @@ namespace Aroma_Violet.Models
     }
 
 
-    [Table("finClientAccount")]
+        [Table("DebitOrderPeriodDetail")]
+    public class DebitOrderPeriodDetail
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public int DebitOrderPeriodDetailID { get; set; }
+        [DisplayName("Reseller / Distributor Code")]
+        public int ClientID { get; set; }
+        public int Period { get; set; }
+        [DisplayName("Product")]
+        public int ProductID { get; set; }
+        [DisplayName("Price")]
+        [DataType(DataType.Currency)]
+        public decimal Price { get; set; }
+        [DisplayName("Status")]
+        public int DebitOrderPeriodStatusID { get; set; }
+        [DisplayName("Quantity")]
+        public int Quantity { get; set; }
+    }
+
+    [Table("PublicHolidays")]
+    public class PublicHolidays
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public int ID { get; set; }
+        [DisplayName("Status")]
+        public DateTime HolidayDate { get; set; }
+        [DisplayName("Status")]
+        public string HolidayDescription { get; set; }
+    }
+
+    [Table("DebitOrderPeriodStatus")]
+    public class DebitOrderPeriodStatus
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public int DebitOrderPeriodStatusID { get; set; }
+        public string Description { get; set; }
+    }
+
+        [Table("finClientAccount")]
     public class finClientAccount
     {
         [Key]
@@ -927,6 +1185,7 @@ namespace Aroma_Violet.Models
         public virtual Client Client { get; set; }
 
         [DisplayName("Account")]
+        public Guid AccountId { get; set; }
         public virtual finAccount Account { get; set; }
 
         public bool Active { get; set; }
@@ -944,7 +1203,8 @@ namespace Aroma_Violet.Models
         public Guid AccountID { get; set; } /*account will normaly point to a client account id but may point to account id when it is a system account*/
 
         [DisplayName("Amount")]
-        public double Amount { get; set; }
+        [DataType(DataType.Currency)]
+        public decimal Amount { get; set; }
 
         [DisplayName("Corresponding Joutnal Entry")]
         public Guid CorrespondingJournalId { get; set; }
@@ -963,6 +1223,8 @@ namespace Aroma_Violet.Models
 
         [DisplayName("Comment")]
         public string Comment { get; set; }
+
+        public int Index { get; set; }
 
         public bool Active { get; set; }
 
@@ -1029,8 +1291,12 @@ namespace Aroma_Violet.Models
         public bool Active { get; set; }
         public DateTime Created { get; set; }
         public DateTime? ProcessDate { get; set; }
+        public decimal Amount { get; set; }
+        public int ExternalDebitOrderId { get; set; }
 
     }
+
+
     #endregion
 
     #region Loging and settings

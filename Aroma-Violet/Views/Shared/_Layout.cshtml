@@ -58,6 +58,7 @@
     </div>
     <img src="~/Content/Images/Novus Logo.svg" class="logo" id="Novus_Side_Logo" />
     <div class="container body-content">
+        @Html.Partial("BusyWorking")
         @RenderBody()
         <hr />
         <footer>
@@ -68,12 +69,16 @@
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
  
-
 </body>
 </html>
 
 
 <script type="text/javascript">
+
+    $(function () {
+        window.onsubmit = ShowBustWorking;
+        TogleVisible("BusyWorkingDiv");
+    });
 
     function UpdateDateTime(key)
     {
@@ -110,11 +115,46 @@
     function TogleVisible(id)
     {
         var element = document.getElementById(id);
-        if (element.style.display == 'block')
-            e.style.display = 'none';
-        else
-            e.style.display = 'block';
+        if (element.style.display == 'block'||element.style.display == '') {
+            element.style.display = 'none';
+        }
+        else {
+            element.style.display = 'block';
+        }
 
+    }
+
+    function SetVisible(id,bVal) {
+        var element = document.getElementById(id);
+        if (!bVal) {
+            element.style.display = 'none';
+        }
+        else {
+            element.style.display = 'block';
+        }
+
+    }
+    function ShowBustWorking() {
+
+        TogleVisible("BusyWorkingDiv");
+    }
+
+    function callServerMethod(clientData, url, responceElement)
+    {
+        data = JSON.stringify(clientData);
+
+        $.ajax({
+            url: url,
+            type: 'POST',
+            contentType: 'application/json; charset=utf-8',
+            data: data,
+            success: function (rdata) {
+                if (responceElement != '') {
+                    var elementPreview = document.getElementById(responceElement);
+                    elementPreview.innerHTML = rdata;
+                }
+            }
+        });
     }
 
     //$(function () { // will trigger when the document is ready

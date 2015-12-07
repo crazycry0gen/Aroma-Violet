@@ -1,0 +1,58 @@
+﻿@model Aroma_Violet.Models.PickingListHeader
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>PickingListHeader</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ShippingMethod.ShippingMethodName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ShippingMethod.ShippingMethodName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ShippingType.ShippingTypeName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ShippingType.ShippingTypeName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PickingDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PickingDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ShippedDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ShippedDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PickingListDetailId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PickingListDetailId)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.PickingListHeaderId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

@@ -22,7 +22,9 @@ namespace Aroma_Violet.Models
         [Display(Name = "SMS Template")]
         public int SystemSMSTemplateID { get; internal set; }
         public int ClientSMSCount { get; internal set; }
+        public int ClientSMSMaxCount { get; internal set; }
         public List<SMSDistributionItemModel> Countries { get; internal set; }
+        public List<SMSDistributionItemModel> ClientTypes { get; internal set; }
         public List<string> Variables { get; internal set; }
         public int ClientID { get; internal set; }
     }
@@ -98,7 +100,8 @@ namespace Aroma_Violet.Models
             Country=0,
             Province=1,
             PostalArea=2,
-            PostalCode=3
+            PostalCode=3,
+            ClientType=4
         }
 
         public static List<SMSDistributionItemModel> Items { get; set; }

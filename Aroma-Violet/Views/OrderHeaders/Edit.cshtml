@@ -12,6 +12,7 @@
     @Html.AntiForgeryToken()
 
     @Html.HiddenFor(m=>m.Active)
+    @Html.HiddenFor(m => m.ShippingTypeId)
 
     <div class="form-horizontal">
         <h4>Order</h4>

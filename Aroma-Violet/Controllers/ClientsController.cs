@@ -201,12 +201,24 @@ namespace Aroma_Violet.Controllers
             }
         }
 
+
+        public JsonResult CheckIDNumber(string id)
+        {
+            var ret = string.Empty;
+            var client = db.Clients.FirstOrDefault(m => m.IDNumber == id);
+            if (client != null)
+            {
+                ret = string.Format("ID exists already for {0} {1}", client.Title.TitleName, client.ClientSurname);
+            }
+            return Json(ret);
+        }
+
         // POST: Clients/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "ClientId,ClientInitials,NickName,FullNames,LanguageID,Employer,DateOfBirth,ClientSurname,SAResident,IDNumber,ClientTypeID,TitleID,EthnicGroupID,IncomeGroupID,PostalAddress,DeliveryAddress,DeliveryAddressLines,ProvinceID,CountryID,Lines,AddressLine,PostalAddressLines,AddressTypeID,DeliveryAddress,PostalAddress,TelWork,Cell,TelHome,EMail,ResellerID")] ClientViewModel clientView)
+        public async Task<ActionResult> Create([Bind(Include = "ClientId,ClientInitials,NickName,FullNames,LanguageID,Employer,DateOfBirth,ClientSurname,SAResident,IDNumber,ClientTypeID,TitleID,EthnicGroupID,IncomeGroupID,PostalAddress,DeliveryAddress,DeliveryAddressLines,ProvinceID,CountryID,Lines,AddressLine,PostalAddressLines,AddressTypeID,DeliveryAddress,PostalAddress,TelWork,Cell,TelHome,EMail,ResellerID,RegistrationNumber,CompanyName,IgnoreRebate")] ClientViewModel clientView)
         {
             
             var client = clientView.GetBaseClient();
@@ -223,7 +235,7 @@ namespace Aroma_Violet.Controllers
 
                 if (existingClient == null)
                 {
-
+                    
                     db.Clients.Add(client);
                     await db.SaveChangesAsync();
                     
@@ -354,7 +366,7 @@ namespace Aroma_Violet.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "ClientId, ResellerID,ClientInitials,NickName,FullNames,LanguageID,Employer,DateOfBirth,ClientSurname,SAResident,IDNumber,ClientTypeID,TitleID,EthnicGroupID,IncomeGroupID,ProvinceID,CountryID,Active")] ClientViewModel clientView)
+        public async Task<ActionResult> Edit([Bind(Include = "ClientId, ResellerID,ClientInitials,NickName,FullNames,LanguageID,Employer,DateOfBirth,ClientSurname,SAResident,IDNumber,ClientTypeID,TitleID,EthnicGroupID,IncomeGroupID,ProvinceID,CountryID,Active,RegistrationNumber,CompanyName,IgnoreRebate")] ClientViewModel clientView)
         {
             var client = clientView.GetBaseClient();
             if (ModelState.IsValid)

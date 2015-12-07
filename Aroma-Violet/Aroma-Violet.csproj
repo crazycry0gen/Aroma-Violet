@@ -169,6 +169,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AccountHoldersController.cs" />
+    <Compile Include="Controllers\AccountMovementController.cs" />
     <Compile Include="Controllers\AddressesController.cs" />
     <Compile Include="Controllers\AddressLinesController.cs" />
     <Compile Include="Controllers\AddressTypesController.cs" />
@@ -193,12 +194,22 @@
     <Compile Include="Controllers\OrderHeadersController.cs" />
     <Compile Include="Controllers\OrderLinesController.cs" />
     <Compile Include="Controllers\OrderStatusController.cs" />
+    <Compile Include="Controllers\PickingListDetailsController.cs" />
+    <Compile Include="Controllers\PickingListHeadersController.cs" />
     <Compile Include="Controllers\PostalCodesController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
     <Compile Include="Controllers\ProvincesController.cs" />
+    <Compile Include="Controllers\RebatesController.cs" />
+    <Compile Include="Controllers\ShippingMethodsController.cs" />
+    <Compile Include="Controllers\ShippingTypesController.cs" />
     <Compile Include="Controllers\SubscriptionsController.cs" />
     <Compile Include="Controllers\SupportTicketsController.cs" />
+    <Compile Include="Controllers\SupportTicketTypesController.cs" />
+    <Compile Include="Controllers\SystemIntervalSpecifiersController.cs" />
+    <Compile Include="Controllers\SystemMenuListItemsController.cs" />
     <Compile Include="Controllers\SystemMenuListsController.cs" />
+    <Compile Include="Controllers\SystemProcedureMessagesController.cs" />
+    <Compile Include="Controllers\SystemProceduresController.cs" />
     <Compile Include="Controllers\SystemSMSController.cs" />
     <Compile Include="Controllers\SystemSMSTemplatesController.cs" />
     <Compile Include="Controllers\SystemTicketTemplatesController.cs" />
@@ -208,10 +219,12 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\AccountMovementViewModel.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AdministratorModels.cs" />
     <Compile Include="Models\AromaDataModels.cs" />
     <Compile Include="Models\Attributes.cs" />
+    <Compile Include="Models\ClientFinStatementViewModel.cs" />
     <Compile Include="Models\ClientViewModels.cs" />
     <Compile Include="Models\Generic.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -226,6 +239,7 @@
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Images\gears_animated.gif" />
     <Content Include="Content\Images\Novus Logo.svg" />
     <Content Include="Content\themes\base\accordion.css" />
     <Content Include="Content\themes\base\all.css" />
@@ -283,10 +297,16 @@
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
+    <Content Include="SQL Scripts\dbo.fnGetValidDebitOrderDateForCurrentMonth.sql" />
+    <Content Include="SQL Scripts\dbo.spBalanceAtDate.sql" />
+    <Content Include="SQL Scripts\dbo.spCreateDebitOrderFromSubscriptions.sql" />
+    <Content Include="SQL Scripts\dbo.spCreateSales.sql" />
     <Content Include="SQL Scripts\dbo.spfinCreateJournal.sql" />
     <Content Include="SQL Scripts\dbo.spfinCreateJournal_Base.sql" />
+    <Content Include="SQL Scripts\dbo.spfinCreateJournal_GS.sql" />
     <Content Include="SQL Scripts\dbo.tpfinJournal.sql" />
     <Content Include="SQL Scripts\dbo.tpfinJournal_Base.sql" />
+    <Content Include="SQL Scripts\dbo.tpfinJournal_GS.sql" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -411,11 +431,6 @@
     <Content Include="Views\finAccounts\Details.cshtml" />
     <Content Include="Views\finAccounts\Edit.cshtml" />
     <Content Include="Views\finAccounts\Index.cshtml" />
-    <Content Include="Views\finClientAccounts\Create.cshtml" />
-    <Content Include="Views\finClientAccounts\Delete.cshtml" />
-    <Content Include="Views\finClientAccounts\Details.cshtml" />
-    <Content Include="Views\finClientAccounts\Edit.cshtml" />
-    <Content Include="Views\finClientAccounts\Index.cshtml" />
     <Content Include="Views\DebitOrders\Create.cshtml" />
     <Content Include="Views\DebitOrders\Delete.cshtml" />
     <Content Include="Views\DebitOrders\Details.cshtml" />
@@ -500,9 +515,63 @@
     <Content Include="Views\OrderLines\Edit.cshtml" />
     <Content Include="Views\OrderLines\Index.cshtml" />
     <Content Include="Views\OrderHeaders\partialCreate.cshtml" />
+    <Content Include="Views\Shared\BusyWorking.cshtml" />
+    <Content Include="Views\SystemMenuListItems\Create.cshtml" />
+    <Content Include="Views\SystemMenuListItems\Delete.cshtml" />
+    <Content Include="Views\SystemMenuListItems\Details.cshtml" />
+    <Content Include="Views\SystemMenuListItems\Edit.cshtml" />
+    <Content Include="Views\SystemMenuListItems\Index.cshtml" />
+    <Content Include="Views\SystemIntervalSpecifiers\Create.cshtml" />
+    <Content Include="Views\SystemIntervalSpecifiers\Delete.cshtml" />
+    <Content Include="Views\SystemIntervalSpecifiers\Details.cshtml" />
+    <Content Include="Views\SystemIntervalSpecifiers\Edit.cshtml" />
+    <Content Include="Views\SystemIntervalSpecifiers\Index.cshtml" />
+    <Content Include="Views\SystemProcedures\Create.cshtml" />
+    <Content Include="Views\SystemProcedures\Delete.cshtml" />
+    <Content Include="Views\SystemProcedures\Details.cshtml" />
+    <Content Include="Views\SystemProcedures\Edit.cshtml" />
+    <Content Include="Views\SystemProcedures\Index.cshtml" />
+    <Content Include="Views\SystemProcedureMessages\Create.cshtml" />
+    <Content Include="Views\SystemProcedureMessages\Delete.cshtml" />
+    <Content Include="Views\SystemProcedureMessages\Details.cshtml" />
+    <Content Include="Views\SystemProcedureMessages\Edit.cshtml" />
+    <Content Include="Views\SystemProcedureMessages\Index.cshtml" />
+    <Content Include="Views\SupportTicketTypes\Create.cshtml" />
+    <Content Include="Views\SupportTicketTypes\Delete.cshtml" />
+    <Content Include="Views\SupportTicketTypes\Details.cshtml" />
+    <Content Include="Views\SupportTicketTypes\Edit.cshtml" />
+    <Content Include="Views\SupportTicketTypes\Index.cshtml" />
+    <Content Include="Views\Rebates\Create.cshtml" />
+    <Content Include="Views\Rebates\Delete.cshtml" />
+    <Content Include="Views\Rebates\Details.cshtml" />
+    <Content Include="Views\Rebates\Edit.cshtml" />
+    <Content Include="Views\Rebates\Index.cshtml" />
+    <Content Include="Views\ShippingTypes\Create.cshtml" />
+    <Content Include="Views\ShippingTypes\Delete.cshtml" />
+    <Content Include="Views\ShippingTypes\Details.cshtml" />
+    <Content Include="Views\ShippingTypes\Edit.cshtml" />
+    <Content Include="Views\ShippingTypes\Index.cshtml" />
+    <Content Include="Views\ShippingMethods\Create.cshtml" />
+    <Content Include="Views\ShippingMethods\Delete.cshtml" />
+    <Content Include="Views\ShippingMethods\Details.cshtml" />
+    <Content Include="Views\ShippingMethods\Edit.cshtml" />
+    <Content Include="Views\ShippingMethods\Index.cshtml" />
+    <Content Include="Views\PickingListHeaders\Create.cshtml" />
+    <Content Include="Views\PickingListHeaders\Delete.cshtml" />
+    <Content Include="Views\PickingListHeaders\Details.cshtml" />
+    <Content Include="Views\PickingListHeaders\Edit.cshtml" />
+    <Content Include="Views\PickingListHeaders\Index.cshtml" />
+    <Content Include="Views\PickingListDetails\Create.cshtml" />
+    <Content Include="Views\PickingListDetails\Delete.cshtml" />
+    <Content Include="Views\PickingListDetails\Details.cshtml" />
+    <Content Include="Views\PickingListDetails\Edit.cshtml" />
+    <Content Include="Views\PickingListDetails\Index.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\PickingListDetail.cshtml" />
+    <Content Include="Views\AccountMovement\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\finClientAccounts\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

@@ -25,8 +25,8 @@ AS
 		inp.ClientID ClientID,
 		FromAccountID,
 		ToAccountID,
-		(select top 1 ClientAccountID from finClientAccount where ClientID = inp.ClientID and Account_AccountId = inp.FromAccountID) ClientFromAccountID,
-		(select top 1 ClientAccountID from finClientAccount where ClientID = inp.ClientID and Account_AccountId = inp.ToAccountID) ClientToAccountID,
+		(select top 1 ClientAccountID from finClientAccount where ClientID = inp.ClientID and AccountId = inp.FromAccountID) ClientFromAccountID,
+		(select top 1 ClientAccountID from finClientAccount where ClientID = inp.ClientID and AccountId = inp.ToAccountID) ClientToAccountID,
 		0  CreateFrom,
 		0  CreateTo,
 		/*isnull(fromAccount.ClientAccountID,newid()) ClientFromAccountID,
@@ -48,10 +48,10 @@ AS
 	from #transInput inp
 			/*left join finClientAccount fromAccount
 				on inp.ClientID = fromAccount.ClientID 
-				and inp.FromAccountID = fromAccount.Account_AccountId
+				and inp.FromAccountID = fromAccount.AccountId
 			left join finClientAccount toAccount
 				on inp.ClientID = toAccount.ClientID 
-				and inp.FromAccountID = toAccount.Account_AccountId
+				and inp.FromAccountID = toAccount.AccountId
 			left join SystemNote 
 				on inp.MovementSource = SystemNote.NoteText*/
 
@@ -79,7 +79,7 @@ AS
 	where CreateNote = 1
 
 	insert into finClientAccount (
-		Account_AccountId,
+		AccountId,
 		Active,
 		ClientAccountId,
 		ClientID

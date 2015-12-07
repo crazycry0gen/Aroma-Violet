@@ -1,0 +1,26 @@
+﻿@model Aroma_Violet.Models.SupportTicketType
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>SupportTicketType</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.SupportTicketTypeName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SupportTicketTypeName)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.SupportTickettypeId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

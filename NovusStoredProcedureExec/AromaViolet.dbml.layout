@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.5" name="AromaViolet">
+  <DataContextMoniker Name="/AromaVioletDataContext" />
+  <nestedChildShapes>
+    <classShape Id="de9b1213-59f5-4a3e-820a-7e42c65d0b8b" absoluteBounds="3.625, 4.125, 2, 1.3862939453125">
+      <DataClassMoniker Name="/AromaVioletDataContext/SystemSetting" />
+      <nestedChildShapes>
+        <elementListCompartment Id="dfdb62b9-b2d1-4204-9b67-7030df2cdef4" absoluteBounds="3.6400000000000006, 4.585, 1.9700000000000002, 0.8262939453125" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="430ec1a8-c426-4f5a-aa55-bdbac00e1996" absoluteBounds="3.375, 0.875, 2, 2.1554996744791666">
+      <DataClassMoniker Name="/AromaVioletDataContext/SystemProcedure" />
+      <nestedChildShapes>
+        <elementListCompartment Id="ca6ab552-e18d-40c5-8048-287134a0f0f0" absoluteBounds="3.3899999999999997, 1.335, 1.9700000000000002, 1.5954996744791665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="15e94c52-ac1a-4e74-9857-017e814ff2d1" absoluteBounds="8.375, 2.375, 2, 1.5785953776041666">
+      <DataClassMoniker Name="/AromaVioletDataContext/SystemProcedureMessage" />
+      <nestedChildShapes>
+        <elementListCompartment Id="9be36bc6-a8bb-418e-b305-194f7794d791" absoluteBounds="8.39, 2.835, 1.9700000000000002, 1.0185953776041665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(5.375 : 2.70274983723958); (8.375 : 2.70274983723958)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/AromaVioletDataContext/SystemProcedure/SystemProcedure_SystemProcedureMessage" />
+      <nodes>
+        <classShapeMoniker Id="430ec1a8-c426-4f5a-aa55-bdbac00e1996" />
+        <classShapeMoniker Id="15e94c52-ac1a-4e74-9857-017e814ff2d1" />
+      </nodes>
+    </associationConnector>
+    <classShape Id="dd5377b7-3ddf-4707-8a1c-7783024ffa64" absoluteBounds="8.125, 0.875, 2, 1.3862939453125">
+      <DataClassMoniker Name="/AromaVioletDataContext/SystemIntervalSpecifier" />
+      <nestedChildShapes>
+        <elementListCompartment Id="6500dacc-9e69-4ea4-9f65-60cc105b390c" absoluteBounds="8.14, 1.335, 1.9700000000000002, 0.8262939453125" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(8.125 : 1.56814697265625); (5.375 : 1.56814697265625)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/AromaVioletDataContext/SystemIntervalSpecifier/SystemIntervalSpecifier_SystemProcedure" />
+      <nodes>
+        <classShapeMoniker Id="dd5377b7-3ddf-4707-8a1c-7783024ffa64" />
+        <classShapeMoniker Id="430ec1a8-c426-4f5a-aa55-bdbac00e1996" />
+      </nodes>
+    </associationConnector>
+  </nestedChildShapes>
+</ordesignerObjectsDiagram>
