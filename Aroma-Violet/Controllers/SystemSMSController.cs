@@ -17,56 +17,73 @@ namespace Aroma_Violet.Controllers
         private AromaContext db = new AromaContext();
         [Authorize]
         [HttpGetAttribute]
-        public async Task<ActionResult> Manage(int? clientId, int smsCount=0)
+        public async Task<ActionResult> Manage(int? clientId, int smsCount = 0)
         {
-            if ((SMSDistributionViewModel.Items== null || SMSDistributionViewModel.Items.Count==0 ) && !clientId.HasValue)
+            var location = "Start";
+            try
             {
-                SMSDistributionViewModel.Items = new List<SMSDistributionItemModel>();
-                SMSDistributionViewModel.Items.AddRange(await db.Countries.Where(m => m.Active).Select(m=>new SMSDistributionItemModel() {Id= m.CountryId, Description=m.CountryName, ItemType=SMSDistributionViewModel.enumSMSDistributionItemType.Country}).ToListAsync());
-                SMSDistributionViewModel.Items.AddRange(await db.Provinces.Where(m => m.Active).Select(m=>new SMSDistributionItemModel() {Id= m.ProvinceId, Description=m.ProvinceName, ItemType=SMSDistributionViewModel.enumSMSDistributionItemType.Province}).ToListAsync());
-                SMSDistributionViewModel.Items.AddRange(await db.PostalAreas.Where(m => m.Active).Select(m=>new SMSDistributionItemModel() {Id= m.PostalAreaId, Description=m.PostalAreaName, ItemType=SMSDistributionViewModel.enumSMSDistributionItemType.PostalArea}).ToListAsync());
-                SMSDistributionViewModel.Items.AddRange(await db.PostalCodes.Where(m => m.Active).Select(m=>new SMSDistributionItemModel() {Id= m.PostalCodeId, Description=m.PostalCodeName, ItemType=SMSDistributionViewModel.enumSMSDistributionItemType.PostalCode}).ToListAsync());
-                SMSDistributionViewModel.Items.AddRange(await db.ClientTypes.Where(m => m.Active).Select(m => new SMSDistributionItemModel() { Id = m.ClientTypeId, Description = m.ClientTypeName, ItemType = SMSDistributionViewModel.enumSMSDistributionItemType.ClientType }).ToListAsync());
+                if ((SMSDistributionViewModel.Items == null || SMSDistributionViewModel.Items.Count == 0) && !clientId.HasValue)
+                {
+                    SMSDistributionViewModel.Items = new List<SMSDistributionItemModel>();
+                    SMSDistributionViewModel.Items.AddRange(await db.Countries.OrderBy(m=>m.CountryName).Where(m => m.Active).Select(m => new SMSDistributionItemModel() { Id = m.CountryId, Description = m.CountryName, ItemType = SMSDistributionViewModel.enumSMSDistributionItemType.Country }).ToListAsync());
+                    SMSDistributionViewModel.Items.AddRange(await db.Provinces.Where(m => m.Active).Select(m => new SMSDistributionItemModel() { Id = m.ProvinceId, Description = m.ProvinceName, ItemType = SMSDistributionViewModel.enumSMSDistributionItemType.Province }).ToListAsync());
+                    SMSDistributionViewModel.Items.AddRange(await db.PostalAreas.Where(m => m.Active).Select(m => new SMSDistributionItemModel() { Id = m.PostalAreaId, Description = m.PostalAreaName, ItemType = SMSDistributionViewModel.enumSMSDistributionItemType.PostalArea }).ToListAsync());
+                    SMSDistributionViewModel.Items.AddRange(await db.PostalCodes.Where(m => m.Active).Select(m => new SMSDistributionItemModel() { Id = m.PostalCodeId, Description = m.PostalCodeName, ItemType = SMSDistributionViewModel.enumSMSDistributionItemType.PostalCode }).ToListAsync());
+                    SMSDistributionViewModel.Items.AddRange(await db.ClientTypes.Where(m => m.Active).Select(m => new SMSDistributionItemModel() { Id = m.ClientTypeId, Description = m.ClientTypeName, ItemType = SMSDistributionViewModel.enumSMSDistributionItemType.ClientType }).ToListAsync());
 
-                SMSDistributionViewModel.RelationShips = (from item in db.PostalCodes.Where(m=>m.Active).ToArray()
-                                                  select new int[] { item.Country.CountryId, item.Province.ProvinceId, item.PostalArea.PostalAreaId, item.PostalCodeId }).ToArray();
+                    var allCodes = db.PostalCodes.ToArray();
+                    var clients = db.Addresses.Where(m=>m.AddressTypeID==1).Select(m=>m.Code).ToArray();
+                                    
+
+                    SMSDistributionViewModel.RelationShips = (from item in db.PostalCodes.Where(m => m.Active
+                                                              && m.Country != null
+                                                              && m.Province != null
+                                                              && m.PostalArea != null
+                                                              ).ToArray()
+                                                              select new int[] { item.Country.CountryId, item.Province.ProvinceId, item.PostalArea.PostalAreaId, item.PostalCodeId }).ToArray();
+                }
+
+                var manager = new SMSManagerViewModel();
+                manager.UnsentSMSCount = await db.SystemSMSes.Where(m => m.SystemSMSStatusId == 1).CountAsync();
+                manager.LastSendAttempt = await db.SystemSMSes.Where(m => m.SystemSMSStatusId == 1).Select(m => (DateTime?)m.LastSendAttempt).MaxAsync();
+                manager.LastSMSAdded = await db.SystemSMSes.Select(m => (DateTime?)m.iDate).MaxAsync();
+                manager.LastSuccessfulSend = await db.SystemSMSes.Where(m => m.SystemSMSStatusId == 2).Select(m => (DateTime?)m.LastSendAttempt).MaxAsync();
+                manager.ClientSMSCount = smsCount;
+                manager.ClientSMSMaxCount = await db.Clients.Where(m => m.Active).CountAsync();
+                manager.SystemSMSTemplateID = 0;
+                var itemList = await db.SystemSMSTemplates.ToListAsync();
+                itemList.Insert(0, new SystemSMSTemplate() { SystemSMSTemplateId = 0, Description = "Custom", Text = string.Empty });
+                var nlist = new SelectList(itemList, "SystemSMSTemplateId", "Description", null);
+                ViewBag.Templates = itemList.Select(m => m.Text).ToArray();
+                ViewBag.SystemSMSTemplateID = nlist;
+
+                if (clientId.HasValue)
+                {
+                    manager.Countries = new List<SMSDistributionItemModel>();
+                    ViewBag.Client = db.Clients.FirstOrDefault(m => m.ClientId == clientId.Value);
+                }
+
+                if (ViewBag.Client != null)
+                {
+                    manager.ClientID = clientId.Value;
+                    manager.ClientSMSCount = 1;
+                    manager.ClientSMSMaxCount = 1;
+
+                }
+                else
+                {
+                    manager.Countries = SMSDistributionViewModel.Items.Where(m => m.ItemType == SMSDistributionViewModel.enumSMSDistributionItemType.Country).ToList();
+                    manager.ClientTypes = SMSDistributionViewModel.Items.Where(m => m.ItemType == SMSDistributionViewModel.enumSMSDistributionItemType.ClientType).ToList();
+
+                }
+                manager.Variables = SystemSMSTemplateModel.GetVariableList();
+
+                return View(manager);
             }
-
-            var manager = new SMSManagerViewModel();
-            manager.UnsentSMSCount = await db.SystemSMSes.Where(m => m.SystemSMSStatusId == 1).CountAsync();
-            manager.LastSendAttempt = await db.SystemSMSes.Where(m => m.SystemSMSStatusId==1).Select(m=> (DateTime?)m.LastSendAttempt).MaxAsync();
-            manager.LastSMSAdded = await db.SystemSMSes.Select(m => (DateTime?)m.iDate).MaxAsync();
-            manager.LastSuccessfulSend = await db.SystemSMSes.Where(m => m.SystemSMSStatusId == 2).Select(m => (DateTime?)m.LastSendAttempt).MaxAsync();
-            manager.ClientSMSCount = smsCount;
-            manager.ClientSMSMaxCount = await db.Clients.Where(m => m.Active).CountAsync();
-            manager.SystemSMSTemplateID = 0;
-            var itemList = await db.SystemSMSTemplates.ToListAsync();
-            itemList.Insert(0,new SystemSMSTemplate() { SystemSMSTemplateId = 0, Description = "Custom",Text=string.Empty });
-            var nlist = new SelectList(itemList, "SystemSMSTemplateId","Description", null);
-            ViewBag.Templates = itemList.Select(m=>m.Text).ToArray();
-            ViewBag.SystemSMSTemplateID = nlist;
-
-            if (clientId.HasValue)
+            catch (Exception ex)
             {
-                manager.Countries = new List<SMSDistributionItemModel>();
-                ViewBag.Client = db.Clients.FirstOrDefault(m=>m.ClientId==clientId.Value);
+                throw new Exception(location, ex);
             }
-
-            if (ViewBag.Client != null)
-            {
-                manager.ClientID = clientId.Value;
-                manager.ClientSMSCount = 1;
-                manager.ClientSMSMaxCount = 1;
-            }
-            else
-            {
-                manager.Countries = SMSDistributionViewModel.Items.Where(m => m.ItemType == SMSDistributionViewModel.enumSMSDistributionItemType.Country).ToList();
-                manager.ClientTypes = SMSDistributionViewModel.Items.Where(m => m.ItemType == SMSDistributionViewModel.enumSMSDistributionItemType.ClientType).ToList();
-
-            }
-            manager.Variables = SystemSMSTemplateModel.GetVariableList();
-
-            return View(manager);
         }
 
         [HttpPost]
@@ -78,39 +95,31 @@ namespace Aroma_Violet.Controllers
                 var result = await db.SystemSMSTemplates.FirstAsync(m => m.SystemSMSTemplateId == SystemSMSTemplateID);
                 SMSText = result.Text;
             }
-               var  client = await db.Clients.FirstOrDefaultAsync(m => m.ClientId == clientId) ;
-            if(client != null)
+            var client = await db.Clients.FirstOrDefaultAsync(m => m.ClientId == clientId);
+            if (client != null)
             {
-                var smsSub = new SystemSMSTemplateModel(SMSText, client);
+                var smsSub = new SystemSMSTemplateModel(SMSText, client,db);
                 textResult = smsSub.Generate();
             }
             return Json(textResult);
         }
 
-        [HttpPost]
-        public async Task<ActionResult> Manage(int[] selectedCountries, int[] selectedProvinces, int[] selectedAreas, int[] selectedCodes,int[] selectedClientTypes, string SMSText, int SystemSMSTemplateID, int? clientId, bool GetSMSCount)
+
+        public async Task<Client[]> GetSMSClients(int[] selectedCountries, int[] selectedProvinces, int[] selectedAreas, int[] selectedCodes, int[] selectedClientTypes, int? clientId)
         {
-
-            var userId = Guid.Parse( User.Identity.GetUserId());
-
-            if (SystemSMSTemplateID > 0)
-            {
-                SMSText = db.SystemSMSTemplates.First(m => m.SystemSMSTemplateId == SystemSMSTemplateID).Text;
-            }
-
             var selectedItems = new List<SMSDistributionItemModel>();
             selectedItems.AddRange(SMSDistributionViewModel.Find(selectedCountries, SMSDistributionViewModel.enumSMSDistributionItemType.Country));
             selectedItems.AddRange(SMSDistributionViewModel.Find(selectedProvinces, SMSDistributionViewModel.enumSMSDistributionItemType.Province));
             selectedItems.AddRange(SMSDistributionViewModel.Find(selectedAreas, SMSDistributionViewModel.enumSMSDistributionItemType.PostalArea));
             selectedItems.AddRange(SMSDistributionViewModel.Find(selectedCodes, SMSDistributionViewModel.enumSMSDistributionItemType.PostalCode));
-            
-            var parents = (from item in selectedItems.Where(m=>m.Parent!=null).ToArray()
+
+            var parents = (from item in selectedItems.Where(m => m.Parent != null).ToArray()
                            select item.Parent.Key).ToArray();
             selectedItems.RemoveAll(m => parents.Contains(m.Key));
-            var codes = (from item in await db.PostalCodes.Where(m=>m.Active).ToArrayAsync()
+            var codes = (from item in await db.PostalCodes.Where(m => m.Active).ToArrayAsync()
                          where (
                          selectedItems.Where(m => m.ItemType == SMSDistributionViewModel.enumSMSDistributionItemType.Country).Select(m => m.Id).Contains(item.Country.CountryId)
-                         || selectedItems.Where(m => m.ItemType == SMSDistributionViewModel.enumSMSDistributionItemType.Province ).Select(m => m.Id).Contains(item.Province.ProvinceId)
+                         || selectedItems.Where(m => m.ItemType == SMSDistributionViewModel.enumSMSDistributionItemType.Province).Select(m => m.Id).Contains(item.Province.ProvinceId)
                          || selectedItems.Where(m => m.ItemType == SMSDistributionViewModel.enumSMSDistributionItemType.PostalArea).Select(m => m.Id).Contains(item.PostalArea.PostalAreaId)
                          || selectedItems.Where(m => m.ItemType == SMSDistributionViewModel.enumSMSDistributionItemType.PostalCode).Select(m => m.Id).Contains(item.PostalCodeId)
                          )
@@ -120,56 +129,80 @@ namespace Aroma_Violet.Controllers
 
             if (clientId.HasValue && clientId.Value > 0)
             {
-                clients = new Client[] { db.Clients.FirstOrDefault(m=>m.ClientId==clientId.Value)};
+                clients = new Client[] { db.Clients.FirstOrDefault(m => m.ClientId == clientId.Value) };
             }
             else
             {
-                clients = (from item in await db.Clients.Where(m => m.Active).ToArrayAsync()
-                            where codes.Contains(item.DeliveryAddress.Code)
-                            && selectedClientTypes.Contains(item.ClientTypeID)
+                clients = await db.Clients.Where(m => m.Active).ToArrayAsync();
+
+                clients = (from item in clients
+                           where codes.Contains(item.DeliveryAddress.Code)
+                           && selectedClientTypes.Contains(item.ClientTypeID)
                            select item).ToArray();
 
             }
+            return clients;
+        }
 
-            if (GetSMSCount)
+        [HttpPost]
+        public async Task<ActionResult> Manage(int[] selectedCountries, int[] selectedProvinces, int[] selectedAreas, int[] selectedCodes,int[] selectedClientTypes, string SMSText, int SystemSMSTemplateID, int? clientId, bool GetSMSCount)
+        {
+            var track = 0;
+            try
             {
-             return RedirectToAction("Manage", new { smsCount = clients.Length, clientid = clientId });
+                var userId = Guid.Parse(User.Identity.GetUserId());
+
+                track = 1;
+                if (SystemSMSTemplateID > 0)
+                {
+                    SMSText = db.SystemSMSTemplates.First(m => m.SystemSMSTemplateId == SystemSMSTemplateID).Text;
+                }
+
+                var clients = await GetSMSClients(selectedCountries, selectedProvinces, selectedAreas, selectedCodes, selectedClientTypes, clientId);
+
+                if (GetSMSCount)
+                {
+                    return RedirectToAction("Manage", new { smsCount = clients.Length, clientid = clientId });
+                }
+                else
+                {
+
+                    var smsesSubs = (from item in clients
+                                     select new SystemSMSTemplateModel(SMSText, item, db));
+
+                    var entries = (from item in smsesSubs
+                                   select new SystemSMS()
+                                   {
+                                       Active = true,
+                                       ClientID = item.ClientID,
+                                       iDate = DateTime.Now,
+                                       Number = item.Cell,
+                                       SMSDescription = item.Generate(),
+
+                                       Source = userId,
+                                       SystemSMSStatusId = 1
+                                   }).ToArray();
+
+                    var links = (from item in entries
+                                 select new SystemLink()
+                                 {
+                                     UserID = userId,
+                                     Created = DateTime.Now,
+                                     LinkId = Guid.NewGuid(),
+                                     Parent = ClientKey(item.ClientID)
+                                 }).ToArray();
+
+                    db.SystemSMSes.AddRange(entries);
+                    db.SystemLinks.AddRange(links);
+                    db.SaveChanges();
+
+                    return RedirectToAction("Index", new { clientId = clientId });
+                }
             }
-            else
+            catch (Exception ex)
             {
-
-                var smsesSubs = (from item in clients
-                                 select new SystemSMSTemplateModel(SMSText, item));
-
-                var entries = (from item in smsesSubs
-                               select new SystemSMS()
-                               {
-                                   Active = true,
-                                   ClientID = item.ClientID,
-                                   iDate = DateTime.Now,
-                                   Number = item.Cell,
-                                   SMSDescription = item.Generate(),
-
-                                   Source = userId,
-                                   SystemSMSStatusId = 1
-                               }).ToArray();
-
-                var links = (from item in entries
-                             select new SystemLink()
-                             {
-                                 UserID = userId,
-                                 Created = DateTime.Now,
-                                 LinkId = Guid.NewGuid(),
-                                 Parent = ClientKey(item.ClientID)
-                             }).ToArray();
-
-                db.SystemSMSes.AddRange(entries);
-                db.SystemLinks.AddRange(links);
-                db.SaveChanges();
-
-                return RedirectToAction("Index", new { clientId = clientId });
+                throw ex;
             }
-
         }
 
         public Guid ClientKey(int clientId)
@@ -278,6 +311,92 @@ namespace Aroma_Violet.Controllers
         {
 
             return View();
+        }
+
+        public static void SendSMSEvent(AromaContext db, int systemSMSEventId, int clientId, Guid userId, Guid? source, params KeyValuePair<string, string>[] pars)
+        {
+            try
+            {
+                var systemSMSevent = db.SystemSMSEvents.Find(systemSMSEventId);
+                var template = systemSMSevent.SystemSMSTemplate;
+                var client = db.Clients.Find(clientId);
+                if (!source.HasValue) source = userId;
+                try
+                {
+                
+                    if (systemSMSevent.Active)
+                    {
+                        
+
+                        var contact = db.Contacts.Where(m => m.ContactTypeID == 3 && m.ClientID == clientId).FirstOrDefault();
+                        var smsSub = new SystemSMSTemplateModel(template.Text, client, db);
+                        smsSub.EventInfo = pars;
+                        var textResult = smsSub.Generate();
+                        if (contact != null)
+                        {
+
+                            var sms = (from item in db.SystemSMSes
+                                       where item.ClientID == clientId
+                                       && item.SMSDescription == textResult
+                                       select item).FirstOrDefault();
+                            if (sms == null)
+                            {
+                                sms = new SystemSMS()
+                                {
+                                    Active = true,
+                                    ClientID = clientId,
+                                    iDate = DateTime.Now,
+                                    Number = contact.ContactName,
+                                    SMSDescription = textResult,
+                                    Source = source,
+                                    SystemSMSStatusId = 1
+                                };
+                                db.SystemSMSes.Add(sms);
+                                db.SaveChanges();
+                            }
+                        }
+                        else
+                        {
+                            var ticket = new SupportTicket()
+                            {
+                                ClientID = clientId,
+                                Description = string.Format("An attemt was made to send a SMS to this client ({0}) but the cell number could not be found.\r\n{1}", clientId, textResult),
+                                iDate = DateTime.Now,
+                                SupportTicketStatusID = 1,
+                                SupportTicketTypeId = 2,
+                                UserID = userId
+                            };
+                            db.SupportTickets.Add(ticket);
+                            db.SaveChanges();
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    try
+                    {
+                        var ticket = new SupportTicket()
+                        {
+                            ClientID = client.ClientId,
+                            Description = string.Format("Unable to create system sms:\"{0}\" Message:{1}", template.Description, ex.Message),
+                            iDate = DateTime.Now,
+                            SupportTicketStatusID = 1,
+                            SupportTicketTypeId = 2,
+                            UserID = userId
+                        };
+                        db.SupportTickets.Add(ticket);
+                        db.SaveChanges();
+                    }
+                    catch
+                    {
+                        throw;
+                    }
+                }
+            }
+            catch
+            {
+                throw;
+            }
         }
 
         // POST: SystemSMS/Create

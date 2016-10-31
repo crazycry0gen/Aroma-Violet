@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="https://live.stratcol.co.za/dynamic/administration/serv_manager/sysIntegratorRejected.wsdl" name="rejectedStandardTransService" targetNamespace="https://live.stratcol.co.za/dynamic/administration/serv_manager/sysIntegratorRejected.wsdl" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="https://live.stratcol.co.za/dynamic/administration/serv_manager/sysIntegratorRejected.wsdl">
+      <xsd:element name="authenticateClient">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="key" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="mode" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="outputRequest">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="file_code" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="tranDetails">
+        <xsd:sequence>
+          <xsd:element name="user_id" type="xsd:string" />
+          <xsd:element name="tran_status" type="xsd:string" />
+          <xsd:element name="acb_status" type="xsd:string" />
+          <xsd:element name="acb_reason" type="xsd:string" />
+          <xsd:element name="acb_reason_code" type="xsd:string" />
+          <xsd:element name="tran_type" type="xsd:string" />
+          <xsd:element name="dbt_cdt_id" type="xsd:string" />
+          <xsd:element name="otid" type="xsd:string" />
+          <xsd:element name="reference" type="xsd:string" />
+          <xsd:element name="batch_ref" type="xsd:string" />
+          <xsd:element name="name" type="xsd:string" />
+          <xsd:element name="account_no" type="xsd:string" />
+          <xsd:element name="action_date" type="xsd:string" />
+          <xsd:element name="status_date" type="xsd:string" />
+          <xsd:element name="value" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="arrayOfTrans">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="unbounded" name="trans" nillable="true" type="tns:tranDetails" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="authenticateClient">
+    <wsdl:part name="authenticateClient" element="tns:authenticateClient" />
+  </wsdl:message>
+  <wsdl:message name="rejectedStandardTransRequest">
+    <wsdl:part name="parameter" element="tns:outputRequest" />
+  </wsdl:message>
+  <wsdl:message name="rejectedStandardTransResponse">
+    <wsdl:part name="result" element="tns:arrayOfTrans" />
+  </wsdl:message>
+  <wsdl:portType name="rejectedStandardTransPortType">
+    <wsdl:operation name="rejectedStandardTrans">
+      <wsdl:input message="tns:rejectedStandardTransRequest" />
+      <wsdl:output message="tns:rejectedStandardTransResponse" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="rejectedStandardTransBinding" type="tns:rejectedStandardTransPortType">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="rejectedStandardTrans">
+      <soap:operation soapAction="rejectedStandardTrans" />
+      <wsdl:input>
+        <soap:body use="literal" namespace="urn:live.stratcol.co.za:rejectedStandardTrans" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+        <soap:header message="tns:authenticateClient" part="authenticateClient" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" namespace="urn:live.stratcol.co.za:rejectedStandardTrans" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="rejectedStandardTransService">
+    <wsdl:port name="rejectedStandardTransServicePort" binding="tns:rejectedStandardTransBinding">
+      <soap:address location="https://live.stratcol.co.za/dynamic/administration/serv_manager/sys_integrator_rejections.php" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

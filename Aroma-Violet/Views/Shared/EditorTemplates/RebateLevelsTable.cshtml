@@ -1,0 +1,87 @@
+﻿@model Aroma_Violet.Models.RebateLevelsTable
+
+@{ 
+    var rows = Model.RebateLevelRows.ToArray();
+}
+
+@using (Html.BeginForm())
+{
+
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <h4>Product Rebate Table Up Line</h4>
+        <table>
+            <tr>
+                <th>From Account</th>
+                <td>@Html.DropDownList("FromAccountID", null, htmlAttributes: new { @class = "form-control", onchange = string.Format("ProductRebateAccount('true', 'RebateLevelsTable_FromAccountID',{0})", Model.RebateClientTypeId) })</td>
+                <th></th>
+                <th>To Account</th>
+                <td>@Html.DropDownList("ToAccountID", null, htmlAttributes: new { @class = "form-control", onchange = string.Format("ProductRebateAccount('false', 'RebateLevelsTable_ToAccountID',{0})", Model.RebateClientTypeId) })</td>
+            </tr>
+           
+            <tr>
+                <th colspan="2">Level Range</th>
+                <th>First Product</th>
+                <th>Additional Product</th>
+                <th>@Html.ActionLink("Add", "AddRange", new { id = Model.RebateClientTypeId })</th>
+            </tr>
+            @for (int row = 0; row < rows.Length; row++)
+            {
+                <tr>
+                    <td>
+                        @Html.TextBoxFor(m => rows[row].LevelRange.StartLevel, htmlAttributes: new { onchange = string.Format("LevelChange(0,this,{0})", rows[row].RebateLevelsTableRowId), @class = "form-control" })
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(m => rows[row].LevelRange.EndLevel, htmlAttributes: new { onchange = string.Format("LevelChange(1,this,{0})", rows[row].RebateLevelsTableRowId), @class = "form-control" })
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(m => rows[row].FirstProductRebate, htmlAttributes: new { onchange = string.Format("LevelChange(2,this,{0})", rows[row].RebateLevelsTableRowId), @class = "form-control" })
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(m => rows[row].AdditionalProductsRebate, htmlAttributes: new { onchange = string.Format("LevelChange(3,this,{0})", rows[row].RebateLevelsTableRowId), @class = "form-control" })
+                    </td>
+                    <td>
+                        @Html.ActionLink("Delete", "DeleteRebateLevelsTableRow", new { id = rows[row].RebateLevelsTableRowId })
+                    </td>
+                </tr>
+            }
+
+        </table>
+
+        <div id="ErrorMessage" class="text-danger"></div>
+    </div>
+
+}
+
+<script type="text/javascript">
+
+    function LevelChange(selection, control, rowId)
+    {
+        var clientData = {
+            selection: selection,
+            value: control.value,
+            rowId: rowId
+        }
+        var responceElement = 'ErrorMessage';
+
+        var url = '@Url.Action("UpdateRebateLevelRow", "RebateClientTypes")';
+
+        callServerMethod(clientData, url, responceElement)
+    }
+
+    function ProductRebateAccount(from, controlName, rebateClientTypeId)
+    {
+        var control = document.getElementById(controlName);
+       
+         var clientData = {
+             from: from,
+             accountId: control.value,
+             rebateClientTypeId: rebateClientTypeId
+        }
+        var responceElement = 'ErrorMessage';
+
+        var url = '@Url.Action("ProductRebateAccount", "RebateClientTypes")';
+
+        callServerMethod(clientData, url, responceElement)
+    }
+</script>

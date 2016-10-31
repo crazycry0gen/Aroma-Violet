@@ -1,0 +1,54 @@
+﻿@model Aroma_Violet.Models.ReportLinkedUserSales
+@{
+    ViewBag.Title = "GetUserSales";
+    var fromDate = Model.FromDate;
+    var toDate = Model.ToDate;
+    var fmt = "#,###,##0.00";
+}
+
+<h2>Get User Sales</h2>
+
+@using (Html.BeginForm())
+{
+
+    @Html.AntiForgeryToken()
+
+    <table>
+        <tr>
+            <th>
+                From
+            </th>
+            <td>
+                @Html.EditorFor(m => fromDate)
+            </td>
+            <th></th>
+            <th>
+                To
+            </th>
+            <td>
+                @Html.EditorFor(m => toDate)
+            </td>
+            <th></th>
+            <td>
+                <input type="submit" value="Filter" class="btn btn-default" />
+            </td>
+        </tr>
+    </table>
+
+}
+
+<table>
+    <tr>
+        <th>Sold by Client</th>
+        <th>Amount</th>
+        <th></th>
+    </tr>
+    @foreach (var clientsales in Model.ClientSales)
+    {
+        <tr class="findisp">
+            <td>@clientsales.UserClientId</td>
+            <td class="Number">@clientsales.Total.ToString(fmt)</td>
+            <td>@Html.ActionLink("Detail","Index","OrderHeaders",new {specificUserId = clientsales.UserId, getSeller=true, frd=Model.FromDate, tod=Model.ToDate },htmlAttributes:null)</td>
+        </tr>
+    }
+</table>

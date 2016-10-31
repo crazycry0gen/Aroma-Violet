@@ -47,10 +47,11 @@ namespace Aroma_Violet.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "OrderStatusId,OrderStatusName")] OrderStatus orderStatus)
+        public async Task<ActionResult> Create([Bind(Include = "OrderStatusId,OrderStatusName,Active")] OrderStatus orderStatus)
         {
             if (ModelState.IsValid)
             {
+                orderStatus.Active = true;
                 db.OrderStatuses.Add(orderStatus);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
@@ -79,7 +80,7 @@ namespace Aroma_Violet.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "OrderStatusId,OrderStatusName")] OrderStatus orderStatus)
+        public async Task<ActionResult> Edit([Bind(Include = "OrderStatusId,OrderStatusName,Active")] OrderStatus orderStatus)
         {
             if (ModelState.IsValid)
             {

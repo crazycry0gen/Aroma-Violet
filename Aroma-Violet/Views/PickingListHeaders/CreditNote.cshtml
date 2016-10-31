@@ -1,0 +1,260 @@
+﻿
+@model Aroma_Violet.Models.OrderHeader
+
+@{
+    ViewBag.Title = "CreditNote";
+    ViewBag.HideEdit = 1;
+    var refNo = Model.OrderHeaderId.ToString();
+    var orderLines = Model.OrderLines.Where(m => m.Active).ToArray();
+    var totalPlusShip = Model.Total; //TODO: Add Shipping
+    var tax = totalPlusShip * (decimal)1.14;
+    var total = totalPlusShip + tax;
+    var linesPerPage = 20;
+    Aroma_Violet.Models.CreditNote creditNote = ViewBag.CreditNote;
+}
+
+
+
+<div id="PrintBit" style="width:742px;">
+    <table class="CreditNote">
+        <tr>
+            <td class="CreditNote">
+                <img src="~/Content/Images/Novus Logo.svg" style="width:360px" />
+            </td>
+
+            <td class="CreditNote">
+                <table>
+                    <tr class="CreditNote">
+                        <td colspan="40" class="CreditNoteCellHead"><h3>Copy Credit Note</h3></td>
+                    </tr>
+                    <tr class="CreditNote">
+                        <td></td>
+                        <td colspan="19">
+                            Date
+                        </td>
+                        <td colspan="19" style="text-align:right">
+                            @Html.DisplayFor(m => m.OrderDate)
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr class="CreditNote">
+                        <td></td>
+
+                        <td colspan="19">
+                            Page
+                        </td>
+                        <td colspan="19" style="text-align:right">
+                            1
+                        </td>
+                        <td></td>
+
+                    </tr>
+                    <tr class="CreditNote">
+                        <td></td>
+                        <td colspan="19">
+                            Document No
+                        </td>
+                        <td colspan="19" style="text-align:right">
+                            @Html.DisplayFor(m=>creditNote.Number)
+                        </td>
+                        <td></td>
+                    </tr>
+                </table>
+
+            </td>
+        </tr>
+
+        <tr class="CreditNote">
+            <td class="CreditNote">
+
+                Novus Fragrances (Pty) Ltd<br />
+                PO Box 2122<br />
+                Montana Park<br />
+                0159<br />
+            </td>
+
+            <td class="CreditNote">
+                Tel: 0878087351<br />
+                Email:   accounts@novusfragrances.co.za<br />
+                VAT No: 4550245668<br />
+                Reg. No: 2008/005421/07<br />
+            </td>
+
+        </tr>
+        <tr class="CreditNote">
+            <td class="CreditNote">
+                @Html.DisplayFor(m => m.Client.Title.TitleName)
+                @Html.DisplayFor(m => m.Client.ClientInitials)
+                @Html.DisplayFor(m => m.Client.ClientSurname)
+                @Html.DisplayFor(m => m.Client.DeliveryAddress)
+            </td>
+
+            <td class="CreditNote">
+                Delivered to:<br />
+                @Html.DisplayFor(m => m.Address)
+            </td>
+
+        </tr>
+    </table>
+    <table class="CreditNote">
+        <tr>
+            <td colspan="3" class="CreditNote">
+                <table>
+                    <tr class="CreditNote">
+                        <th>Account</th>
+                        <th colspan="3">Your Reference</th>
+                        <th>Tax Exempt</th>
+                        <th>Tax Reference</th>
+                        <th>Sales Code</th>
+                        <th></th>
+                    </tr>
+                    <tr class="CreditNote">
+                        <td>
+                            @Html.DisplayFor(m => m.ClientID)
+                        </td>
+                        <td colspan="3">
+                            @Html.DisplayFor(m => creditNote.Invoice.Number)
+                        </td>
+                        <td>
+                            N
+                        </td>
+
+                        <td></td>
+                        <td></td>
+                        <td>Inclusive</td>
+                    </tr>
+                </table>
+                <table class="CreditNote">
+                    <tr class="CreditNote">
+                        <th>Code</th>
+                        <th colspan="3">Description</th>
+                        <th>Quantity</th>
+                        <th>Unit</th>
+                        <th>Unit Price</th>
+                        <th>Disc%</th>
+                        <th>Tax</th>
+                        <th>Nett Price</th>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr class="CreditNote">
+            <td colspan="3" class="CreditNote">
+                <table class="CreditNote">
+
+                    @for (int i = 0; i < orderLines.Length; i++)
+                    {
+                        var netPrice = (decimal)orderLines[i].Quantity * orderLines[i].UnitCost;
+                        <tr class="CreditNoteLine">
+                            <td>@Html.DisplayFor(m => orderLines[i].Product.ProductCode)</td>
+                            <td colspan="3">@Html.DisplayFor(m => orderLines[i].Product.ProductName)</td>
+                            <td class="Number">@Html.DisplayFor(m => orderLines[i].Quantity)</td>
+                            <td>Each</td>
+                            <td class="Number">@Html.DisplayFor(m => orderLines[i].UnitCost)</td>
+                            <td></td>
+                            <td class="Number">14,00%</td>
+                            <td class="Number">@netPrice</td>
+                        </tr>
+                    }
+                    @for (int i = orderLines.Length; i < linesPerPage; i++)
+                    {
+                        <tr><td colspan="8"></td></tr>
+                    }
+                </table>
+
+            </td>
+        </tr>
+        <tr class="CreditNote">
+            <td colspan="2" rowspan="2" class="CreditNote">
+                <table>
+                    <tr>
+                        <td colspan="2">Bank:FNB</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">Acc No:62393862068</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">Branch Code:250655</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">Received in good order</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"></td>
+                    </tr>
+                    <tr>
+                        <td>Sighned______________________</td>
+                        <td>Date______________________</td>
+                    </tr>
+                </table>
+            </td>
+            <td class="CreditNote">
+                <table>
+                    <tr class="CreditNote">
+                        <td>Sub Total</td>
+                        <td class="Number">@Html.DisplayFor(m => totalPlusShip)</td>
+                    </tr>
+                    <tr class="CreditNote">
+                        <td>Discount @@ 0,00%</td>
+                        <td class="Number">0,00</td>
+                    </tr>
+                    <tr class="CreditNote">
+                        <td>Amount Excl Tax</td>
+                        <td class="Number">@Html.DisplayFor(m => totalPlusShip)</td>
+                    </tr>
+                    <tr>
+                        <td>Tax</td>
+                        <td class="Number">@Html.DisplayFor(m => tax)</td>
+                    </tr>
+
+                </table>
+
+            </td>
+        </tr>
+
+        <tr class="CreditNote">
+            <td class="CreditNote">
+                <table>
+                    <tr>
+                        <td>Total</td>
+                        <td class="Number">@Html.DisplayFor(m => total)</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+
+
+    </table>
+
+</div>
+
+<div id="NoPrintHeader">
+    <a href="#" onclick="SwitchToPrint()">Print</a>|
+    @Html.ActionLink("To Client Orders", "Index", new { clientId = Model.ClientID })
+</div>
+
+<script type="text/javascript">
+
+        function SwitchToPrint() {
+
+            var printDiv = document.getElementById("PrintBit");
+            printDiv.style.position = "absolute";
+            printDiv.style.top = 0;
+            SetVisible("Nav", false);
+            SetVisible("NoPrintHeader", false);
+            SetVisible("PrintBit", true);
+            SetVisible("Novus_Side_Logo", false);
+            SetVisible("main_footer", false);
+            window.print();
+            SetVisible("Nav", true);
+            SetVisible("NoPrintHeader", true);
+            SetVisible("PrintBit", true);
+            SetVisible("Novus_Side_Logo", true);
+            SetVisible("main_footer", true);
+            printDiv.style.position = "relative";
+        }
+
+</script>

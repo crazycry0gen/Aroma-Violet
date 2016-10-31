@@ -2,69 +2,149 @@
 
 @{
     ViewBag.Title = "Edit";
-    var tableStile = Model.Total > 0 ? "min-height:300px" : "";
+    //var tableStile = Model.Total > 0 ? "min-height:300px" : "";
+    int Navigate = 1;
+    int WavePostage = 0;
+    int JustSave = 0;
+    ViewBag.HasOnChange = true;
+    bool ownOrder = ViewBag.OwnOrder;
+    var invalidStatuses = new int[] { 2, 3, 4, 5 };
+    var edit = !invalidStatuses.Contains(Model.OrderStatusId);
 }
 
 <h2>Edit</h2>
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+    @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "OrderForm" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m=> JustSave)
+        @Html.HiddenFor(m => WavePostage)
+        @Html.HiddenFor(m => Navigate)
+        @Html.HiddenFor(m => m.Active)
+        @Html.HiddenFor(m => m.SalesTypeId)
+        @Html.HiddenFor(m => m.OrderStatusId)
+        @Html.HiddenFor(m=> m.OnceOff)
 
-    @Html.HiddenFor(m=>m.Active)
-    @Html.HiddenFor(m => m.ShippingTypeId)
+        <div class="form-horizontal" style="width:50%; float:left; "
+>
+            <h4>Order</h4>
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.OrderHeaderId)
 
-    <div class="form-horizontal">
-        <h4>Order</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.OrderHeaderId)
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ClientID, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ClientID, new { htmlAttributes = new { @class = "form-control", @readonly = "true" } })
-                @Html.ValidationMessageFor(model => model.ClientID, "", new { @class = "text-danger" })
+            <div class="form-group">
+                @Html.LabelFor(model => model.ClientID, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.ClientID, new { htmlAttributes = new { @class = "form-control", @readonly = "true" } })
+                    @Html.ValidationMessageFor(model => model.ClientID, "", new { @class = "text-danger" })
+                </div>
             </div>
-        </div>
+            @if (ViewBag.ShowPostage != null && ViewBag.ShowPostage & !ownOrder)
+            {
+                <div class="form-group">
+                    @Html.Label("Postage Charge", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownList("PostageChargeId", null, htmlAttributes: new { @class = "form-control", onchange = "SubmitForm()" })
+                        @Html.ValidationMessage("PostageChargeId", "", new { @class = "text-danger" })
+                        <label class="text-danger">
+                            @ViewBag.Warning
+                        </label>
+                    </div>
+                </div>
+            }
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Total, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @*<input type="text" id="Total" name="Total" value="@Model.Total.ToString("#,###,###,##0.00")" class = "form-control" readonly />*@
-                @Html.EditorFor(model => model.Total, new { htmlAttributes = new { @class = "form-control", @readonly="true" } })
-                @Html.ValidationMessageFor(model => model.Total, "", new { @class = "text-danger" })
+
+            @if ((((User.IsInRole("Area Distributor")|| User.IsInRole("Distributor")) || (Model.OrderStatusId != 8 && Model.OrderStatusId != 1)) && !ownOrder) )
+            {
+                
+            <div class="form-group">
+                @Html.LabelFor(model => model.ShippingTypeId, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownList("ShippingTypeId", null, htmlAttributes: new { @class = "form-control", @readonly = "true" })
+                    @Html.ValidationMessageFor(model => model.ShippingTypeId, "", new { @class = "text-danger" })
+                </div>
             </div>
-        </div>
+            }
+            else
+            {
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ShippingTypeId, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownList("ShippingTypeId", null, htmlAttributes: new { @class = "form-control", onchange = "SubmitForm()" })
+                        @Html.ValidationMessageFor(model => model.ShippingTypeId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.OrderStatusId, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("OrderStatusId", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.OrderStatusId, "", new { @class = "text-danger" })
+            }
+            <div class="form-group">
+                @Html.LabelFor(model => model.Total, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @*<input type="text" id="Total" name="Total" value="@Model.Total.ToString("#,###,###,##0.00")" class = "form-control" readonly />*@
+                    @Html.EditorFor(model => model.Total, new { htmlAttributes = new { @class = "form-control", @readonly = "true" } })
+                    @Html.ValidationMessageFor(model => model.Total, "", new { @class = "text-danger" })
+                </div>
             </div>
-        </div>
-        
-        <div class="form-group">
-            @Html.LabelFor(model => model.OrderDate, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.OrderDate, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.OrderDate, "", new { @class = "text-danger" })
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Shipping, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @*<input type="text" id="Total" name="Total" value="@Model.Total.ToString("#,###,###,##0.00")" class = "form-control" readonly />*@
+                    @Html.EditorFor(model => model.Shipping, new { htmlAttributes = new { @class = "form-control", @readonly = "true" } })
+                    @Html.ValidationMessageFor(model => model.Shipping, "", new { @class = "text-danger" })
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+            @Html.HiddenFor(m=>m.OrderDate)
+
+            @*<div class="form-group">
+                @Html.LabelFor(model => model.OrderDate, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.OrderDate, new { htmlAttributes = new { @class = "form-control", onchange = "SubmitForm()" } })
+                    @Html.ValidationMessageFor(model => model.OrderDate, "", new { @class = "text-danger" })
+                </div>
+            </div>*@
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+    @if ((User.IsInRole("Area Distributor") || User.IsInRole("Distributor")) && (Model.OrderStatusId == 8 || Model.OrderStatusId == 1))
+    {
+        if (ownOrder)
+        {
+            <a href="#" name="pay" class="btn btn-default" onclick="SubmitFormAndMove('0','1')">Save Form</a>
+        }
+        else
+        {
+            <a href="#" name="pay" class="btn btn-default" onclick="SubmitFormAndMove('1','0')">Pay Order</a>
+        }
+    }
+    else if (User.IsInRole("Finance") && (Model.OrderStatusId == 8 || Model.OrderStatusId == 1))
+    {
+            <a href="#" name="pay" class="btn btn-default" onclick="SubmitFormAndMove('0','0')">Pay Order</a>
+            <a href="#" name="pay" class="btn btn-default" onclick="SubmitFormAndMove('1','0')">Pay Order No Shipping</a>
+            <br/>
+            <a href="#" name="pay" class="btn btn-default" onclick="SubmitFormAndMove('0','1')">Save Form</a>
+            <a href="#" name="pay" class="btn btn-default" onclick="SubmitFormAndMove('1','1')">Save Form No Shipping</a>
+        }
+        else
+        {
+            <a href="#" name="pay" class="btn btn-default" onclick="SubmitFormAndMove('0')">Save Form</a>
+        }
+                </div>
             </div>
+
         </div>
-
-    </div>
-    @Html.HiddenFor(model => model.Total)
-
+        @*@Html.HiddenFor(model => model.Total)*@
+    }
+<div style="float: left; padding-top: 200px;">
     @Html.ValidationMessage("Banking not active", new { @class = "text-danger" })
 
-    <table class="table" style="@tableStile">
+    <div class="form-group">
+        @Html.Partial("partialCreate", new Aroma_Violet.Models.OrderLine() { OrderHeaderId = Model.OrderHeaderId, Active = true })
+    </div>
+
+</div>
+    
+    <table class="table" >
         <tr>
             <th>
                 Product
@@ -72,11 +152,16 @@
             <th>
                 Quantity
             </th>
-
+            <th>
+                Unit Cost
+            </th>
+            <th>
+                Total
+            </th>
             <th></th>
         </tr>
 
-        @foreach (var item in Model.OrderLines)
+        @foreach (var item in Model.OrderLines.Where(m => m.Active))
         {
             <tr>
                 <td>
@@ -85,7 +170,13 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Quantity)
                 </td>
-
+                <td>
+                    @Html.DisplayFor(modelItem => item.UnitCost)
+                </td>
+                <td>
+                    @{var t = item.Quantity * item.UnitCost; }
+                    @Html.DisplayFor(modelItem=>t)
+                </td>
                 <td>
                     <a class="btn btn-default" href="@Url.Action("Edit", "OrderLines", new { id = item.OrderLineId, returnUrl = ViewContext.HttpContext.Request.Url.PathAndQuery })">Edit</a>
                 </td>
@@ -94,15 +185,43 @@
 
     </table>
  
-}
- 
+
+@if (((User.IsInRole("Area Distributor")|| User.IsInRole("Distributor"))))
+{
 <div>
-
-
-    <div class="form-group">
-        @Html.Partial("partialCreate", new Aroma_Violet.Models.OrderLine() { OrderHeaderId = Model.OrderHeaderId, Active = true })
+    <a href="javascript:history.back()">Go Back</a>
+</div>
+}
+else
+{
+    <div>
+        @Html.ActionLink("To Client Details", "Details", "Clients", new { id = Model.ClientID }, null)|
+        @Html.ActionLink("To Orders", "Index", "OrderHeaders", new { clientId = Model.ClientID }, null)|
+        <a href="javascript:history.back()">Go Back</a>
     </div>
 
+}
+<script type="text/javascript">
+    function SubmitForm() {
+        document.getElementById("Navigate").value = "0";
+        document.getElementById("OrderForm").submit();
+    }
+    function SubmitFormAndMove(shipping, justSave) {
+        document.getElementById("Navigate").value = "1";
+        document.getElementById("WavePostage").value = shipping;
+        document.getElementById("JustSave").value = justSave;
 
-</div>
+        document.getElementById("OrderForm").submit();
+        if (shipping == '1')
+        {
+            document.getElementById('Shipping').value = "0";
+        }
+    }
+    function DateChange(date)
+    {
+        SubmitForm()
+    }
 
+   
+
+</script>

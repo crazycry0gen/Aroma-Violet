@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="https://live.stratcol.co.za/dynamic/administration/serv_manager/sysIntegratorSearchCancellations.wsdl" name="searchCancelledTransService" targetNamespace="https://live.stratcol.co.za/dynamic/administration/serv_manager/sysIntegratorSearchCancellations.wsdl" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="https://live.stratcol.co.za/dynamic/administration/serv_manager/sysIntegratorSearchCancellations.wsdl">
+      <xsd:element name="authenticateClient">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="key" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="mode" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="searchCancelledTrans">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="cancel_date_from" type="xsd:string" />
+            <xsd:element name="cancel_date_to" type="xsd:string" />
+            <xsd:element name="file_code" type="xsd:string" />
+            <xsd:element name="batch_ref" type="xsd:string" />
+            <xsd:element name="date_from" type="xsd:string" />
+            <xsd:element name="date_to" type="xsd:string" />
+            <xsd:element name="account_no" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="tran">
+        <xsd:sequence>
+          <xsd:element name="user_id" type="xsd:string" />
+          <xsd:element name="tran_type" type="xsd:string" />
+          <xsd:element name="dbt_cdt_id" type="xsd:string" />
+          <xsd:element name="otid" type="xsd:string" />
+          <xsd:element name="reference" type="xsd:string" />
+          <xsd:element name="batch_ref" type="xsd:string" />
+          <xsd:element name="name" type="xsd:string" />
+          <xsd:element name="account_no" type="xsd:string" />
+          <xsd:element name="action_date" type="xsd:string" />
+          <xsd:element name="value" type="xsd:string" />
+          <xsd:element name="cancel_reason" type="xsd:string" />
+          <xsd:element name="cancel_date" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="arrayOfTrans">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="tranDetails" nillable="true" type="tns:tran" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="authenticateClient">
+    <wsdl:part name="authenticateClient" element="tns:authenticateClient" />
+  </wsdl:message>
+  <wsdl:message name="searchCancelledTransRequest">
+    <wsdl:part name="params" element="tns:searchCancelledTrans" />
+  </wsdl:message>
+  <wsdl:message name="searchCancelledTransResponse">
+    <wsdl:part name="result" element="tns:arrayOfTrans" />
+  </wsdl:message>
+  <wsdl:portType name="searchCancelledTransPortType">
+    <wsdl:operation name="searchCancelledTrans">
+      <wsdl:input message="tns:searchCancelledTransRequest" />
+      <wsdl:output message="tns:searchCancelledTransResponse" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="searchCancelledTransBinding" type="tns:searchCancelledTransPortType">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="searchCancelledTrans">
+      <soap:operation soapAction="searchCancelledTrans" />
+      <wsdl:input>
+        <soap:body use="literal" namespace="urn:live.stratcol.co.za:searchCancelledTrans" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+        <soap:header message="tns:authenticateClient" part="authenticateClient" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" namespace="urn:live.stratcol.co.za:searchCancelledTrans" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="searchCancelledTransService">
+    <wsdl:port name="searchCancelledTransPortType" binding="tns:searchCancelledTransBinding">
+      <soap:address location="https://live.stratcol.co.za/dynamic/administration/serv_manager/sys_integrator_search_cancellations.php" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="https://live.stratcol.co.za/dynamic/administration/serv_manager/sysIntegratorOutput.wsdl" name="outputStandardTransService" targetNamespace="https://live.stratcol.co.za/dynamic/administration/serv_manager/sysIntegratorOutput.wsdl" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="https://live.stratcol.co.za/dynamic/administration/serv_manager/sysIntegratorOutput.wsdl">
+      <xsd:element name="authenticateClient">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="key" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="mode" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="params">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="file_code" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="trans">
+        <xsd:sequence>
+          <xsd:element name="user_id" type="xsd:string" />
+          <xsd:element name="tran_status" type="xsd:string" />
+          <xsd:element name="acb_status" type="xsd:string" />
+          <xsd:element name="acb_reason" type="xsd:string" />
+          <xsd:element name="acb_reason_code" type="xsd:string" />
+          <xsd:element name="tran_type" type="xsd:string" />
+          <xsd:element name="dbt_cdt_id" type="xsd:string" />
+          <xsd:element name="otid" type="xsd:string" />
+          <xsd:element name="reference" type="xsd:string" />
+          <xsd:element name="batch_ref" type="xsd:string" />
+          <xsd:element name="name" type="xsd:string" />
+          <xsd:element name="account_no" type="xsd:string" />
+          <xsd:element name="action_date" type="xsd:string" />
+          <xsd:element name="status_date" type="xsd:string" />
+          <xsd:element name="value" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="arrayOfTrans">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="unbounded" name="tranDetails" nillable="true" type="tns:trans" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="authenticateClient">
+    <wsdl:part name="authenticateClient" element="tns:authenticateClient" />
+  </wsdl:message>
+  <wsdl:message name="outputStandardTransRequest">
+    <wsdl:part name="params" element="tns:params" />
+  </wsdl:message>
+  <wsdl:message name="outputStandardTransResponse">
+    <wsdl:part name="result" element="tns:arrayOfTrans" />
+  </wsdl:message>
+  <wsdl:portType name="outputStandardTransPortType">
+    <wsdl:operation name="outputStandardTrans">
+      <wsdl:input message="tns:outputStandardTransRequest" />
+      <wsdl:output message="tns:outputStandardTransResponse" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="outputStandardTransBinding" type="tns:outputStandardTransPortType">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="outputStandardTrans">
+      <soap:operation soapAction="outputStandardTrans" />
+      <wsdl:input>
+        <soap:body use="literal" namespace="urn:live.stratcol.co.za:outputStandardTrans" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+        <soap:header message="tns:authenticateClient" part="authenticateClient" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" namespace="urn:live.stratcol.co.za:outputStandardTrans" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="outputStandardTransService">
+    <wsdl:port name="outputStandardTransServicePortType" binding="tns:outputStandardTransBinding">
+      <soap:address location="https://live.stratcol.co.za/dynamic/administration/serv_manager/sys_integrator_output.php" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

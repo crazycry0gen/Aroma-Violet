@@ -18,7 +18,7 @@ namespace Aroma_Violet.Controllers
         // GET: IncomeGroups
         public async Task<ActionResult> Index()
         {
-            return View(await db.IncomeGroups.ToListAsync());
+            return View(await db.IncomeGroups.OrderBy(m=>m.IncomeGroupName).ToListAsync());
         }
 
         // GET: IncomeGroups/Details/5

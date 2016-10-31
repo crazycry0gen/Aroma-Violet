@@ -32,7 +32,7 @@
         {
             <td>
                 @{var checkedText = Model.Where(m=>m.SystemMenuListItem.Text==menuItem.Text && m.RoleId.Equals(Guid.Parse(role.Key))).Count()==0?string.Empty:"checked";}
-                <input type="checkbox" id="@menuItem.Text" @checkedText onchange="UpdateMenu('@role.Key','@menuItem.Text') "/>
+                <input type="checkbox" id="@menuItem.Text" @checkedText onchange="UpdateMenu('@role.Key','@menuItem.Text',this) "/>
 
             </td>
         }
@@ -44,10 +44,9 @@
 
 
 <script type="text/javascript">
-    function UpdateMenu( roleId, systemMenuListItemId) {
+    function UpdateMenu(roleId, systemMenuListItemId, checkBox) {
 
-        var checkBox = document.getElementById(systemMenuListItemId);
-       
+             
         wrapper = {
             status: checkBox.checked,
             roleId: roleId,

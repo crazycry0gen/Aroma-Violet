@@ -1,0 +1,43 @@
+﻿@model Aroma_Violet.Models.SystemSMSEvent
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>SystemSMSEvent</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.SystemSMSTemplate.Description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SystemSMSTemplate.Description)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SystemSMSEventName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SystemSMSEventName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Active)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Active)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.SystemSMSEventId }) |
+    @Html.ActionLink("Back to List", "Index") |
+    @Html.ActionLink("Edit Template", "Edit","SystemSMSTemplates", new {id=Model.SystemSMSTemplateId }, null)
+</p>

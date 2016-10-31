@@ -2,33 +2,44 @@
 
 @{
     ViewBag.Title = "Create";
+    var detail = Model.PickingListDetail.ToArray();
+    var clients = Model.PickingListDetail.Select(m => m.ClientID).Distinct().ToArray();
 }
 
 <h2>Create</h2>
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm(null,null,FormMethod.Post, new {id="PickingListForm" }))
 {
     @Html.AntiForgeryToken()
-    @Html.Hidden("refreshList","false")
+    @Html.Hidden("refreshList",0)
+    
     <div class="form-horizontal">
-        <h4>PickingListHeader</h4>
+        <h4>Picking List</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
-            @Html.LabelFor(model => model.ShippingTypeId, "ShippingTypeId", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.ShippingTypeId, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.DropDownList("ShippingTypeId", null, htmlAttributes: new { @class = "form-control" , onchange="RefreshList()"})
                 @Html.ValidationMessageFor(model => model.ShippingTypeId, "", new { @class = "text-danger" })
             </div>
         </div>
-
+        @if (ViewBag.ShowShippingMethod)
+        {
         <div class="form-group">
-            @Html.LabelFor(model => model.ShippingMethodId, "ShippingMethodId", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.ShippingMethodId, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.DropDownList("ShippingMethodId", null, htmlAttributes: new { @class = "form-control", onchange = "RefreshList()" })
                 @Html.ValidationMessageFor(model => model.ShippingMethodId, "", new { @class = "text-danger" })
             </div>
         </div>
+        }
+        else
+        {
+            <div>
+                @Html.HiddenFor(m=>m.ShippingMethodId)
+            </div>
+        }
 
         <div class="form-group">
             @Html.LabelFor(model => model.PickingDate, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -43,26 +54,56 @@
             <div class="col-md-10">
                 <table>
                     <tr>
-                        <th>Product</th>
                         <th>Client</th>
+                        <th>Invoice</th>
+                        <th colspan="3">Product</th>
                         <th>Total Items</th>
                         <th>Transfer Quantity</th>
-                        <th>Tracking Number</th>
-                        <th></th>
+                        <th><input type="checkbox" class="form-control checkbox" onchange="SetActive(this,'@Model.PickingListDetail.Count()')"/></th>
                     </tr>
-                    @Html.EditorFor(model => model.PickingListDetail, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.EditorFor(m=>m.PickingListDetail)
+                    
+                    <tr>
+                        <th colspan="5">Total</th>
+                        <th>@Model.PickingListDetail.Sum(m=>m.TotalItems)</th>
+                        <th>@Model.PickingListDetail.Sum(m => m.TransferQuantity)</th>
+
+                    </tr>
+                    @*@for (int i = 0; i < clients.Length; i++)
+                    {
+                        var cdet = detail.Where(m => m.ClientID == clients[i]);
+                        var invs = cdet.Select(m => m.Invoice).Distinct().ToArray();
+                        <tbody style="background-color:aqua">
+                            <tr>
+                                <th>Client:</th>
+                                <td>@clients[i]</td>
+                            </tr>
+                            @for (int c = 0; c < invs.Length; c++)
+                            {
+                                var mdet = cdet.Where(m => m.Invoice == invs[c]).ToArray();
+                            <tr>
+                                <td colspan="1"></td>
+                                <th>Invoice:</th>
+                                <td>@invs[c]</td>
+                            </tr>
+                            @Html.EditorFor(model => mdet, new { htmlAttributes = new { @class = "form-control" } })
+                            }
+                        </tbody>
+                    }*@
                 </table>
                
                 @Html.ValidationMessageFor(model => model.PickingListDetail, "", new { @class = "text-danger" })
             </div>
         </div>
 
-
+        @if (Model.PickingListDetail.Count() > 0)
+        {
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <a href="#" value="Create" onclick="SubmitList();" class="btn btn-default">Create List</a>
             </div>
         </div>
+        }
     </div>
 }
 
@@ -72,7 +113,32 @@
 
 <script type="text/javascript">
     function RefreshList() {
-        $("refreshList").val('true');
+        var element = document.getElementById("refreshList");
+        //alert(element.value);
+        element.value = '1';
+        //alert(element.value);
+        //$("refreshList").val('true');
+        //alert($("refreshList").val());
+        document.getElementById("PickingListForm").submit();
+    }
+    function SubmitList() {
+        var element = document.getElementById("refreshList");
+        //alert(element.value);
+        element.value = '0';
+        //alert(element.value);
+        //$("refreshList").val('true');
+        //alert($("refreshList").val());
+        document.getElementById("PickingListForm").submit();
+    }
+
+    function SetActive(allCheck, count)
+    {
         
+        var val = allCheck.checked;
+        for(i=0;i< count; i++)
+        {
+            var check = document.getElementById('PickingListDetail_' + i.toString() + '__Active');
+            check.checked = val;
+        }
     }
 </script>

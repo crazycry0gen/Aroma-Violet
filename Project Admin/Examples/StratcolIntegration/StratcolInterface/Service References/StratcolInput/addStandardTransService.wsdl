@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="https://live.stratcol.co.za/dynamic/administration/serv_manager/sysIntegratorInput.wsdl" name="addStandardTransService" targetNamespace="https://live.stratcol.co.za/dynamic/administration/serv_manager/sysIntegratorInput.wsdl" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="https://live.stratcol.co.za/dynamic/administration/serv_manager/sysIntegratorInput.wsdl">
+      <xsd:element name="authenticateClient">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="key" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="mode" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="batchHeader">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="user_id" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="batch_ref" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="total_trans" type="xsd:int" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="total_value" type="xsd:double" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="trans">
+        <xsd:sequence>
+          <xsd:element name="stc_ref" type="xsd:string" />
+          <xsd:element name="user_ref" type="xsd:string" />
+          <xsd:element name="surname" type="xsd:string" />
+          <xsd:element name="initials" type="xsd:string" />
+          <xsd:element name="mobile_no" type="xsd:string" />
+          <xsd:element name="account_name" type="xsd:string" />
+          <xsd:element name="branch_code" type="xsd:string" />
+          <xsd:element name="id_reg_no" type="xsd:string" />
+          <xsd:element name="account_no" type="xsd:string" />
+          <xsd:element name="account_type" type="xsd:int" />
+          <xsd:element name="ccard_ssv" type="xsd:string" />
+          <xsd:element name="ccard_exp" type="xsd:string" />
+          <xsd:element name="user_id" type="xsd:string" />
+          <xsd:element name="start_date" type="xsd:string" />
+          <xsd:element name="amount" type="xsd:double" />
+          <xsd:element name="tran_type" type="xsd:string" />
+          <xsd:element name="day_of_month" type="xsd:string" />
+          <xsd:element name="continue" type="xsd:string" />
+          <xsd:element name="no_of_deduct" type="xsd:string" />
+          <xsd:element name="final_date" type="xsd:string" />
+          <xsd:element name="escalation_perc" type="xsd:int" />
+          <xsd:element name="escalation_month" type="xsd:string" />
+          <xsd:element name="publication_ref" type="xsd:string" />
+          <xsd:element name="batch_ref" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="arrayOfTrans">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="unbounded" name="tranDetails" type="tns:trans" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="result">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="message" type="xsd:string" />
+            <xsd:element name="file_code" type="xsd:string" />
+            <xsd:element name="header_trans" type="xsd:int" />
+            <xsd:element name="header_total" type="xsd:double" />
+            <xsd:element name="received_trans" type="xsd:int" />
+            <xsd:element name="received_total" type="xsd:double" />
+            <xsd:element name="uploaded_successful" type="xsd:int" />
+            <xsd:element name="uploaded_rejected" type="xsd:int" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="authenticateClient">
+    <wsdl:part name="authenticateClient" element="tns:authenticateClient" />
+  </wsdl:message>
+  <wsdl:message name="batchHeader">
+    <wsdl:part name="batchHeader" element="tns:batchHeader" />
+  </wsdl:message>
+  <wsdl:message name="addStandardTransRequest">
+    <wsdl:part name="params" element="tns:arrayOfTrans" />
+  </wsdl:message>
+  <wsdl:message name="addStandardTransResponse">
+    <wsdl:part name="result" element="tns:result" />
+  </wsdl:message>
+  <wsdl:portType name="addStandardTransPortType">
+    <wsdl:operation name="addStandardTrans">
+      <wsdl:input message="tns:addStandardTransRequest" />
+      <wsdl:output message="tns:addStandardTransResponse" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="addStandardTransBinding" type="tns:addStandardTransPortType">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="addStandardTrans">
+      <soap:operation soapAction="addStandardTrans" />
+      <wsdl:input>
+        <soap:body use="literal" namespace="urn:live.stratcol.co.za:addStandardTransService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+        <soap:header message="tns:batchHeader" part="batchHeader" use="literal" />
+        <soap:header message="tns:authenticateClient" part="authenticateClient" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" namespace="urn:live.stratcol.co.za:addStandardTransService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="addStandardTransService">
+    <wsdl:port name="addStandardTransPort" binding="tns:addStandardTransBinding">
+      <soap:address location="https://live.stratcol.co.za/dynamic/administration/serv_manager/sys_integrator_input.php" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

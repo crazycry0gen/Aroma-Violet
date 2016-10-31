@@ -17,7 +17,7 @@
         @Html.HiddenFor(model => model.SubscriptionId)
 
         <div class="form-group">
-            @Html.LabelFor(model => model.ClientTypeID, "ClientTypeID", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.ClientTypeID, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.DropDownList("ClientTypeID", null, htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.ClientTypeID, "", new { @class = "text-danger" })
@@ -47,7 +47,15 @@
                 @Html.ValidationMessageFor(model => model.Price, "", new { @class = "text-danger" })
             </div>
         </div>
-        
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.PriceExcl, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.PriceExcl, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.PriceExcl, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
         <div class="form-group">
             @Html.LabelFor(model => model.ValidFromDate, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
@@ -56,6 +64,20 @@
             </div>
         </div>
 
+        <div class="form-group">
+            @Html.LabelFor(model => model.InitialOnceOffFromAccountID, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("InitialOnceOffFromAccountID", null, htmlAttributes: new { @class = "form-control", onchange="ShowHideSalesType(this)" })
+                @Html.ValidationMessageFor(model => model.InitialOnceOffFromAccountID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group" id="SalesTypeDiv">
+            @Html.LabelFor(model => model.SalesTypeID, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("SalesTypeID", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.SalesTypeID, "", new { @class = "text-danger" })
+            </div>
+        </div>
         <div class="form-group">
             @Html.LabelFor(model => model.Active, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
@@ -77,3 +99,10 @@
 <div>
     @Html.ActionLink("Back to List", "Index")
 </div>
+<script type="text/javascript">
+    function ShowHideSalesType(drop)
+    {
+        var bval = (drop.value != '00000000-0000-0000-0000-000000000000');
+        SetVisible('SalesTypeDiv', bval);
+    }
+</script>

@@ -18,7 +18,7 @@ namespace Aroma_Violet.Controllers
         // GET: AddressTypes
         public async Task<ActionResult> Index()
         {
-            return View(await db.AddressTypes.ToListAsync());
+            return View(await db.AddressTypes.OrderBy(m=>m.AddressTypeName).ToListAsync());
         }
 
         // GET: AddressTypes/Details/5

@@ -1,0 +1,118 @@
+﻿@model IEnumerable<Aroma_Violet.Models.Client>
+@{
+    ViewBag.Title = "StarterPackPurchaseReport";
+}
+
+<h2>Starter Pack Purchase Report</h2>
+<table class="table">
+     <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.ClientId)
+        </th>
+        <th colspan="2">
+            @Html.DisplayNameFor(model => model.Title.TitleName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ClientInitials)
+        </th>
+        <th colspan="4">
+            @Html.DisplayNameFor(model => model.ClientSurname)
+        </th>
+
+        <th colspan="2">
+            @Html.DisplayNameFor(model => model.NickName)
+        </th>
+        <th colspan="2">
+            @Html.DisplayNameFor(model => model.FullNames)
+        </th>
+        <th colspan="2">
+            @Html.DisplayNameFor(model => model.ClientType.ClientTypeName)
+        </th>
+         <th colspan="3">
+             @Html.DisplayNameFor(model => model.IDNumber)
+         </th>
+         <th colspan="2">
+             Contact
+         </th>
+         <th colspan="3">
+             Sign On
+         </th>
+        <th>
+            Client Active
+        </th>
+        <th>
+            Banking Detail Active
+        </th>
+        
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        var numberContact = item.Contact.Where(m => m.ContactTypeID <= 3 && m.ContactName != "None" && m.Active).OrderByDescending(m => m.ContactTypeID).FirstOrDefault();
+        var signOn = item.iDate.ToString("dd MMM yyyy");
+        var number = numberContact == null ? "Unknown" : numberContact.ContactName;
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ClientId)
+            </td>
+            <td colspan="2">
+                @Html.DisplayFor(modelItem => item.Title.TitleName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ClientInitials)
+            </td>
+            <td colspan="4">
+                @Html.DisplayFor(modelItem => item.ClientSurname)
+            </td>
+            <td colspan="2">
+                @Html.DisplayFor(modelItem => item.NickName)
+            </td>
+            <td colspan="2">
+                @Html.DisplayFor(modelItem => item.FullNames)
+            </td>
+            <td colspan="2">
+                @Html.DisplayFor(modelItem => item.ClientType.ClientTypeName)
+            </td>
+            <td colspan="3">
+                @Html.DisplayFor(modelItem => item.IDNumber)
+            </td>
+            <td colspan="2">@number</td>
+            <td colspan="3">@signOn</td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Active)
+            </td>
+            <td>
+                @{
+                    var bankingActive = (item.BankingDetails.Any(m => m.Active));
+                    var checkedText = bankingActive ? "checked" : "";
+                }
+                <input type="checkbox" readonly @checkedText />
+            </td>
+              </tr>
+                    }
+
+</table>
+
+<div id="NoPrintHeader">
+    <a href="#" onclick="SwitchToPrint()">Print</a>|
+    @Html.ActionLink("Edit product purchases required","Index", "ClientTypeProductObligations")
+</div>
+
+<script type="text/javascript">
+
+        function SwitchToPrint() {
+
+            var printDiv = document.getElementById("PrintBit");
+            //printDiv.style.position = "absolute";
+            //printDiv.style.top = 0;
+            
+            SetVisible("NoPrintHeader", false);
+            window.print();
+            
+            SetVisible("NoPrintHeader", true);
+            //printDiv.style.position = "relative";
+        }
+
+       
+
+</script>

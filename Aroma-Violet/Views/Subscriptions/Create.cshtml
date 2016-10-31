@@ -15,7 +15,7 @@
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
-            @Html.LabelFor(model => model.ClientTypeID, "ClientTypeID", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.ClientTypeID, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.DropDownList("ClientTypeID", null, htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.ClientTypeID, "", new { @class = "text-danger" })
@@ -23,7 +23,7 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.ProductID, "ProductID", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.ProductID, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.DropDownList("ProductID", null, htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.ProductID, "", new { @class = "text-danger" })
@@ -41,8 +41,15 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Price, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Price, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.Price, new { htmlAttributes = new { @class = "form-control", onchange="CalcVat()" } })
                 @Html.ValidationMessageFor(model => model.Price, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.PriceExcl, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.PriceExcl, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.PriceExcl, "", new { @class = "text-danger" })
             </div>
         </div>
         
@@ -51,6 +58,22 @@
             <div class="col-md-10">
                 @Html.EditorFor(model => model.ValidFromDate, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.ValidFromDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.InitialOnceOffFromAccountID, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("InitialOnceOffFromAccountID", null, htmlAttributes: new { @class = "form-control", onchange = "ShowHideSalesType(this)" })
+                @Html.ValidationMessageFor(model => model.InitialOnceOffFromAccountID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group" id="SalesTypeDiv" style="display:none">
+            @Html.LabelFor(model => model.SalesTypeID, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("SalesTypeID", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.SalesTypeID, "", new { @class = "text-danger" })
             </div>
         </div>
 
@@ -75,3 +98,19 @@
 <div>
     @Html.ActionLink("Back to List", "Index")
 </div>
+
+<script>
+    function CalcVat()
+    {
+        var price = document.getElementById("Price");
+        var vat = document.getElementById("PriceExcl");
+        vat.value = (price.value / 1.14).toFixed(2).toString().replace(".", ",");
+    }
+    
+    function ShowHideSalesType(drop)
+    {
+        var bval = (drop.value != '00000000-0000-0000-0000-000000000000');
+        SetVisible('SalesTypeDiv', bval);
+    }
+
+</script>

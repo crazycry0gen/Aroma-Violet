@@ -1,0 +1,35 @@
+﻿@model Aroma_Violet.Models.AccountAuditList
+
+@{
+    const string fmt = "dd/MM/yyyy HH:mm:ss.fff";
+    ViewBag.Title = "AuditAccount";
+}
+
+<h2>Account Statement: @Model.AccountName</h2>
+
+<h3>Client: @Model.Client.ClientId</h3>
+
+<table>
+    <tr>
+        <th colspan="2">Journal Date</th>
+        <th colspan="2">Effective Date</th>
+        <th>Amount</th>
+        <th>Journal Amount</th>
+        <th>Effective Amount</th>
+        <th></th>
+        <th colspan="4">Comment</th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr  class="findisp">
+            <td colspan="2" class="Number">@item.JournalDate.ToString(fmt)</td>
+            <td colspan="2" class="Number" >@item.Effectivedate.ToString(fmt)</td>
+            <td class="Number">@item.Amount</td>
+            <td class="Number">@item.JournalTotal</td>
+            <td class="Number">@item.EffectiveTotal</td>
+            <th></th>
+            <td colspan="4">@item.Comment</td>
+        </tr>
+    }
+</table>
+

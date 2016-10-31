@@ -1,0 +1,175 @@
+﻿@model Aroma_Violet.Models.InterAccountTransferViewModel
+
+@{
+    ViewBag.Title = "View";
+    int? paymentTypeId = null;
+    string orderHeaderId = string.Empty;
+    if (ViewBag.OrderHeaderId != null) { orderHeaderId = ViewBag.OrderHeaderId.ToString(); }
+    var isReadonly = (User.IsInRole("Area Distributor")|| User.IsInRole("Distributor"));
+    var splitPayment = false;
+}
+
+<h2>View</h2>
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+    @Html.HiddenFor(m=>m.ClientId)
+    @Html.HiddenFor(m=>m.UserID)
+    @Html.HiddenFor(m=>m.MovementSource)
+    @Html.HiddenFor(m=> orderHeaderId)
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div id="ValueHolder" style="visibility:hidden"></div>
+    <div class="form-horizontal">
+        <h4>Inter-account Transfer</h4>
+        <hr />
+      @if (isReadonly)
+      {
+        @Html.HiddenFor(m=>m.FromAccountID)
+        @Html.HiddenFor(m=>m.ToAccountID)
+      }
+      else
+      {
+        <div class="form-group">
+            @Html.LabelFor(model => model.FromAccountID, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("FromAccountID", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.FromAccountID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ToAccountID, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("ToAccountID", null, htmlAttributes: new { @class = "form-control", onchange = "CheckAccountBalance(this)" })
+                @Html.ValidationMessageFor(model => model.ToAccountID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+      }        <div class="form-group">
+            @Html.LabelFor(model => model.OriginalAmount, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.OriginalAmount, new { htmlAttributes = new { @class = "form-control", @readonly=true } })
+                @Html.ValidationMessageFor(model => model.OriginalAmount, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.AvailableAmount, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.AvailableAmount, new { htmlAttributes = new { @class = "form-control",@readonly=true } })
+                @Html.ValidationMessageFor(model => model.AvailableAmount, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        @if (isReadonly)
+        {
+        <div class="form-group">
+            @Html.LabelFor(model => model.Amount, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Amount, new { htmlAttributes = new { @class = "form-control", @readonly = isReadonly } })
+                @Html.ValidationMessageFor(model => model.Amount, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        }
+        else
+        {
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Amount, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Amount, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Amount, "", new { @class = "text-danger" })
+            </div>
+        </div>
+            
+        <div class="form-group">
+            <label class = "control-label col-md-2">Create Split Payment</label>
+            <div class="col-md-10">
+                @Html.EditorFor(model => splitPayment, new { htmlAttributes = new {  } })
+                
+            </div>
+        </div>
+        }
+        @if (!isReadonly)
+        {
+        <div class="form-group">
+            @Html.LabelFor(model => model.FromEffectiveDate, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.FromEffectiveDate, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.FromEffectiveDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ToEffectiveDate, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ToEffectiveDate, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ToEffectiveDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        }
+        else
+        {
+            <div>
+                @Html.HiddenFor(m => m.FromEffectiveDate)
+                @Html.HiddenFor(m=>m.ToEffectiveDate)
+            </div>
+        }
+        <div class="form-group">
+            @Html.LabelFor(model => model.Comment, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Comment, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Comment, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+           <label class = "control-label col-md-2">Payment Type</label>
+            <div class="col-md-10">
+                @Html.DropDownList("PaymentTypeId", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => paymentTypeId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+@if (!(User.IsInRole("Area Distributor")|| User.IsInRole("Distributor")))
+{
+    if (orderHeaderId.Length > 0)
+    {
+        <div>
+    @Html.ActionLink("To Account Movement", "Index", "AccountMovement", new { clientId = Model.ClientId }, htmlAttributes: null) |
+    @Html.ActionLink("Order Detail", "Details", "OrderHeaders", new { id = orderHeaderId }, htmlAttributes: null) 
+    </div>
+    }
+    else
+    {
+        <div>
+            @Html.ActionLink("To Account Movement", "Index", "AccountMovement", new { clientId = Model.ClientId }, htmlAttributes: null)
+        </div>
+    }
+}
+<script type="text/javascript">
+    function CheckAccountBalance(dropdown)
+    {
+        
+        var clientData = {
+            accountId: dropdown.value,
+            clientId: '@Model.ClientId'
+        }
+        var responceElement = '';
+
+        var url = '@Url.Action("GetBalance", "AccountMovement")';
+        var available = parseFloat(callServerMethod(clientData, url, responceElement)).toFixed(2);
+        var original = parseFloat(document.getElementById("OriginalAmount").value.replace(',', '.')).toFixed(2);
+        if (original < available) original = available;
+        var amount = (original - available).toFixed(2);
+        document.getElementById("AvailableAmount").value = available.toString().replace('.',',');
+        document.getElementById("Amount").value = amount.toString().replace('.', ',');
+    }
+</script>

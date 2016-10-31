@@ -1,0 +1,58 @@
+﻿@model Aroma_Violet.Models.ShippingMethodPostalCode
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>ShippingMethodPostalCode</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.PostalCode.PostalCodeName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PostalCode.PostalCodeName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ShippingMethod.ShippingMethodName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ShippingMethod.ShippingMethodName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ExtraCost)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ExtraCost)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Active)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Active)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ShippingMethodPostalCodeId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

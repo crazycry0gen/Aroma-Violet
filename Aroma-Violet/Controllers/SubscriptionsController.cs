@@ -18,7 +18,8 @@ namespace Aroma_Violet.Controllers
         // GET: Subscriptions
         public async Task<ActionResult> Index()
         {
-            var subscriptions = db.Subscriptions.Include(s => s.ClientType).Include(s => s.Product);
+            ViewBag.ClientTypes = db.ClientTypes.Where(m => m.Active).OrderBy(m => m.ClientTypeName).ToArray();
+            var subscriptions = db.Subscriptions.Include(s => s.ClientType).Include(s => s.Product).OrderBy(m=>m.ClientType.ClientTypeName).ThenBy(m=>m.Product.ProductName);
             return View(await subscriptions.ToListAsync());
         }
 
@@ -42,9 +43,19 @@ namespace Aroma_Violet.Controllers
         {
             ViewBag.ClientTypeID = new SelectList(db.ClientTypes, "ClientTypeId", "ClientTypeName");
             ViewBag.ProductID = new SelectList(db.Products.Where(m=>m.Active), "ProductID", "ProductName");
+            ViewBag.InitialOnceOffFromAccountID = GetInitialOnceOffAccounts(Guid.Empty);
+            ViewBag.SalesTypeID = new SelectList(db.SalesTypes.Where(m => m.Active).OrderBy(m => m.SalesTypeDescription).ToArray(), "SalesTypeID", "SalesTypeDescription", 0);
             var subscription = new Subscription() { ValidFromDate = DateTime.Now, Active = true};
             
             return View(subscription);
+        }
+
+        private SelectList GetInitialOnceOffAccounts(Guid selectedId)
+        {
+            var accounts = db.Accounts.Where(m =>m.Active && !m.IsSystemAccount).OrderBy(m=>m.AccountName).ToList();
+            var defAccount = new finAccount() {AccountId=Guid.Empty, AccountName="None", Active=true, IsSystemAccount=false };
+            accounts.Insert(0,defAccount);
+            return new SelectList(accounts, "AccountId", "AccountName", selectedId);
         }
 
         // POST: Subscriptions/Create
@@ -52,7 +63,7 @@ namespace Aroma_Violet.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "SubscriptionId,ClientTypeID,ProductID,MandatoryQuantity,ValidFromDate,Price,Active")] Subscription subscription)
+        public async Task<ActionResult> Create([Bind(Include = "SubscriptionId,ClientTypeID,ProductID,MandatoryQuantity,ValidFromDate,Price,PriceExcl,Active,SalesTypeID")] Subscription subscription)
         {
             if (ModelState.IsValid)
             {
@@ -63,6 +74,9 @@ namespace Aroma_Violet.Controllers
 
             ViewBag.ClientTypeID = new SelectList(db.ClientTypes, "ClientTypeId", "ClientTypeName", subscription.ClientTypeID);
             ViewBag.ProductID = new SelectList(db.Products, "ProductID", "ProductName", subscription.ProductID);
+            ViewBag.InitialOnceOffFromAccountID = GetInitialOnceOffAccounts(subscription.InitialOnceOffFromAccountID);
+            ViewBag.SalesTypeID = new SelectList(db.SalesTypes.Where(m => m.Active).OrderBy(m => m.SalesTypeDescription).ToArray(), "SalesTypeID", "SalesTypeDescription", subscription.SalesTypeID);
+
             return View(subscription);
         }
 
@@ -80,6 +94,10 @@ namespace Aroma_Violet.Controllers
             }
             ViewBag.ClientTypeID = new SelectList(db.ClientTypes, "ClientTypeId", "ClientTypeName", subscription.ClientTypeID);
             ViewBag.ProductID = new SelectList(db.Products, "ProductID", "ProductName", subscription.ProductID);
+            ViewBag.InitialOnceOffFromAccountID = GetInitialOnceOffAccounts(subscription.InitialOnceOffFromAccountID);
+            ViewBag.SalesTypeID = new SelectList(db.SalesTypes.Where(m => m.Active).OrderBy(m => m.SalesTypeDescription).ToArray(), "SalesTypeID", "SalesTypeDescription", subscription.SalesTypeID);
+
+
             return View(subscription);
         }
 
@@ -88,7 +106,7 @@ namespace Aroma_Violet.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "SubscriptionId,ClientTypeID,ProductID,ValidFromDate,MandatoryQuantity,Price,Active")] Subscription subscription)
+        public async Task<ActionResult> Edit([Bind(Include = "SubscriptionId,ClientTypeID,ProductID,ValidFromDate,MandatoryQuantity,Price,PriceExcl,Active,InitialOnceOffFromAccountID,SalesTypeID")] Subscription subscription)
         {
             if (ModelState.IsValid)
             {
@@ -96,8 +114,12 @@ namespace Aroma_Violet.Controllers
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewBag.ClientTypeID = new SelectList(db.ClientTypes, "ClientTypeId", "ClientTypeName", subscription.ClientTypeID);
-            ViewBag.ProductID = new SelectList(db.Products, "ProductID", "ProductName", subscription.ProductID);
+            ViewBag.ClientTypeID = new SelectList(db.ClientTypes.OrderBy(m=>m.ClientTypeName), "ClientTypeId", "ClientTypeName", subscription.ClientTypeID);
+            ViewBag.ProductID = new SelectList(db.Products.OrderBy(m=>m.ProductName), "ProductID", "ProductName", subscription.ProductID);
+            ViewBag.InitialOnceOffFromAccountID = GetInitialOnceOffAccounts(subscription.InitialOnceOffFromAccountID);
+            ViewBag.SalesTypeID = new SelectList( db.SalesTypes.Where(m => m.Active).OrderBy(m => m.SalesTypeDescription).ToArray(), "SalesTypeID", "SalesTypeDescription", subscription.SalesTypeID);
+
+
             return View(subscription);
         }
 

@@ -1,7 +1,7 @@
 ﻿@model Aroma_Violet.Models.AccountMovementViewModel
 
 @{ 
-    
+    bool reverse = ViewBag.Reverse;
 
 }
 
@@ -11,6 +11,7 @@
 {
     @Html.AntiForgeryToken()
     @Html.HiddenFor(m=>m.ClientId)
+    @Html.HiddenFor(m=>m.ClientAccountId)
     <div>
         <div class="form-group">
             <label class="control-label col-md-2">From</label>
@@ -42,18 +43,28 @@
             
         </tr>
         <tr>
-            <th>Comment</th>
+@if (reverse)
+{
+    <th>
+        Finance
+    </th>
+    }
+            <th colspan="3">Comment</th>
             <th>Journal Date</th>
             @for (int i = 0; i < Model.Accounts.Count; i++)
             {
                 <th>
-                    @Model.Accounts[i].AccountDescription
+                    @Html.ActionLink(Model.Accounts[i].AccountDescription, "AuditAccount", "AccountMovement",routeValues:new { effectiveDate = false, clientAccountId = Model.Accounts[i].AccountId, startDateTime = Model.FromDate, endDateTime=Model.ToDate }, htmlAttributes:null)
+                  
                 </th>
             }
         </tr>
         <tr>
-            
-            <th>Opening Balance</th>
+            @if (reverse)
+            {
+                <td></td>
+            }
+            <th colspan="3">Opening Balance</th>
             <td></td>
             @for (int i = 0; i < Model.Accounts.Count; i++)
             {
@@ -68,7 +79,14 @@
         @for (int row = 0; row < Model.Journals.Count - 1; row += 2)
         {
             <tr class="findisp">
-                <td style="text-align:left;">
+                @if (reverse)
+                {
+                    <td style="text-align:left">
+                        @Html.ActionLink("Reverse","Reverse",new {JournalId= Model.Journals[row].JournalId, clientId = Model.ClientId })|
+                        @Html.ActionLink("Order", "Details","OrderHeaders", routeValues: new { id=Model.Journals[row].MovementSource },htmlAttributes:null)
+                    </td>
+                }
+                <td style="text-align:left;" colspan="3">
                     @Html.DisplayFor(m=>m.Journals[row].Comment)
                 </td>
                 <td>
@@ -101,8 +119,13 @@
         
         }
         <tr class="fintot">
-         
-            <th>Closing Balance</th>
+         @if (reverse)
+         {
+            <td>
+                
+            </td>
+         }
+            <th colspan="3">Closing Balance</th>
             <td></td>
             @for (int i = 0; i < Model.Accounts.Count; i++)
             {
@@ -118,21 +141,15 @@
 
     <p>
         <div>
-            @Html.ActionLink("To Client detail", "Details", "Clients", new { id = Model.ClientId }, htmlAttributes: null)
+            @Html.ActionLink("To Client detail", "Details", "Clients", new { id = Model.ClientId }, htmlAttributes: null) |
+            @if (User.IsInRole("Finance"))
+            {
+                <text>
+                @Html.ActionLink("Inter-account Transfer", "InterAccountTransfer", "AccountMovement", new { clientId = Model.ClientId }, htmlAttributes: null) | </text>
+                }
+            <a href="javascript:history.back()">Go Back</a>
         </div>
     </p>
 
 }
 
-<script>
-    function FetchExtraInfo(JournalId)
-    {
-        var clientData = {
-            journalId:JournalId
-        }
-        var responceElement = "Extra-" + JournalId;
-
-        var url = '@Url.Action("GetJournalExtraInfo","AccountMovement")';
-        callServerMethod(clientData, url, responceElement);
-    }
-</script>

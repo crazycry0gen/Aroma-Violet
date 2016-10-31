@@ -16,10 +16,39 @@ namespace Aroma_Violet.Controllers
         private AromaContext db = new AromaContext();
 
         // GET: DebitOrders
+        [HttpGet]
         public async Task<ActionResult> Index()
         {
-            var debitOrders = db.DebitOrders.Include(d => d.AccountHolder).Include(d => d.AccountType).Include(d => d.Bank).Include(d => d.Branch).Include(d => d.Client);
-            return View(await debitOrders.ToListAsync());
+            
+            var startDate = DateTime.Today.AddMonths(-6);
+            startDate.AddDays(startDate.Day * -1);
+            var debitOrders = db.DebitOrders.Where(m=>m.DebitDate>startDate).Include(d => d.AccountHolder).Include(d => d.AccountType).Include(d => d.Bank).Include(d => d.Branch).Include(d => d.Client);
+            var res = await debitOrders.ToArrayAsync();
+            
+            return this.View(res);
+        }
+
+        
+        public async Task<ActionResult> RunDOCalc()
+        {
+            this.db.Database.ExecuteSqlCommand("spCreateDebitOrderFromSubscriptions");
+            return RedirectToAction("Index");
+        }
+
+
+        public async Task<ActionResult> Approve()
+        {
+            this.db.Database.ExecuteSqlCommand("spPopulateStratcolPortalDebitOrder");
+            return RedirectToAction("Index");
+        }
+
+        
+        public async Task<ActionResult> ClientDoState(int clientId = 0)
+        {
+            var onceOffSales = this.db.OrderHeaders.Where(m => m.OnceOff && m.ClientID == clientId).Include(m => m.OrderLines).ToArray();
+            ViewBag.OnceOffSales = onceOffSales; 
+            var clientSubscriptions = this.db.ClientSubscriptions.FirstOrDefaultAsync(m => m.ClientID == clientId);
+            return this.View(await clientSubscriptions);
         }
 
         // GET: DebitOrders/Details/5

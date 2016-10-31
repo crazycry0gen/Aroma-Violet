@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11.25, 8.5" name="Novus">
+  <DataContextMoniker Name="/NovusDataContext" />
+  <nestedChildShapes>
+    <classShape Id="0e91fa60-253d-4e0f-b55b-45261c9e187d" absoluteBounds="2.125, 0.5, 2, 1.7708968098958331">
+      <DataClassMoniker Name="/NovusDataContext/PickingListHeader" />
+      <nestedChildShapes>
+        <elementListCompartment Id="d68fd883-5fd4-4586-bedd-372d7016f349" absoluteBounds="2.1400000000000006, 0.96, 1.9700000000000002, 1.2108968098958333" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="eaf62eac-4372-40bb-b437-1aee571e0a60" absoluteBounds="4.375, 0.5, 2, 2.9247054036458331">
+      <DataClassMoniker Name="/NovusDataContext/PickingListDetail" />
+      <nestedChildShapes>
+        <elementListCompartment Id="00cbc646-535b-4ddb-8144-dd009b884a83" absoluteBounds="4.3900000000000006, 0.96, 1.9700000000000002, 2.364705403645833" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(4.125 : 1.38544840494792); (4.375 : 1.38544840494792)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/NovusDataContext/PickingListHeader/PickingListHeader_PickingListDetail" />
+      <nodes>
+        <classShapeMoniker Id="0e91fa60-253d-4e0f-b55b-45261c9e187d" />
+        <classShapeMoniker Id="eaf62eac-4372-40bb-b437-1aee571e0a60" />
+      </nodes>
+    </associationConnector>
+    <classShape Id="f98a380f-7f25-45c2-844c-895f2d88d93d" absoluteBounds="6.625, 2.375, 2, 1.9631982421875">
+      <DataClassMoniker Name="/NovusDataContext/Address" />
+      <nestedChildShapes>
+        <elementListCompartment Id="11f6db27-bc30-48ed-951d-761c851adf15" absoluteBounds="6.6400000000000006, 2.835, 1.9700000000000002, 1.4031982421875" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(6.625 : 2.89985270182292); (6.375 : 2.89985270182292)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/NovusDataContext/Address/Address_PickingListDetail" />
+      <nodes>
+        <classShapeMoniker Id="f98a380f-7f25-45c2-844c-895f2d88d93d" />
+        <classShapeMoniker Id="eaf62eac-4372-40bb-b437-1aee571e0a60" />
+      </nodes>
+    </associationConnector>
+    <classShape Id="5d6e7356-0363-4324-aae6-e80606e200e8" absoluteBounds="6.5, 4.875, 2, 1.7708968098958331">
+      <DataClassMoniker Name="/NovusDataContext/AddressLine" />
+      <nestedChildShapes>
+        <elementListCompartment Id="122f5725-f56a-4eda-a91d-71c482bce0e7" absoluteBounds="6.515, 5.335, 1.9700000000000002, 1.2108968098958333" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(7.5625 : 4.3381982421875); (7.5625 : 4.875)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/NovusDataContext/Address/Address_AddressLine" />
+      <nodes>
+        <classShapeMoniker Id="f98a380f-7f25-45c2-844c-895f2d88d93d" />
+        <classShapeMoniker Id="5d6e7356-0363-4324-aae6-e80606e200e8" />
+      </nodes>
+    </associationConnector>
+    <classShape Id="21a593a2-b6e3-4b84-94da-16ebde23e907" absoluteBounds="9, 0.5, 2, 6.3861311848958326">
+      <DataClassMoniker Name="/NovusDataContext/Client" />
+      <nestedChildShapes>
+        <elementListCompartment Id="8c4b9935-3c2f-4158-a465-f8ef0d5c8be0" absoluteBounds="9.015, 0.96, 1.9700000000000002, 5.826131184895833" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(9 : 1.40625); (6.375 : 1.40625)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/NovusDataContext/Client/Client_PickingListDetail" />
+      <nodes>
+        <classShapeMoniker Id="21a593a2-b6e3-4b84-94da-16ebde23e907" />
+        <classShapeMoniker Id="eaf62eac-4372-40bb-b437-1aee571e0a60" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(9 : 3.35659912109375); (8.625 : 3.35659912109375)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/NovusDataContext/Client/Client_Address" />
+      <nodes>
+        <classShapeMoniker Id="21a593a2-b6e3-4b84-94da-16ebde23e907" />
+        <classShapeMoniker Id="f98a380f-7f25-45c2-844c-895f2d88d93d" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(8.625 : 2.80329956054688); (9 : 2.80329956054688)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/NovusDataContext/Address/Address_Client" />
+      <nodes>
+        <classShapeMoniker Id="f98a380f-7f25-45c2-844c-895f2d88d93d" />
+        <classShapeMoniker Id="21a593a2-b6e3-4b84-94da-16ebde23e907" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(8.625 : 3.90989868164063); (9 : 3.90989868164063)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/NovusDataContext/Address/Address_Client1" />
+      <nodes>
+        <classShapeMoniker Id="f98a380f-7f25-45c2-844c-895f2d88d93d" />
+        <classShapeMoniker Id="21a593a2-b6e3-4b84-94da-16ebde23e907" />
+      </nodes>
+    </associationConnector>
+  </nestedChildShapes>
+</ordesignerObjectsDiagram>

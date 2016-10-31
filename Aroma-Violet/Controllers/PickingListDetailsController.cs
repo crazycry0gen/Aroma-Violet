@@ -50,7 +50,7 @@ namespace Aroma_Violet.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "PickingListDetailId,ProductID,TotalItems,TransferQuantity,ClientID,OrderHeaderId,TrackingNumber,Active")] PickingListDetail pickingListDetail)
+        public async Task<ActionResult> Create([Bind(Include = "PickingListDetailId,ProductID,TotalItems,TransferQuantity,ClientID,OrderHeaderId,TrackingNumber,Active,Invoice")] PickingListDetail pickingListDetail)
         {
             if (ModelState.IsValid)
             {

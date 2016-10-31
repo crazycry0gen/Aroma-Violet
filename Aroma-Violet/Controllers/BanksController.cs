@@ -18,7 +18,7 @@ namespace Aroma_Violet.Controllers
         // GET: Banks
         public async Task<ActionResult> Index()
         {
-            return View(await db.Banks.ToListAsync());
+            return View(await db.Banks.OrderBy(m => m.BankName).ToListAsync());
         }
 
         // GET: Banks/Details/5

@@ -2,62 +2,78 @@
 
 @{
     ViewBag.Title = "Index";
+    var prevClientType = string.Empty;
 }
 
 <h2>Index</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
+@foreach (Aroma_Violet.Models.ClientType clientType in ViewBag.ClientTypes)
+{
+    <text> | <a href="#" onclick="TogleVisibleTBody('ClientType-@clientType.ClientTypeId')">@clientType.ClientTypeName</a> </text>
+}
 </p>
 <table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.ClientType.ClientTypeName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Product.ProductName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.MandatoryQuantity)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Price)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model=>model.ValidFromDate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Active)
-        </th>
-        <th></th>
-    </tr>
-
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.ClientType.ClientTypeName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Product.ProductName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.MandatoryQuantity)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Price)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem=>item.ValidFromDate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Active)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.SubscriptionId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.SubscriptionId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.SubscriptionId })
-        </td>
-    </tr>
+    <tbody style="display:table-header-group;">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ClientType.ClientTypeName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Product.ProductName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MandatoryQuantity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PriceExcl)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ValidFromDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Active)
+            </th>
+            <th></th>
+        </tr>
+        </tbody>
+        @foreach (Aroma_Violet.Models.ClientType clientType in ViewBag.ClientTypes)
+        {
+<tbody id="ClientType-@clientType.ClientTypeId" style="display:none;">
+        @foreach (var item in Model.Where(m => m.ClientTypeID == clientType.ClientTypeId))
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ClientType.ClientTypeName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product.ProductName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MandatoryQuantity)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PriceExcl)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ValidFromDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Active)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.SubscriptionId }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.SubscriptionId })
+                </td>
+            </tr>
+        }
+    </tbody>
 }
-
 </table>

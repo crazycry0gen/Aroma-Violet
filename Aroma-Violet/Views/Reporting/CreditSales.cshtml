@@ -1,0 +1,125 @@
+﻿@model Aroma_Violet.Models.ReportViewModel
+@{
+    ViewBag.Title = "CashSales";
+    var clients = Aroma_Violet.Models.ReportViewModel.Clients.OrderBy(m=>m.ClientID).ToList();
+    var fromDate = Model.FromDate;
+    var toDate = Model.ToDate;
+}
+
+<h2>Credit Sales</h2>
+
+@using (Html.BeginForm())
+{
+
+    @Html.AntiForgeryToken()
+
+    <table>
+        <tr>
+            <th>
+                From
+            </th>
+            <td>
+                @Html.EditorFor(m => fromDate)
+            </td>
+            <th></th>
+            <th>
+                To
+            </th>
+            <td>
+                @Html.EditorFor(m => toDate)
+            </td>
+            <th></th>
+            <td>
+                <input type="submit" value="Filter" class="btn btn-default" />
+            </td>
+        </tr>
+    </table>
+
+}
+<table>
+    <tr>
+        <th>
+            Client ID
+        </th>
+        <th colspan="2">Client Initials & Surname</th>
+        <th>Invoice</th>
+        <th colspan="2">Product Code</th>
+        <th colspan="4">Product Description</th>
+        <th>Qty</th>
+        <th>Unit Price</th>
+        <th>Total (VAT Inc.)</th>
+    </tr>
+
+@for (int i = 0; i < clients.Count; i++)
+{
+    var orders = Aroma_Violet.Models.ReportViewModel.Sales.Where(m => m.ClientID == clients[i].ClientID).ToList();
+    if (orders.Count > 0)
+    {
+
+        <tr class="findisp">
+            <td>@Html.DisplayFor(m => clients[i].ClientID)</td>
+            <td colspan="2">@Html.DisplayFor(m => clients[i].Description)</td>
+        </tr>
+
+        for (int c = 0; c < orders.Count; c++)
+        {
+            var order = orders[c];
+        <tr class="findisp">
+            <td colspan="3"></td>
+            <td>@Html.DisplayFor(m => orders[c].Invoice)</td>
+        </tr>
+
+            var lines = Aroma_Violet.Models.ReportViewModel.Lines.Where(m => m.OrderHeaderId.Equals(order.OrderHeaderId)).OrderBy(m => m.ProductCode).ToList();
+            for (int f = 0; f < lines.Count; f++)
+            {
+                <tr class="findisp">
+                    <td colspan="4"></td>
+                    <td colspan="2">@Html.DisplayFor(m => lines[f].ProductCode)</td>
+                    <td colspan="4">@Html.DisplayFor(m => lines[f].ProductDescription)</td>
+                    <td class="Number">@Html.DisplayFor(m => lines[f].Quantity)</td>
+                    <td class="Number">@Html.DisplayFor(m => lines[f].UnitPrice)</td>
+                    <td class="Number">@Html.DisplayFor(m => lines[f].Total)</td>
+
+                </tr>
+            }
+        <tr class="findisp">
+            <th colspan="10"></th>
+            <th colspan="2">Shipping</th>
+            <th class="Number">@Html.DisplayFor(m => order.Shipping)</th>
+        </tr>
+        <tr>
+            <th colspan="10"></th>
+            <th colspan="2">Total Excl Shipping</th>
+            <th class="Number">@Html.DisplayFor(m => order.Total)</th>
+        </tr>
+        <tr>
+            <th colspan="10"></th>
+            <th colspan="2">Subtotal</th>
+            <th class="Number">@Html.DisplayFor(m => order.TotalIncShipping)</th>
+        </tr>
+        }
+
+    }
+}
+    <tr>
+        <td colspan="13"></td>
+    </tr>
+    <tr>
+        <th colspan="4"></th>
+        <th>Shipping</th>
+        <th class="Number">@Model.Shipping</th>
+        <th></th>
+        <th>Total Excl Shipping</th>
+        <th class="Number">@Model.Total</th>
+        <th></th>
+        <th>Total</th>
+        <th class="Number">@Model.TotalIncShipping</th>
+    </tr>
+
+</table>
+
+<p>
+    @Html.ActionLink("Reports", "Index")
+
+
+</p>

@@ -1,0 +1,225 @@
+﻿@model Aroma_Violet.Models.ReportDownlineStatementViewModel[]
+@{
+    ViewBag.Title = "DownlineStatement";
+
+}
+
+@foreach (var statement in Model)
+{
+    var resellerLevels = statement.Resellers.Select(m => m.Level).Distinct().OrderBy(m => m);
+    var subscriptionLevels = statement.Subscribers.Select(m => m.Level).Distinct().OrderBy(m => m);
+    var GTotActive = 0;
+    var GTotInactive = 0;
+    var GTotSubActive = 0;
+    var GTotSubInactive = 0;
+
+<h2>Downline Statement</h2>
+
+<h3>Name: @statement.Name</h3>
+    <h3>Resseller No. @statement.ClientId</h3>
+    <h4>Related Resellers</h4>
+    foreach (var rlvl in resellerLevels)
+    {
+        decimal runningTotal = 0;
+        decimal runningAve = 0;
+        int activeCount = 0;
+        int inactiveCount = 0;
+        var resellers = statement.Resellers.Where(m => m.Level == rlvl).ToArray();
+        <h5>Level @rlvl</h5>
+        <table>
+            <tr class="findispHead">
+                <th>No</th>
+                <th colspan="3">Name</th>
+                <th colspan="2">Reseller No</th>
+                <th colspan="2">Title</th>
+                <th colspan="2">Status</th>
+                <th colspan="3">Date Joined</th>
+                <th colspan="3">Cellphone No</th>
+                <th colspan="6">Email Address</th>
+                <th colspan="4">Introducer Name</th>
+                <th colspan="2">Introducer No</th>
+                <th colspan="2">Total Cash Purchases last 3 months</th>
+                <th colspan="2">Average Cash Purchases last 3 months</th>
+            </tr>
+            @for (int i = 0; i < resellers.Length; i++)
+            {
+                runningTotal += resellers[i].TotalPurchases;
+                runningAve += resellers[i].AveragePurchases;
+                activeCount += resellers[i].Status == "Active" ? 1 : 0;
+                inactiveCount += resellers[i].Status != "Active" ? 1 : 0;
+                var l = i + 1;
+                <tr class="findisp">
+                    <td>@l</td>
+                    <td colspan="3">@resellers[i].Name</td>
+                    <td colspan="2">@resellers[i].ClientId</td>
+                    <td colspan="2">@resellers[i].ClientType</td>
+                    <td colspan="2">@resellers[i].Status</td>
+                    <td colspan="3">@resellers[i].DateJoined</td>
+                    @if (rlvl == 1 /*|| User.IsInRole("Administrator")*/)
+                    {
+                        <td colspan="3">@resellers[i].CellphoneNo</td>
+                        <td colspan="6">@resellers[i].EmailAddress</td>
+                    }
+                    else
+                    {
+                        <td colspan="3">XXXXXXXXXX</td>
+                        <td colspan="6">XXXXXXXXXX</td>
+                    }
+                    <td colspan="4">@resellers[i].IntroducerName</td>
+                    <td colspan="2">@resellers[i].IntroducerClientId</td>
+                    <td colspan="2" class="Number">@resellers[i].TotalPurchases.ToString("#,###,##0.00")</td>
+                    <td colspan="2" class="Number">@resellers[i].AveragePurchases.ToString("#,###,##0.00")</td>
+
+                </tr>
+            }
+            <tr class="findisp">
+                <th colspan="26"></th>
+                <th colspan="2">Total</th>
+                <th colspan="2" class="Number">@runningTotal.ToString("#,###,##0.00")</th>
+                <th colspan="2" class="Number">@runningAve.ToString("#,###,##0.00")</th>
+
+            </tr>
+            <tr>
+                <th colspan="8">Total Active Members on Level @rlvl</th>
+                <th colspan="2">@activeCount</th>
+            </tr>
+            <tr>
+                <th colspan="8">Total Inactive Members on Level @rlvl</th>
+                <th colspan="2">@inactiveCount</th>
+            </tr>
+        </table>
+        GTotActive += activeCount;
+        GTotInactive += inactiveCount;
+    }
+    <h4>Subscribtion Customers</h4>
+    foreach (var rlvl in subscriptionLevels)
+    {
+        decimal runningTotal = 0;
+        int activeCount = 0;
+        int inactiveCount = 0;
+        var subscribers = statement.Subscribers.Where(m => m.Level == rlvl).ToArray();
+        <h5>Level @rlvl</h5>
+        <table>
+            <tr class="findispHead">
+                <th>No</th>
+                <th colspan="3">Name</th>
+                <th colspan="2">Reseller No</th>
+                <th colspan="2">Title</th>
+                <th colspan="2">Status</th>
+                <th colspan="3">Date Joined</th>
+                <th colspan="3">Cellphone No</th>
+                <th colspan="6">Email Address</th>
+                <th colspan="4">Introducer Name</th>
+                <th colspan="2">Introducer No</th>
+                <th colspan="2">Monthly Subscription</th>
+            </tr>
+            @for (int i = 0; i < subscribers.Length; i++)
+            {
+                runningTotal += subscribers[i].SubscriptionAmount;
+                activeCount += subscribers[i].Status == "Active" ? 1 : 0;
+                inactiveCount += subscribers[i].Status != "Active" ? 1 : 0;
+                var l = i + 1;
+                <tr class="findisp">
+                    <td>@l</td>
+                    <td colspan="3">@subscribers[i].Name</td>
+                    <td colspan="2">@subscribers[i].ClientId</td>
+                    <td colspan="2">@subscribers[i].ClientType</td>
+                    <td colspan="2">@subscribers[i].Status</td>
+                    <td colspan="3">@subscribers[i].DateJoined</td>
+                    @if (rlvl == 1 /*|| User.IsInRole("Administrator")*/)
+                    {
+                        <td colspan="3">@subscribers[i].CellphoneNo</td>
+                        <td colspan="6">@subscribers[i].EmailAddress</td>
+                    }
+                    else
+                    {
+                        <td colspan="3">XXXXXXXXXX</td>
+                        <td colspan="6">XXXXXXXXXX</td>
+                    }
+                    <td colspan="4">@subscribers[i].IntroducerName</td>
+                    <td colspan="2">@subscribers[i].IntroducerClientId</td>
+                    <td colspan="2" class="Number">@subscribers[i].SubscriptionAmount.ToString("#,###,##0.00")</td>
+
+                </tr>
+            }
+            <tr class="findisp">
+                <th colspan="26"></th>
+                <th colspan="2">Total</th>
+                <th colspan="2" class="Number">@runningTotal.ToString("#,###,##0.00")</th>
+                
+
+            </tr>
+            <tr>
+                <th colspan="8">Total Active Members on Level @rlvl</th>
+                <th colspan="2">@activeCount</th>
+            </tr>
+            <tr>
+                <th colspan="8">Total Inactive Members on Level @rlvl</th>
+                <th colspan="2">@inactiveCount</th>
+            </tr>
+        </table>
+        GTotSubActive += activeCount;
+        GTotSubInactive += inactiveCount;
+    }
+    <h3>Summary</h3>
+    <h4>Network</h4>
+    <table>
+        <tr class="findisp">
+            <td>Related Resellers</td>
+            <td>Active</td>
+            <td>All Levels</td>
+            <td class="Number">@GTotActive</td>
+        </tr>
+        <tr class="findisp">
+            <td>Related Resellers</td>
+            <td>Inactive</td>
+            <td>All Levels</td>
+            <td class="Number">@GTotInactive</td>
+        </tr>
+        <tr class="findisp">
+            <td>Subscription Customers</td>
+            <td>Active</td>
+            <td>All Levels</td>
+            <td class="Number">@GTotSubActive</td>
+        </tr>
+        <tr class="findisp">
+            <td>Subscription Customers</td>
+            <td>Inactive</td>
+            <td>All Levels</td>
+            <td class="Number">@GTotSubInactive</td>
+        </tr>   </table>
+
+        <h3>Sales Values</h3>
+        <table>
+            <tr>
+                <th colspan="3">Related Resellers</th>
+                <th></th>
+                <th colspan="2">Subscription Customers</th>
+            </tr>
+            <tr>
+                <th>Month</th>
+                <th>Sales Value Total 3 Months (All Levels)</th>
+                <th>Average Sales Value per Month (3 Months) (All Levels)</th>
+                <th></th>
+                <th>Month</th>
+                <th>Total Monthly Subscription Value</th>
+            </tr>
+            @foreach (var saleValue in statement.SalesValues)
+            {
+                <tr class="findisp">
+                    <th>@saleValue.MonthDescription</th>
+                    <th class="Number">@saleValue.Total.ToString("#,###,##0.00")</th>
+                    <th class="Number">@saleValue.Average.ToString("#,###,##0.00")</th>
+                    <th></th>
+                    <th>@saleValue.MonthDescription</th>
+                    <th class="Number">@saleValue.Subscription.ToString("#,###,##0.00")</th>
+                </tr>
+
+            }
+        </table>
+        
+
+    <p>
+        For enquiries contact the Customer Service Centre on 087 808 7355 or mail to info@novusfragrances.co.za
+    </p>
+}

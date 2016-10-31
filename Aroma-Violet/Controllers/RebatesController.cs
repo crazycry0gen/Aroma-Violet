@@ -51,7 +51,7 @@ namespace Aroma_Violet.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "RebateId,ClientTypeId,ProductID,Amount,AccountId")] Rebate rebate)
+        public async Task<ActionResult> Create([Bind(Include = "RebateId,ClientTypeId,ProductID,Amount,AccountId,MinOwnPurchToQualify")] Rebate rebate)
         {
             if (ModelState.IsValid)
             {
@@ -91,7 +91,7 @@ namespace Aroma_Violet.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "RebateId,ClientTypeId,ProductID,Amount,AccountId")] Rebate rebate)
+        public async Task<ActionResult> Edit([Bind(Include = "RebateId,ClientTypeId,ProductID,Amount,AccountId,MinOwnPurchToQualify")] Rebate rebate)
         {
             if (ModelState.IsValid)
             {

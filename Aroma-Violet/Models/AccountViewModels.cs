@@ -116,5 +116,6 @@ namespace Aroma_Violet.Models
         public string Username { get; set; }
         public List<string> Roles { get; set; }
         public string Id { get; internal set; }
+        public string ClientId { get; internal set; }
     }
 }

@@ -1,0 +1,54 @@
+﻿@model Aroma_Violet.Models.MonthEnd[]
+
+<html>
+<head>
+    <style>
+        table, th {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+@if (Model.Length > 0)
+{
+    <div>
+        @{
+            var client = Model[0].Client;
+            var clientDescription = string.Format("{1} {2}", client.ClientInitials, client.FullNames, client.ClientSurname);
+            string periodDescription = ViewBag.PeriodDescription;
+            
+        }
+
+        <h1>@client.ClientId.ToString()</h1>
+        <h2>@clientDescription</h2>
+        <h3>Commission Calculation @periodDescription</h3>
+        <table>
+            <tr>
+                <th></th>
+                <th colspan="2"></th>
+                <th>Courier Costs</th>
+                <th>L0</th>
+                <th>L1</th>
+                <th>L2</th>
+                <th>L3</th>
+                <th>L4</th>
+                <th>L5</th>
+            </tr>
+            <tr>
+                <th>Client No</th>
+                <th colspan="2">Client Type</th>
+                <th></th>
+                <th colspan="6" style="text-align:center">Sales</th>
+            </tr>
+            
+        </table>
+    </div>
+            }
+            else
+            {
+                <h1>No information available</h1>
+            }
+    
+</body>
+</html>
+

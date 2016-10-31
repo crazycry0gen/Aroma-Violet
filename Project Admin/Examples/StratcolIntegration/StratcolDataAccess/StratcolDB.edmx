@@ -1,0 +1,535 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="StratcolPortalModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+        <EntityContainer Name="StratcolPortalModelStoreContainer">
+          <EntitySet Name="tblAccountHolderVerification" EntityType="StratcolPortalModel.Store.tblAccountHolderVerification" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="tblBatch" EntityType="StratcolPortalModel.Store.tblBatch" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="tblBatchResult" EntityType="StratcolPortalModel.Store.tblBatchResult" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="tblCancelledDebitOrder" EntityType="StratcolPortalModel.Store.tblCancelledDebitOrder" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="tblErrorCode" EntityType="StratcolPortalModel.Store.tblErrorCode" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="tblOrigin" EntityType="StratcolPortalModel.Store.tblOrigin" store:Type="Tables" store:Schema="dbo" store:Name="tblOrigin">
+            <DefiningQuery>SELECT 
+      [tblOrigin].[OriginID] AS [OriginID], 
+      [tblOrigin].[OriginSystem] AS [OriginSystem], 
+      [tblOrigin].[UserID] AS [UserID], 
+      [tblOrigin].[AuthKey] AS [AuthKey], 
+      [tblOrigin].[AuthParam] AS [AuthParam], 
+      [tblOrigin].[DebitOrderTypeID] AS [DebitOrderTypeID], 
+      [tblOrigin].[TestMode] AS [TestMode]
+      FROM [dbo].[tblOrigin] AS [tblOrigin]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="tblResult" EntityType="StratcolPortalModel.Store.tblResult" store:Type="Tables" Schema="dbo" />
+        </EntityContainer>
+        <EntityType Name="tblAccountHolderVerification">
+          <Key>
+            <PropertyRef Name="AccountHolderVerificationID" />
+          </Key>
+          <Property Name="AccountHolderVerificationID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="user_id" Type="varchar" MaxLength="50" />
+          <Property Name="trans_status" Type="varchar" MaxLength="50" />
+          <Property Name="acb_status" Type="varchar" MaxLength="50" />
+          <Property Name="id_no_match" Type="varchar" MaxLength="50" />
+          <Property Name="acc_no_match" Type="varchar" MaxLength="50" />
+          <Property Name="acc_open" Type="varchar" MaxLength="50" />
+          <Property Name="allow_debit" Type="varchar" MaxLength="50" />
+          <Property Name="allow_credit" Type="varchar" MaxLength="50" />
+          <Property Name="open3_months" Type="varchar" MaxLength="50" />
+          <Property Name="surname_match" Type="varchar" MaxLength="50" />
+          <Property Name="initials_match" Type="varchar" MaxLength="50" />
+          <Property Name="otid" Type="varchar" MaxLength="50" />
+          <Property Name="batch_ref" Type="varchar" MaxLength="50" />
+          <Property Name="initials" Type="varchar" MaxLength="50" />
+          <Property Name="surname" Type="varchar" MaxLength="50" />
+          <Property Name="id_no" Type="varchar" MaxLength="50" />
+          <Property Name="branch_code" Type="varchar" MaxLength="50" />
+          <Property Name="account_no" Type="varchar" MaxLength="50" />
+          <Property Name="status_date" Type="varchar" MaxLength="50" />
+          <Property Name="iDate" Type="datetime" Nullable="false" />
+          <Property Name="uDate" Type="datetime" Nullable="false" />
+          <Property Name="UpdateCount" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblBatch">
+          <Key>
+            <PropertyRef Name="BatchID" />
+          </Key>
+          <Property Name="BatchID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="OriginID" Type="int" Nullable="false" />
+          <Property Name="BatchCount" Type="int" Nullable="false" />
+          <Property Name="BatchValue" Type="float" Nullable="false" />
+          <Property Name="BatchProcessID" Type="int" Nullable="false" />
+          <Property Name="iDate" Type="datetime" Nullable="false" />
+          <Property Name="FileCode" Type="nvarchar" MaxLength="50" />
+          <Property Name="BatchRejectedRequested" Type="int" Nullable="false" />
+          <Property Name="BatchContainsAHV" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblBatchResult">
+          <Key>
+            <PropertyRef Name="BatchResultID" />
+          </Key>
+          <Property Name="BatchResultID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="BatchID" Type="int" Nullable="false" />
+          <Property Name="messageField" Type="varchar" MaxLength="500" />
+          <Property Name="file_codeField" Type="varchar" MaxLength="500" />
+          <Property Name="header_transField" Type="int" />
+          <Property Name="header_totalField" Type="money" />
+          <Property Name="received_transField" Type="int" />
+          <Property Name="received_totalField" Type="money" />
+          <Property Name="uploaded_successfulField" Type="int" />
+          <Property Name="uploaded_rejectedField" Type="int" />
+          <Property Name="iDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblCancelledDebitOrder">
+          <Key>
+            <PropertyRef Name="CancelledDebitOrderID" />
+          </Key>
+          <Property Name="CancelledDebitOrderID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="user_id" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="tran_type" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="dbt_cdt_id" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="otid" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="reference" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="batch_ref" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="name" Type="varchar" Nullable="false" MaxLength="500" />
+          <Property Name="account_no" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="action_date" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="value" Type="money" Nullable="false" />
+          <Property Name="cancel_reason" Type="varchar" Nullable="false" MaxLength="500" />
+          <Property Name="cancel_date" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="idate" Type="datetime" Nullable="false" />
+          <Property Name="udate" Type="datetime" Nullable="false" />
+          <Property Name="UpdateCount" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblErrorCode">
+          <Key>
+            <PropertyRef Name="ErrorCodeID" />
+          </Key>
+          <Property Name="ErrorCodeID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="StratcolErrorID" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="StratcolErrorDescription" Type="varchar" Nullable="false" MaxLength="200" />
+          <Property Name="NeedsIntegrationUpdate" Type="bit" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+      warning 6002: The table/view 'SCGSAStratcolPortal.dbo.tblOrigin' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      -->
+        <EntityType Name="tblOrigin">
+          <Key>
+            <PropertyRef Name="OriginID" />
+            <PropertyRef Name="OriginSystem" />
+            <PropertyRef Name="UserID" />
+            <PropertyRef Name="AuthKey" />
+            <PropertyRef Name="AuthParam" />
+            <PropertyRef Name="DebitOrderTypeID" />
+            <PropertyRef Name="TestMode" />
+          </Key>
+          <Property Name="OriginID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="OriginSystem" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="UserID" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="AuthKey" Type="nvarchar" Nullable="false" MaxLength="200" />
+          <Property Name="AuthParam" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="DebitOrderTypeID" Type="int" Nullable="false" />
+          <Property Name="TestMode" Type="varchar" Nullable="false" MaxLength="2" />
+        </EntityType>
+        <EntityType Name="tblResult">
+          <Key>
+            <PropertyRef Name="ResultID" />
+          </Key>
+          <Property Name="ResultID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="BacthID" Type="int" Nullable="false" />
+          <Property Name="user_id" Type="varchar" MaxLength="50" />
+          <Property Name="trans_status" Type="varchar" MaxLength="50" />
+          <Property Name="acb_status" Type="varchar" MaxLength="50" />
+          <Property Name="acb_reason" Type="varchar" MaxLength="150" />
+          <Property Name="acb_reason_code" Type="varchar" MaxLength="50" />
+          <Property Name="tran_type" Type="varchar" MaxLength="50" />
+          <Property Name="dbt_cdt_id" Type="varchar" MaxLength="50" />
+          <Property Name="otid" Type="varchar" MaxLength="50" />
+          <Property Name="reference" Type="varchar" MaxLength="50" />
+          <Property Name="batch_ref" Type="varchar" MaxLength="50" />
+          <Property Name="name" Type="varchar" MaxLength="50" />
+          <Property Name="account_no" Type="varchar" MaxLength="50" />
+          <Property Name="action_date" Type="varchar" MaxLength="50" />
+          <Property Name="status_date" Type="varchar" MaxLength="50" />
+          <Property Name="value" Type="varchar" MaxLength="50" />
+          <Property Name="iDate" Type="datetime" Nullable="false" />
+          <Property Name="uDate" Type="datetime" Nullable="false" />
+          <Property Name="UpdateCount" Type="int" Nullable="false" />
+        </EntityType>
+        <Function Name="spGetDebitOrdersForBatchID" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="BatchID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="spJobCreateBatchForAllOrigins" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="spJobProcessAHVResults" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="spJobProcessDebitOrderResults" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="StratcolPortalModel" Alias="Self" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+        <EntityContainer Name="SCGSAStratcolPortalEntities">
+          <EntitySet Name="tblErrorCodes" EntityType="StratcolPortalModel.tblErrorCode" />
+          <FunctionImport Name="CreateBatchForAllOrigins" />
+          <EntitySet Name="tblResults" EntityType="StratcolPortalModel.tblResult" />
+          <EntitySet Name="tblAccountHolderVerifications" EntityType="StratcolPortalModel.tblAccountHolderVerification" />
+          <EntitySet Name="tblOrigins" EntityType="StratcolPortalModel.tblOrigin" />
+          <FunctionImport Name="JobProcessDebitOrderResults" />
+          <FunctionImport Name="JobProcessAHVResults" />
+          <FunctionImport Name="GetDebitOrdersForBatchID" ReturnType="Collection(StratcolPortalModel.GetDebitOrdersForBatchID_Result)">
+          <Parameter Name="BatchID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <EntitySet Name="tblBatchResults" EntityType="StratcolPortalModel.tblBatchResult" />
+          <EntitySet Name="tblBatches" EntityType="StratcolPortalModel.tblBatch" />
+          <EntitySet Name="tblCancelledDebitOrders" EntityType="StratcolPortalModel.tblCancelledDebitOrder" />
+        </EntityContainer>
+        <EntityType Name="tblErrorCode">
+          <Key>
+            <PropertyRef Name="ErrorCodeID" />
+          </Key>
+          <Property Name="ErrorCodeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Name="StratcolErrorID" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="StratcolErrorDescription" Type="String" Nullable="false" MaxLength="200" Unicode="false" FixedLength="false" />
+          <Property Name="NeedsIntegrationUpdate" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <ComplexType Name="GetDebitOrdersForBatchID_Result">
+          <Property Type="Decimal" Name="DebitOrderID" Nullable="false" Precision="18" Scale="0" />
+          <Property Type="DateTime" Name="DebitOrderDate" Nullable="false" Precision="23" />
+          <Property Type="Decimal" Name="DebitOrderAmount" Nullable="false" Precision="18" Scale="8" />
+          <Property Type="Int32" Name="AccountTypeID" Nullable="false" />
+          <Property Type="String" Name="ClientInitials" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="ClientSurname" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="ClientIDNumber" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="AccountNumber" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="BranchCode" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="iDate" Nullable="false" Precision="23" />
+          <Property Type="DateTime" Name="uDate" Nullable="false" Precision="23" />
+          <Property Type="Int32" Name="StratcolCodeID" Nullable="true" />
+          <Property Type="Int64" Name="BatchID" Nullable="true" />
+          <Property Type="Int32" Name="ProcessID" Nullable="false" />
+          <Property Type="Int32" Name="IntegrationProcessID" Nullable="true" />
+          <Property Type="Int32" Name="OriginID" Nullable="false" />
+          <Property Type="Int32" Name="DebitOrderTypeID" Nullable="false" />
+          <Property Type="DateTime" Name="StratcolAffectedDate" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="OriginUniqueID" Nullable="false" />
+        </ComplexType>
+        <EntityType Name="tblResult">
+          <Key>
+            <PropertyRef Name="ResultID" />
+          </Key>
+          <Property Type="Int32" Name="ResultID" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="Int32" Name="BacthID" Nullable="false" />
+          <Property Type="String" Name="user_id" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="trans_status" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="acb_status" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="acb_reason" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="acb_reason_code" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="tran_type" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="dbt_cdt_id" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="otid" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="reference" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="batch_ref" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="name" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="account_no" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="action_date" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="status_date" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="value" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="iDate" Nullable="false" />
+          <Property Type="DateTime" Name="uDate" Nullable="false" />
+          <Property Type="Int32" Name="UpdateCount" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblAccountHolderVerification">
+          <Key>
+            <PropertyRef Name="AccountHolderVerificationID" />
+          </Key>
+          <Property Type="Int32" Name="AccountHolderVerificationID" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="String" Name="user_id" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="trans_status" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="acb_status" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="id_no_match" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="acc_no_match" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="acc_open" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="allow_debit" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="allow_credit" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="open3_months" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="surname_match" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="initials_match" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="otid" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="batch_ref" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="initials" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="surname" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="id_no" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="branch_code" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="account_no" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="status_date" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="iDate" Nullable="false" />
+          <Property Type="DateTime" Name="uDate" Nullable="false" />
+          <Property Type="Int32" Name="UpdateCount" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblOrigin">
+          <Key>
+            <PropertyRef Name="OriginID" />
+            <PropertyRef Name="OriginSystem" />
+            <PropertyRef Name="UserID" />
+            <PropertyRef Name="AuthKey" />
+            <PropertyRef Name="AuthParam" />
+            <PropertyRef Name="DebitOrderTypeID" />
+            <PropertyRef Name="TestMode" />
+          </Key>
+          <Property Type="Int32" Name="OriginID" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="String" Name="OriginSystem" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="UserID" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="AuthKey" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="AuthParam" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="DebitOrderTypeID" Nullable="false" />
+          <Property Type="String" Name="TestMode" Nullable="false" MaxLength="2" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="tblBatchResult">
+          <Key>
+            <PropertyRef Name="BatchResultID" />
+          </Key>
+          <Property Type="Int32" Name="BatchResultID" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="Int32" Name="BatchID" Nullable="false" />
+          <Property Type="String" Name="messageField" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="file_codeField" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="header_transField" />
+          <Property Type="Decimal" Name="header_totalField" Precision="19" Scale="4" />
+          <Property Type="Int32" Name="received_transField" />
+          <Property Type="Decimal" Name="received_totalField" Precision="19" Scale="4" />
+          <Property Type="Int32" Name="uploaded_successfulField" />
+          <Property Type="Int32" Name="uploaded_rejectedField" />
+          <Property Type="DateTime" Name="iDate" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblBatch">
+          <Key>
+            <PropertyRef Name="BatchID" />
+          </Key>
+          <Property Type="Int32" Name="BatchID" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="Int32" Name="OriginID" Nullable="false" />
+          <Property Type="Int32" Name="BatchCount" Nullable="false" />
+          <Property Type="Double" Name="BatchValue" Nullable="false" />
+          <Property Type="Int32" Name="BatchProcessID" Nullable="false" />
+          <Property Type="DateTime" Name="iDate" Nullable="false" />
+          <Property Type="String" Name="FileCode" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="BatchRejectedRequested" Nullable="false" />
+          <Property Type="Int32" Name="BatchContainsAHV" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblCancelledDebitOrder">
+          <Key>
+            <PropertyRef Name="CancelledDebitOrderID" />
+          </Key>
+          <Property Type="Int32" Name="CancelledDebitOrderID" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="String" Name="user_id" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="tran_type" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="dbt_cdt_id" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="otid" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="reference" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="batch_ref" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="name" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="account_no" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="action_date" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="Decimal" Name="value" Nullable="false" Precision="19" Scale="4" />
+          <Property Type="String" Name="cancel_reason" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="cancel_date" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="idate" Nullable="false" />
+          <Property Type="DateTime" Name="udate" Nullable="false" />
+          <Property Type="Int32" Name="UpdateCount" Nullable="false" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="StratcolPortalModelStoreContainer" CdmEntityContainer="SCGSAStratcolPortalEntities">
+          <EntitySetMapping Name="tblErrorCodes">
+            <EntityTypeMapping TypeName="StratcolPortalModel.tblErrorCode">
+              <MappingFragment StoreEntitySet="tblErrorCode">
+                <ScalarProperty Name="ErrorCodeID" ColumnName="ErrorCodeID" />
+                <ScalarProperty Name="StratcolErrorID" ColumnName="StratcolErrorID" />
+                <ScalarProperty Name="StratcolErrorDescription" ColumnName="StratcolErrorDescription" />
+                <ScalarProperty Name="NeedsIntegrationUpdate" ColumnName="NeedsIntegrationUpdate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="CreateBatchForAllOrigins" FunctionName="StratcolPortalModel.Store.spJobCreateBatchForAllOrigins" />
+          <EntitySetMapping Name="tblResults">
+            <EntityTypeMapping TypeName="StratcolPortalModel.tblResult">
+              <MappingFragment StoreEntitySet="tblResult">
+                <ScalarProperty Name="UpdateCount" ColumnName="UpdateCount" />
+                <ScalarProperty Name="uDate" ColumnName="uDate" />
+                <ScalarProperty Name="iDate" ColumnName="iDate" />
+                <ScalarProperty Name="value" ColumnName="value" />
+                <ScalarProperty Name="status_date" ColumnName="status_date" />
+                <ScalarProperty Name="action_date" ColumnName="action_date" />
+                <ScalarProperty Name="account_no" ColumnName="account_no" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="batch_ref" ColumnName="batch_ref" />
+                <ScalarProperty Name="reference" ColumnName="reference" />
+                <ScalarProperty Name="otid" ColumnName="otid" />
+                <ScalarProperty Name="dbt_cdt_id" ColumnName="dbt_cdt_id" />
+                <ScalarProperty Name="tran_type" ColumnName="tran_type" />
+                <ScalarProperty Name="acb_reason_code" ColumnName="acb_reason_code" />
+                <ScalarProperty Name="acb_reason" ColumnName="acb_reason" />
+                <ScalarProperty Name="acb_status" ColumnName="acb_status" />
+                <ScalarProperty Name="trans_status" ColumnName="trans_status" />
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+                <ScalarProperty Name="BacthID" ColumnName="BacthID" />
+                <ScalarProperty Name="ResultID" ColumnName="ResultID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblAccountHolderVerifications">
+            <EntityTypeMapping TypeName="StratcolPortalModel.tblAccountHolderVerification">
+              <MappingFragment StoreEntitySet="tblAccountHolderVerification">
+                <ScalarProperty Name="UpdateCount" ColumnName="UpdateCount" />
+                <ScalarProperty Name="uDate" ColumnName="uDate" />
+                <ScalarProperty Name="iDate" ColumnName="iDate" />
+                <ScalarProperty Name="status_date" ColumnName="status_date" />
+                <ScalarProperty Name="account_no" ColumnName="account_no" />
+                <ScalarProperty Name="branch_code" ColumnName="branch_code" />
+                <ScalarProperty Name="id_no" ColumnName="id_no" />
+                <ScalarProperty Name="surname" ColumnName="surname" />
+                <ScalarProperty Name="initials" ColumnName="initials" />
+                <ScalarProperty Name="batch_ref" ColumnName="batch_ref" />
+                <ScalarProperty Name="otid" ColumnName="otid" />
+                <ScalarProperty Name="initials_match" ColumnName="initials_match" />
+                <ScalarProperty Name="surname_match" ColumnName="surname_match" />
+                <ScalarProperty Name="open3_months" ColumnName="open3_months" />
+                <ScalarProperty Name="allow_credit" ColumnName="allow_credit" />
+                <ScalarProperty Name="allow_debit" ColumnName="allow_debit" />
+                <ScalarProperty Name="acc_open" ColumnName="acc_open" />
+                <ScalarProperty Name="acc_no_match" ColumnName="acc_no_match" />
+                <ScalarProperty Name="id_no_match" ColumnName="id_no_match" />
+                <ScalarProperty Name="acb_status" ColumnName="acb_status" />
+                <ScalarProperty Name="trans_status" ColumnName="trans_status" />
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+                <ScalarProperty Name="AccountHolderVerificationID" ColumnName="AccountHolderVerificationID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblOrigins">
+            <EntityTypeMapping TypeName="StratcolPortalModel.tblOrigin">
+              <MappingFragment StoreEntitySet="tblOrigin">
+                <ScalarProperty Name="TestMode" ColumnName="TestMode" />
+                <ScalarProperty Name="DebitOrderTypeID" ColumnName="DebitOrderTypeID" />
+                <ScalarProperty Name="AuthParam" ColumnName="AuthParam" />
+                <ScalarProperty Name="AuthKey" ColumnName="AuthKey" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="OriginSystem" ColumnName="OriginSystem" />
+                <ScalarProperty Name="OriginID" ColumnName="OriginID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="JobProcessDebitOrderResults" FunctionName="StratcolPortalModel.Store.spJobProcessDebitOrderResults" />
+          <FunctionImportMapping FunctionImportName="JobProcessAHVResults" FunctionName="StratcolPortalModel.Store.spJobProcessAHVResults" />
+          <FunctionImportMapping FunctionImportName="GetDebitOrdersForBatchID" FunctionName="StratcolPortalModel.Store.spGetDebitOrdersForBatchID">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="StratcolPortalModel.GetDebitOrdersForBatchID_Result">
+                <ScalarProperty Name="DebitOrderID" ColumnName="DebitOrderID" />
+                <ScalarProperty Name="DebitOrderDate" ColumnName="DebitOrderDate" />
+                <ScalarProperty Name="DebitOrderAmount" ColumnName="DebitOrderAmount" />
+                <ScalarProperty Name="AccountTypeID" ColumnName="AccountTypeID" />
+                <ScalarProperty Name="ClientInitials" ColumnName="ClientInitials" />
+                <ScalarProperty Name="ClientSurname" ColumnName="ClientSurname" />
+                <ScalarProperty Name="ClientIDNumber" ColumnName="ClientIDNumber" />
+                <ScalarProperty Name="AccountNumber" ColumnName="AccountNumber" />
+                <ScalarProperty Name="BranchCode" ColumnName="BranchCode" />
+                <ScalarProperty Name="iDate" ColumnName="iDate" />
+                <ScalarProperty Name="uDate" ColumnName="uDate" />
+                <ScalarProperty Name="StratcolCodeID" ColumnName="StratcolCodeID" />
+                <ScalarProperty Name="BatchID" ColumnName="BatchID" />
+                <ScalarProperty Name="ProcessID" ColumnName="ProcessID" />
+                <ScalarProperty Name="IntegrationProcessID" ColumnName="IntegrationProcessID" />
+                <ScalarProperty Name="OriginID" ColumnName="OriginID" />
+                <ScalarProperty Name="DebitOrderTypeID" ColumnName="DebitOrderTypeID" />
+                <ScalarProperty Name="StratcolAffectedDate" ColumnName="StratcolAffectedDate" />
+                <ScalarProperty Name="OriginUniqueID" ColumnName="OriginUniqueID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="tblBatchResults">
+            <EntityTypeMapping TypeName="StratcolPortalModel.tblBatchResult">
+              <MappingFragment StoreEntitySet="tblBatchResult">
+                <ScalarProperty Name="iDate" ColumnName="iDate" />
+                <ScalarProperty Name="uploaded_rejectedField" ColumnName="uploaded_rejectedField" />
+                <ScalarProperty Name="uploaded_successfulField" ColumnName="uploaded_successfulField" />
+                <ScalarProperty Name="received_totalField" ColumnName="received_totalField" />
+                <ScalarProperty Name="received_transField" ColumnName="received_transField" />
+                <ScalarProperty Name="header_totalField" ColumnName="header_totalField" />
+                <ScalarProperty Name="header_transField" ColumnName="header_transField" />
+                <ScalarProperty Name="file_codeField" ColumnName="file_codeField" />
+                <ScalarProperty Name="messageField" ColumnName="messageField" />
+                <ScalarProperty Name="BatchID" ColumnName="BatchID" />
+                <ScalarProperty Name="BatchResultID" ColumnName="BatchResultID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblBatches">
+            <EntityTypeMapping TypeName="StratcolPortalModel.tblBatch">
+              <MappingFragment StoreEntitySet="tblBatch">
+                <ScalarProperty Name="BatchContainsAHV" ColumnName="BatchContainsAHV" />
+                <ScalarProperty Name="BatchRejectedRequested" ColumnName="BatchRejectedRequested" />
+                <ScalarProperty Name="FileCode" ColumnName="FileCode" />
+                <ScalarProperty Name="iDate" ColumnName="iDate" />
+                <ScalarProperty Name="BatchProcessID" ColumnName="BatchProcessID" />
+                <ScalarProperty Name="BatchValue" ColumnName="BatchValue" />
+                <ScalarProperty Name="BatchCount" ColumnName="BatchCount" />
+                <ScalarProperty Name="OriginID" ColumnName="OriginID" />
+                <ScalarProperty Name="BatchID" ColumnName="BatchID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblCancelledDebitOrders">
+            <EntityTypeMapping TypeName="StratcolPortalModel.tblCancelledDebitOrder">
+              <MappingFragment StoreEntitySet="tblCancelledDebitOrder">
+                <ScalarProperty Name="UpdateCount" ColumnName="UpdateCount" />
+                <ScalarProperty Name="udate" ColumnName="udate" />
+                <ScalarProperty Name="idate" ColumnName="idate" />
+                <ScalarProperty Name="cancel_date" ColumnName="cancel_date" />
+                <ScalarProperty Name="cancel_reason" ColumnName="cancel_reason" />
+                <ScalarProperty Name="value" ColumnName="value" />
+                <ScalarProperty Name="action_date" ColumnName="action_date" />
+                <ScalarProperty Name="account_no" ColumnName="account_no" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="batch_ref" ColumnName="batch_ref" />
+                <ScalarProperty Name="reference" ColumnName="reference" />
+                <ScalarProperty Name="otid" ColumnName="otid" />
+                <ScalarProperty Name="dbt_cdt_id" ColumnName="dbt_cdt_id" />
+                <ScalarProperty Name="tran_type" ColumnName="tran_type" />
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+                <ScalarProperty Name="CancelledDebitOrderID" ColumnName="CancelledDebitOrderID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="False" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams>
+      <Diagram Name="StratcolDB" ZoomLevel="99">
+        <EntityTypeShape EntityType="StratcolPortalModel.tblErrorCode" Width="1.5" PointX="0.75" PointY="0.75" Height="1.787985026041667" IsExpanded="true" />
+        <EntityTypeShape EntityType="StratcolPortalModel.tblResult" Width="1.5" PointX="2.375" PointY="0.75" Height="4.8648079427083353" />
+        <EntityTypeShape EntityType="StratcolPortalModel.tblAccountHolderVerification" Width="1.5" PointX="4" PointY="0.75" Height="5.4417122395833317" />
+        <EntityTypeShape EntityType="StratcolPortalModel.tblOrigin" Width="1.5" PointX="0.75" PointY="2.875" Height="2.3648893229166674" />
+        <EntityTypeShape EntityType="StratcolPortalModel.tblBatchResult" Width="1.5" PointX="5.625" PointY="0.75" Height="3.1340950520833317" />
+        <EntityTypeShape EntityType="StratcolPortalModel.tblBatch" Width="1.5" PointX="7.25" PointY="0.75" Height="2.7494921874999996" />
+        <EntityTypeShape EntityType="StratcolPortalModel.tblCancelledDebitOrder" Width="1.5" PointX="0.75" PointY="6.75" Height="4.0956022135416674" />
+      </Diagram>
+    </Diagrams>
+  </Designer>
+</edmx:Edmx>

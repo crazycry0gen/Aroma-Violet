@@ -7,10 +7,11 @@
 }
 
 <h2>Index</h2>
-
+@Html.Label("Feedback", " ", new { @class = "text-danger",id="Feedback" })
 <table>
     <tr>
-        <th>User</th>
+        <th colspan="2">User</th>
+        <th>Client Id</th>
         @foreach (var role in roles)
         {
             <th>@role</th>
@@ -21,8 +22,8 @@
 
         
     <tr>
-        <td>@users[i].Username</td>
-        
+        <td colspan="2">@users[i].Username</td>
+        <td>@Html.EditorFor(m=>users[i].ClientId, new { htmlAttributes = new { @class = "form-control", onchange = string.Format("UpdateClient(this,'{0}')", users[i].Id) } })</td>
         @for (int r = 0; r < roles.Length; r++)
         {
             var inRole = users[i].Roles.Contains(roles[r]);
@@ -34,4 +35,17 @@
     }
 </table>
 
+<script type="text/javascript">
+    function UpdateClient(textbox, userId)
+    {
+        var clientData = {
+            clientIdText: textbox.value,
+            userId: userId
+        }
+        var responceElement = "Feedback" ;
+
+        var url = '@Url.Action("UpdateUserClient","Account")';
+        callServerMethod(clientData, url, responceElement);
+    }
+</script>
 

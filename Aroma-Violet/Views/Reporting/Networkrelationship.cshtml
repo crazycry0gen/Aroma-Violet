@@ -1,0 +1,28 @@
+﻿@model Aroma_Violet.Models.NetworkClient
+@{
+    ViewBag.IsFirst = true;
+}
+
+<h2>Network</h2>
+
+<table>
+    @if (Model.Parent.HasValue)
+    {
+        <tr>
+            <td  class="network">@Html.ActionLink(Model.Parent.Value.ToString(),"Networkrelationship","Reporting",routeValues: new {clientId=Model.Parent.Value },htmlAttributes:null)</td><td>@Html.DisplayFor(m => Model)</td>
+        </tr>
+    }
+    else
+    {
+        <tr>
+            <td class="network">
+                @Html.DisplayFor(m => Model)
+            </td>
+        </tr>
+    }
+</table>
+
+
+<p>
+    @Html.ActionLink("Reporting", "Index")
+</p>

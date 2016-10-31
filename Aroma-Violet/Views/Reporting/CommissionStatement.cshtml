@@ -1,0 +1,210 @@
+﻿@model List<Aroma_Violet.Models.ReportCommisionStatementViewModel>
+@{
+    ViewBag.Title = "CommissionStatement";
+    var fmt = "#,###,##0.00";
+
+}
+@using (Html.BeginForm())
+{
+    <div>
+<h2>Commission Statement</h2>
+
+
+    <table>
+        <tr>
+
+        </tr>
+        <tr>
+        <td>@Html.DropDownList("specificPeriodId", null, htmlAttributes: new { @class = "form-control" })</td>
+        <td><input type="submit" value="Filter" class="btn btn-default" /></td>
+            </tr>
+        </table>
+
+
+            @foreach (var statement in Model)
+            {
+                <h3>Name: @statement.Name</h3>
+                <h3>Reseller No: @statement.ClientId</h3>
+                <h3>Month: @statement.Description</h3>
+
+                var own = statement.Periods.Where(m => m.Level == 0).FirstOrDefault();
+                var down = statement.Periods.Where(m => m.Level != 0).OrderBy(m => m.Level).ToArray();
+                decimal downTot = 0;
+                decimal downRebateTot = 0;
+                decimal resellerTot = 0;
+                if (own != null)
+                {
+                    <h4>Volume Discounts</h4>
+                    <table>
+                        <tr>
+                            <th>Period:</th>
+                            <th>From</th>
+                            <td>@own.PeriodStart</td>
+                            <th>To</th>
+                            <td>@own.PeriodEnd</td>
+                        </tr>
+                        <tr>
+                            <th>Own purchases</th>
+                            <td class="Number">@own.Amount.ToString(fmt)</td>
+                        </tr>
+                        <tr>
+                            <th>Volume Discount</th>
+                            <td class="Number">@own.AmountPer.ToString(fmt)</td>
+                        </tr>
+                        <tr>
+                            <th>Volume Discount Value</th>
+                            <th class="Number">@own.AmountValue.ToString(fmt)</th>
+                        </tr>
+                    </table>
+                    <p>* Please take note that your Sales Account with Novus Fragrances (Pty) Ltd has been credited with the above amount. This amount can be set-off against future purchases.</p>
+
+                    <h4>Rebates (Commission) earned</h4>
+                    <h5>Cash Purchases by Related Resellers</h5>
+                    <table>
+                        <tr>
+                            <th>Level</th>
+                            <th>Value of purchases</th>
+                            <th>Rebate %</th>
+                            <th>Rebate Value</th>
+                        </tr>
+                        @for (int i = 0; i < down.Length; i++)
+                        {
+                            downTot += down[i].Amount;
+                            downRebateTot += down[i].AmountValue;
+                            <tr class="findisp">
+                                <td>@down[i].Level</td>
+                                <td class="Number">@down[i].Amount.ToString(fmt)</td>
+                                <td class="Number">@down[i].AmountPer.ToString(fmt)</td>
+                                <td class="Number">@down[i].AmountValue.ToString(fmt)</td>
+                            </tr>
+                        }
+                        <tr>
+                            <th>Sub Total</th>
+                            <th class="Number">@downTot.ToString(fmt)</th>
+                            <th></th>
+                            <th class="Number">@downRebateTot.ToString(fmt)</th>
+                        </tr>
+                    </table>
+                    <p><strong>NOTE:</strong> To qualify for Rebates, you must purchase products to the value of at least R200 in the calendar month in which rebates are calculated.</p>
+
+                    <h5>Subscription Sales by own Customers and Realated Resellers' Customers</h5>
+                    <table>
+                        <tr>
+                            <th>Level</th>
+                            <th>Value of subscriptions (1st Product)</th>
+                            <th>% Rebates earned subscriptions 1st product</th>
+                            <th>RebateValue earned (1st product)</th>
+                            <th>Value of subscriptions (2nd Product)</th>
+                            <th>% Rebates earned subscriptions 2nd product</th>
+                            <th>Rebate Value earned 2nd product</th>
+                            <th>Total Subscription Rebates earned</th>
+                        </tr>
+                        @{
+                            resellerTot = downRebateTot;
+                            downTot = 0;
+                            downRebateTot = 0;
+                            decimal downTot1 = 0;
+                            decimal downRebateTot1 = 0;
+
+                        }
+                        @for (int i = 0; i < down.Length; i++)
+                        {
+                            downTot += down[i].SubscriptionFirstProduct;
+                            downRebateTot += down[i].SubscriptionFirstProductValue;
+                            downTot1 += down[i].SubscriptionOtherProduct;
+                            downRebateTot1 += down[i].SubscriptionOtherProductValue;
+                            <tr class="findisp">
+                                <td>@down[i].Level</td>
+                                <td class="Number">@down[i].SubscriptionFirstProduct.ToString(fmt)</td>
+                                <td class="Number">@down[i].SubscriptionFirstProductPer.ToString(fmt)</td>
+                                <td class="Number">@down[i].SubscriptionFirstProductValue.ToString(fmt)</td>
+                                <td class="Number">@down[i].SubscriptionOtherProduct.ToString(fmt)</td>
+                                <td class="Number">@down[i].SubscriptionOtherProductPer.ToString(fmt)</td>
+                                <td class="Number">@down[i].SubscriptionOtherProductValue.ToString(fmt)</td>
+                                <td class="Number">@((down[i].SubscriptionFirstProductValue + down[i].SubscriptionOtherProductValue).ToString(fmt))</td>
+                            </tr>
+                        }
+                        <tr>
+                            <th>Sub Total</th>
+                            <th class="Number">@downTot.ToString(fmt)</th>
+                            <th></th>
+                            <th class="Number">@downRebateTot.ToString(fmt)</th>
+                            <th class="Number">@downTot1.ToString(fmt)</th>
+                            <th></th>
+                            <th class="Number">@downRebateTot1.ToString(fmt)</th>
+                            <th class="Number">@((downRebateTot + downRebateTot1).ToString(fmt))</th>
+                        </tr>
+                    </table>
+                    <h5>Total Rebates Earned</h5>
+                    <table>
+                        <tr>
+                            <td colspan="2">Cash Purchases by Related Resellers</td>
+                            <td class="Number">@resellerTot.ToString(fmt)</td>
+                            <td colspan="4"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Product Subscription Rebates</td>
+                            <td class="Number">@((downRebateTot + downRebateTot1).ToString(fmt))</td>
+                            <td colspan="4"></td>
+                        </tr>
+                        <tr>
+                            <th colspan="2">Total</th>
+                            <th class="Number">@((downRebateTot + downRebateTot1 + resellerTot).ToString(fmt))</th>
+                            <td colspan="4"></td>
+                        </tr>
+                    </table>
+                    <p>This amount will be paid into your bank account on or before the 7th of the month following the calendar month in which rebates were calculated.</p>
+
+                    <h5>Down-line details & Purchases</h5>
+                    <h5>Related Resellers</h5>
+                            for (int i = 0; i < down.Length; i++)
+                            {
+                                <h6>Level @down[i].Level</h6>
+                                <table>
+                                    <tr>
+                                        <th>No</th>
+                                        <th colspan="2">Name</th>
+                                        <th>Reseller No</th>
+                                        <th>Status</th>
+                                        <th>Title</th>
+                                        <th>Cellphone Number</th>
+                                        <th colspan="3">Email Address</th>
+                                        <th colspan="2">Introducer Name</th>
+                                        <th>Introducer No</th>
+                                        <th>Product Purchases</th>
+                                        <th>Rebates urned on this member</th>
+                                    </tr>
+                                    @for (int c = 0; c < down[i].Detail.Length; c++)
+                                    {
+                                        <tr class="findisp">
+                                            <td>@((c + 1))</td>
+                                            <td colspan="2">@down[i].Detail[c].ClientDescription</td>
+                                            <td>@down[i].Detail[c].Client.ClientId</td>
+                                            <td>@(down[i].Detail[c].Client.Active ? "Active" : "Inactive")</td>
+                                            <td>@down[i].Detail[c].Client.ClientType.ClientTypeName</td>
+                                            @if (down[i].Level < 2)
+                                            {
+                                                <td>@down[i].Detail[c].Cell</td>
+                                                <td colspan="3">@down[i].Detail[c].EMail</td>
+                                            }
+                                            else
+                                            {
+                                                <td>xxxxxxxxxx</td>
+                                                <td colspan="3">xxxxxxxxxx</td>
+                                            }
+                                            <td colspan="2">@down[i].Detail[c].Introducer</td>
+                                            <td>@down[i].Detail[c].Client.ResellerID</td>
+                                            <td class="Number">@down[i].Detail[c].Amount.ToString(fmt)</td>
+                                            <td class="Number">@((down[i].Detail[c].Amount * down[i].AmountPer).ToString(fmt)) </td>
+                                        </tr>
+                                    }
+                                </table>
+                                }
+                            }
+                            else
+                            {
+        < p > No data found</ p >
+                                }
+                            }
+                                </div>
+                            }

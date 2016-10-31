@@ -1,0 +1,40 @@
+﻿@model IEnumerable<Aroma_Violet.Models.SystemEvent>
+
+@{
+    ViewBag.Title = "Index";
+    KeyValuePair<Guid, string>[] users = ViewBag.Users;
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.SystemEventName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UserId)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    var user = users.First(m => m.Key.Equals(item.UserId));
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.SystemEventName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => user.Value)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.SystemEventId }) 
+            
+        </td>
+    </tr>
+}
+
+</table>

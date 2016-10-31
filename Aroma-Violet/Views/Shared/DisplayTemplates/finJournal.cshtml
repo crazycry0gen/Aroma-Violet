@@ -1,0 +1,42 @@
+﻿@model IEnumerable<Aroma_Violet.Models.finJournal>
+
+@{
+    ViewBag.Title = "finJournal";
+    var journals = Model.ToArray();
+    var accounts = ViewBag.Accounts as Aroma_Violet.Models.finAccount[];
+}
+
+@for (int row = 0; row < Model.Count() - 1; row += 2)
+{
+    <tr class="findisp">
+        <td style="text-align:left;">
+            @Html.DisplayFor(m => journals[row].Comment)
+        </td>
+        <td>
+            @Html.DisplayFor(m => journals[row].JournalDate)
+        </td>
+        @for (int i = 0; i < accounts.Length; i++)
+        {
+            if (ViewBag.Accounts[i].AccountId.Equals(journals[row].AccountID))
+            {
+                string tclass = journals[row].EffectiveDate > DateTime.Now ? "futureJournal" : "findisp";
+                <td id="@accounts[i].AccountId-@journals[row].JournalId" class="@tclass">
+                    @Html.DisplayFor(m => journals[row].Amount)
+                    <div id="Extra-@journals[row].JournalId"></div>
+                </td>
+            }
+            else if (accounts[i].AccountId.Equals(journals[row + 1].AccountID))
+            {
+                string tclass = journals[row + 1].EffectiveDate > DateTime.Now ? "futureJournal" : "findisp";
+                <td id="@accounts[i].AccountId-@journals[row + 1].JournalId"  class="@tclass">
+                    @Html.DisplayFor(m => journals[row + 1].Amount)
+                    <div id="Extra-@journals[row + 1].JournalId"></div>
+                </td>
+            }
+            else
+            {
+                <td class="findisp"></td>
+            }
+        }
+     </tr>
+}

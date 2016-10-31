@@ -18,7 +18,7 @@ namespace Aroma_Violet.Controllers
         // GET: ClientTypes
         public async Task<ActionResult> Index()
         {
-            return View(await db.ClientTypes.ToListAsync());
+            return View(await db.ClientTypes.OrderBy(m => m.ClientTypeName).ToListAsync());
         }
 
         // GET: ClientTypes/Details/5
@@ -47,8 +47,13 @@ namespace Aroma_Violet.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "ClientTypeId,ClientTypeName,Active")] ClientType clientType)
+        public async Task<ActionResult> Create([Bind(Include = "ClientTypeId,ClientTypeName,Active,AddShipping")] ClientType clientType)
         {
+            var existing = db.ClientTypes.Where(m => m.ClientTypeName.Trim().ToLower() == clientType.ClientTypeName.Trim().ToLower()).FirstOrDefault();
+            if (existing != null)
+            {
+                ModelState.AddModelError("", string.Format("A client type already exists with the name {0}", clientType.ClientTypeName));
+            }
             if (ModelState.IsValid)
             {
                 db.ClientTypes.Add(clientType);
@@ -79,7 +84,7 @@ namespace Aroma_Violet.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "ClientTypeId,ClientTypeName,Active")] ClientType clientType)
+        public async Task<ActionResult> Edit([Bind(Include = "ClientTypeId,ClientTypeName,Active,AddShipping")] ClientType clientType)
         {
             if (ModelState.IsValid)
             {

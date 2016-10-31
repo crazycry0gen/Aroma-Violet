@@ -2,6 +2,7 @@
 
 @{
     ViewBag.Title = "Index";
+    KeyValuePair<int, int[]>[] sClientIds = ViewBag.ClientIds;
 }
 
 <h2>Index</h2>
@@ -11,6 +12,9 @@
 </p>
 <table class="table">
     <tr>
+        <th>
+            Client(s)
+        </th>
         <th>
             @Html.DisplayNameFor(model => model.ShippingMethod.ShippingMethodName)
         </th>
@@ -30,6 +34,12 @@
 @foreach (var item in Model) {
     <tr>
         <td>
+            @foreach (var v in sClientIds.Where(m => m.Key == item.PickingListHeaderId).First().Value)
+            {
+                <text>@v </text>
+            }
+        </td>
+        <td>
             @Html.DisplayFor(modelItem => item.ShippingMethod.ShippingMethodName)
         </td>
         <td>
@@ -38,14 +48,17 @@
         <td>
             @Html.DisplayFor(modelItem => item.PickingDate)
         </td>
-        <td>
-           
-        </td>
         
+           @if (item.ShippedDate.HasValue)
+           {
+               <td>@Html.DisplayFor(modelitem=>item.ShippedDate.Value)</td>
+           }
+           else
+           { <td></td>}
+
+
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.PickingListHeaderId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.PickingListHeaderId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.PickingListHeaderId })
+            @Html.ActionLink("Details", "Details", new { id=item.PickingListHeaderId }) 
         </td>
     </tr>
 }

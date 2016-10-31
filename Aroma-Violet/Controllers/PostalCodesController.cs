@@ -67,7 +67,7 @@ namespace Aroma_Violet.Controllers
                     {
                         var countryName = row[0].Trim();
                         var checkCountry = countryName.ToLower();
-                        var country = db.Countries.FirstOrDefault(m => m.CountryName.ToLower() == checkCountry);
+                        var country = db.Countries.OrderBy(m=>m.CountryName).FirstOrDefault(m => m.CountryName.ToLower() == checkCountry);
                         if (country == null)
                         {
                             country = new Country() { Active = true, CountryName = countryName };
@@ -117,11 +117,11 @@ namespace Aroma_Violet.Controllers
             ViewBag.Filter = filterPostalCodes;
             if (filterPostalCodes != null && filterPostalCodes.Length > 0)
             {
-                return View(await db.PostalCodes.Where(m => m.PostalCodeName.Contains(filterPostalCodes)).Take(20).ToListAsync());
+                return View(await db.PostalCodes.OrderBy(m=>m.PostalCodeName).Where(m => m.PostalCodeName.Contains(filterPostalCodes)).Take(20).ToListAsync());
             }
             else
             {
-                return View(await db.PostalCodes.Take(20).ToListAsync());
+                return View(await db.PostalCodes.OrderBy(m => m.PostalCodeName).Take(20).ToListAsync());
             }
         }
         // GET: PostalCodes/Details/5
@@ -142,6 +142,10 @@ namespace Aroma_Violet.Controllers
         // GET: PostalCodes/Create
         public ActionResult Create()
         {
+            ViewBag.CountryID = new SelectList(db.Countries.OrderBy(m=>m.CountryName), "CountryId", "CountryName");
+            ViewBag.ProvinceId = new SelectList(db.Provinces.OrderBy(m=>m.ProvinceName), "ProvinceId", "ProvinceName");
+            ViewBag.PostalAreaId = new SelectList(db.PostalAreas.OrderBy(m=>m.PostalAreaName), "PostalAreaId", "PostalAreaName");
+
             return View();
         }
 
@@ -150,14 +154,18 @@ namespace Aroma_Violet.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "PostalCodeId,PostalCodeName,Active")] PostalCode postalCode)
+        public async Task<ActionResult> Create([Bind(Include = "PostalCodeId,PostalCodeName,Active,CountryId,ProvinceId,PostalAreaId")] PostalCode postalCode)
         {
+            
             if (ModelState.IsValid)
             {
                 db.PostalCodes.Add(postalCode);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
+            ViewBag.CountryID = new SelectList(db.Countries.OrderBy(m=>m.CountryName).OrderBy(m=>m.CountryName), "CountryId", "CountryName");
+                        ViewBag.ProvinceId = new SelectList(db.Provinces.OrderBy(m=>m.ProvinceName), "ProvinceId", "ProvinceName");
+            ViewBag.PostalAreaId = new SelectList(db.PostalAreas.OrderBy(m=>m.PostalAreaName), "PostalAreaId", "PostalAreaName");
 
             return View(postalCode);
         }
@@ -174,6 +182,9 @@ namespace Aroma_Violet.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.CountryID = new SelectList(db.Countries.OrderBy(m=>m.CountryName), "CountryId", "CountryName",postalCode.CountryId);
+            ViewBag.ProvinceId = new SelectList(db.Provinces, "ProvinceId", "ProvinceName",postalCode.ProvinceId);
+            ViewBag.PostalAreaId = new SelectList(db.PostalAreas, "PostalAreaId", "PostalAreaName",postalCode.PostalAreaId);
             return View(postalCode);
         }
 
@@ -182,7 +193,7 @@ namespace Aroma_Violet.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "PostalCodeId,PostalCodeName,Active")] PostalCode postalCode)
+        public async Task<ActionResult> Edit([Bind(Include = "PostalCodeId,PostalCodeName,Active,CountryId,ProvinceId,PostalAreaId")] PostalCode postalCode)
         {
             if (ModelState.IsValid)
             {
@@ -190,6 +201,9 @@ namespace Aroma_Violet.Controllers
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
+            ViewBag.CountryID = new SelectList(db.Countries.OrderBy(m=>m.CountryName), "CountryId", "CountryName", postalCode.CountryId);
+            ViewBag.ProvinceId = new SelectList(db.Provinces, "ProvinceId", "ProvinceName", postalCode.ProvinceId);
+            ViewBag.PostalAreaId = new SelectList(db.PostalAreas, "PostalAreaId", "PostalAreaName", postalCode.PostalAreaId);
             return View(postalCode);
         }
 

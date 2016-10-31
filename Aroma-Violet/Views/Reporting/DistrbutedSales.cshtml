@@ -1,0 +1,111 @@
+﻿@model Aroma_Violet.Models.ReportViewModel
+@{
+    ViewBag.Title = "DistrbutedSales";
+    //var lineItems = Aroma_Violet.Models.ReportViewModel.Lines.OrderBy(m=>m.ProductCode).ToList();
+    var lineItems = Aroma_Violet.Models.ReportViewModel.GroupedLines.OrderBy(m => m.ProductCode).ToList();
+    var orders = Aroma_Violet.Models.ReportViewModel.Sales.OrderBy(m => m.ClientID).ToList();
+    var fromDate = Model.FromDate;
+    var toDate = Model.ToDate;
+}
+
+<h2>Distrbuted Sales</h2>
+
+@using (Html.BeginForm())
+{
+
+    @Html.AntiForgeryToken()
+
+    <table>
+        <tr>
+            <th>
+                From
+            </th>
+            <td>
+                @Html.EditorFor(m => fromDate)
+            </td>
+            <th></th>
+            <th>
+                To
+            </th>
+            <td>
+                @Html.EditorFor(m => toDate)
+            </td>
+            <th></th>
+            <td>
+                <input type="submit" value="Filter" class="btn btn-default"/>
+            </td>
+        </tr>
+    </table>
+
+}
+
+<table>
+    <tr>
+        <th colspan="3">Product Code</th>
+        <th colspan="5">Product Description</th>
+        <th>Qty</th>
+        <th>Unit Price</th>
+        <th>Total (Vat included)</th>
+        @*<th>Shipping</th>*@
+    </tr>
+    @for (int i = 0; i < lineItems.Count; i++)
+    {
+        <tr class="findisp">
+            <td colspan="3">
+               @Html.DisplayFor(m=>lineItems[i].ProductCode)
+            </td>
+            <td colspan="5">
+                @Html.DisplayFor(m=>lineItems[i].ProductDescription)
+            </td>
+            <td>
+                @Html.DisplayFor(m => lineItems[i].Quantity)
+            </td>
+            <td class="Number">
+                @Html.DisplayFor(m => lineItems[i].UnitPrice)
+            </td>
+            <td class="Number">
+                @Html.DisplayFor(m => lineItems[i].Total)
+            </td>
+            @*<td class="Number">
+                @Html.DisplayFor(m => lineItems[i].Shipping)
+            </td>*@
+        </tr>
+    }
+    <tr>
+        <th colspan="10">Total</th>
+        <th class="Number">@Model.Total</th>
+    </tr>
+</table>
+
+<h2>Clients Linked to Distrbuted Sales</h2>
+
+<table>
+    <tr>
+        <th>
+            Client ID
+        </th>
+        <th colspan="2">Client Initials & Surname</th>
+        <th>Source</th>
+        <th>Invoice</th>
+        <th>Amount</th>
+    </tr>
+    @for (int i = 0; i < orders.Count; i++)
+    {
+        <tr class="findisp">
+            <td>@Html.DisplayFor(m => orders[i].ClientID)</td>
+            <td colspan="2">@Html.DisplayFor(m => orders[i].Description)</td>
+            <td>@Html.DisplayFor(m => orders[i].Source)</td>
+            <td>@Html.DisplayFor(m => orders[i].Invoice)</td>
+            <td class="Number">@Html.DisplayFor(m=>orders[i].Total)</td>
+        </tr>
+    }
+    <tr>
+        <th colspan="5">Total</th>
+        <th class="Number">@Model.Total</th>
+    </tr>
+
+</table>
+
+<p>
+    @Html.ActionLink("Reporting", "Index")
+</p>

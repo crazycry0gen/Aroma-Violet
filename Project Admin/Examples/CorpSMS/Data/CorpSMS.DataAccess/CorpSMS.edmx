@@ -1,0 +1,995 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="CorpSMSModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+        <EntityContainer Name="CorpSMSModelStoreContainer">
+          <EntitySet Name="Account" EntityType="CorpSMSModel.Store.Account" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Credit" EntityType="CorpSMSModel.Store.Credit" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="DeliveryReport" EntityType="CorpSMSModel.Store.DeliveryReport" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Message" EntityType="CorpSMSModel.Store.Message" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="MessageQueue" EntityType="CorpSMSModel.Store.MessageQueue" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="MessageReply" EntityType="CorpSMSModel.Store.MessageReply" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Origin" EntityType="CorpSMSModel.Store.Origin" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ReplySetting" EntityType="CorpSMSModel.Store.ReplySetting" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="SendSetting" EntityType="CorpSMSModel.Store.SendSetting" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="SentSetting" EntityType="CorpSMSModel.Store.SentSetting" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ShortCodeDatas" EntityType="CorpSMSModel.Store.ShortCodeDatas" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ShortCodeSetting" EntityType="CorpSMSModel.Store.ShortCodeSetting" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="sysdiagrams" EntityType="CorpSMSModel.Store.sysdiagrams" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="tblBaredNumbers" EntityType="CorpSMSModel.Store.tblBaredNumbers" store:Type="Tables" Schema="dbo" />
+          <AssociationSet Name="FK_Credit_Account" Association="CorpSMSModel.Store.FK_Credit_Account">
+            <End Role="Account" EntitySet="Account" />
+            <End Role="Credit" EntitySet="Credit" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReplySetting_Account" Association="CorpSMSModel.Store.FK_ReplySetting_Account">
+            <End Role="Account" EntitySet="Account" />
+            <End Role="ReplySetting" EntitySet="ReplySetting" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SentSetting_Account" Association="CorpSMSModel.Store.FK_SentSetting_Account">
+            <End Role="Account" EntitySet="Account" />
+            <End Role="SentSetting" EntitySet="SentSetting" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ShortCodeSetting_Account" Association="CorpSMSModel.Store.FK_ShortCodeSetting_Account">
+            <End Role="Account" EntitySet="Account" />
+            <End Role="ShortCodeSetting" EntitySet="ShortCodeSetting" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblBaredNumbers_Origin" Association="CorpSMSModel.Store.FK_tblBaredNumbers_Origin">
+            <End Role="Origin" EntitySet="Origin" />
+            <End Role="tblBaredNumbers" EntitySet="tblBaredNumbers" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Account">
+          <Key>
+            <PropertyRef Name="AccountID" />
+          </Key>
+          <Property Name="AccountID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Description" Type="varchar" Nullable="false" MaxLength="25" />
+          <Property Name="CountryCodePrefix" Type="varchar" Nullable="false" MaxLength="5" />
+          <Property Name="Username" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="Password" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="IsDefault" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Credit">
+          <Key>
+            <PropertyRef Name="CreditID" />
+          </Key>
+          <Property Name="CreditID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="AccountID" Type="int" Nullable="false" />
+          <Property Name="Amount" Type="int" Nullable="false" />
+          <Property Name="CreditDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DeliveryReport">
+          <Key>
+            <PropertyRef Name="DeliveryReportId" />
+          </Key>
+          <Property Name="DeliveryReportId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="MessageId" Type="int" Nullable="false" />
+          <Property Name="ChangeId" Type="bigint" Nullable="false" />
+          <Property Name="SentId" Type="bigint" Nullable="false" />
+          <Property Name="Status" Type="nvarchar" Nullable="false" MaxLength="500" />
+          <Property Name="StatusDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Message">
+          <Key>
+            <PropertyRef Name="MessageId" />
+          </Key>
+          <Property Name="MessageId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Number" Type="varchar" Nullable="false" MaxLength="15" />
+          <Property Name="Sender" Type="varchar" MaxLength="15" />
+          <Property Name="Text" Type="varchar(max)" />
+          <Property Name="EncryptedText" Type="varbinary(max)" />
+          <Property Name="Created" Type="datetime" Nullable="false" />
+          <Property Name="OriginId" Type="int" Nullable="false" />
+          <Property Name="UniqueId" Type="int" Nullable="false" />
+          <Property Name="EventId" Type="int" Nullable="false" />
+          <Property Name="RowGuid" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Status" Type="nvarchar" Nullable="false" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="MessageQueue">
+          <Key>
+            <PropertyRef Name="MessageQueueId" />
+          </Key>
+          <Property Name="MessageQueueId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="BatchId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Number" Type="varchar" Nullable="false" MaxLength="15" />
+          <Property Name="Text" Type="varchar" Nullable="false" MaxLength="1000" />
+          <Property Name="MessageId" Type="int" />
+          <Property Name="OriginId" Type="int" Nullable="false" />
+          <Property Name="UniqueId" Type="int" Nullable="false" />
+          <Property Name="Accessed" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MessageReply">
+          <Key>
+            <PropertyRef Name="MessageReplyId" />
+          </Key>
+          <Property Name="MessageReplyId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="MessageId" Type="int" Nullable="false" />
+          <Property Name="ReplyId" Type="int" Nullable="false" />
+          <Property Name="Text" Type="nvarchar" Nullable="false" MaxLength="1000" />
+          <Property Name="DateReceived" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Origin">
+          <Key>
+            <PropertyRef Name="OriginID" />
+          </Key>
+          <Property Name="OriginID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="SystemName" Type="varchar" Nullable="false" MaxLength="250" />
+        </EntityType>
+        <EntityType Name="ReplySetting">
+          <Key>
+            <PropertyRef Name="ReplySettingID" />
+          </Key>
+          <Property Name="ReplySettingID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="AccountID" Type="int" Nullable="false" />
+          <Property Name="LatestID" Type="bigint" Nullable="false" />
+          <Property Name="RecordCount" Type="int" Nullable="false" />
+          <Property Name="ReturnColumns" Type="varchar(max)" Nullable="false" />
+          <Property Name="DateFormat" Type="varchar" Nullable="false" MaxLength="25" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="CreatedBy" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="DateCreated" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SendSetting">
+          <Key>
+            <PropertyRef Name="SendSettingID" />
+          </Key>
+          <Property Name="SendSettingID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="IsLive" Type="bit" Nullable="false" />
+          <Property Name="ReturnCredits" Type="bit" Nullable="false" />
+          <Property Name="ReturnMessageSuccessCount" Type="bit" Nullable="false" />
+          <Property Name="ReturnMessageFailedCount" Type="bit" Nullable="false" />
+          <Property Name="ReturnEntriesSuccessStatus" Type="bit" Nullable="false" />
+          <Property Name="ReturnEntriesFailedStatus" Type="bit" Nullable="false" />
+          <Property Name="DefaultSender" Type="varchar(max)" Nullable="false" />
+          <Property Name="DefaultText1" Type="varchar(max)" Nullable="false" />
+          <Property Name="DefaultText2" Type="varchar(max)" Nullable="false" />
+          <Property Name="DefaultDateFormat" Type="varchar(max)" Nullable="false" />
+          <Property Name="DefaultTimeFormat" Type="varchar(max)" Nullable="false" />
+          <Property Name="Flash" Type="bit" Nullable="false" />
+          <Property Name="Type" Type="varchar(max)" Nullable="false" />
+          <Property Name="CostCentre" Type="varchar(max)" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="CreatedBy" Type="varchar(max)" Nullable="false" />
+          <Property Name="DateCreated" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SentSetting">
+          <Key>
+            <PropertyRef Name="SentSettingID" />
+          </Key>
+          <Property Name="SentSettingID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="AccountID" Type="int" Nullable="false" />
+          <Property Name="LatestID" Type="bigint" Nullable="false" />
+          <Property Name="RecordCount" Type="int" Nullable="false" />
+          <Property Name="ReturnColumns" Type="varchar(max)" Nullable="false" />
+          <Property Name="DateFormat" Type="varchar" Nullable="false" MaxLength="25" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="CreatedBy" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="DateCreated" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ShortCodeDatas">
+          <Key>
+            <PropertyRef Name="changeid" />
+          </Key>
+          <Property Name="changeid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="shortcode" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="keyword" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="phonenumber" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="message" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="received" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="BatchId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ShortCodeSetting">
+          <Key>
+            <PropertyRef Name="ShortCodeSettingID" />
+          </Key>
+          <Property Name="ShortCodeSettingID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="AccountID" Type="int" Nullable="false" />
+          <Property Name="LatestID" Type="bigint" Nullable="false" />
+          <Property Name="DateFormat" Type="varchar" Nullable="false" MaxLength="25" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="CreatedBy" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="DateCreated" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" Nullable="false" MaxLength="128" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="tblBaredNumbers">
+          <Key>
+            <PropertyRef Name="BaredNumberID" />
+          </Key>
+          <Property Name="BaredNumberID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Number" Type="varchar" Nullable="false" MaxLength="15" />
+          <Property Name="Added" Type="datetime" Nullable="false" />
+          <Property Name="Reason" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="OriginId" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Credit_Account">
+          <End Role="Account" Type="CorpSMSModel.Store.Account" Multiplicity="1" />
+          <End Role="Credit" Type="CorpSMSModel.Store.Credit" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Account">
+              <PropertyRef Name="AccountID" />
+            </Principal>
+            <Dependent Role="Credit">
+              <PropertyRef Name="AccountID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReplySetting_Account">
+          <End Role="Account" Type="CorpSMSModel.Store.Account" Multiplicity="1" />
+          <End Role="ReplySetting" Type="CorpSMSModel.Store.ReplySetting" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Account">
+              <PropertyRef Name="AccountID" />
+            </Principal>
+            <Dependent Role="ReplySetting">
+              <PropertyRef Name="AccountID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SentSetting_Account">
+          <End Role="Account" Type="CorpSMSModel.Store.Account" Multiplicity="1" />
+          <End Role="SentSetting" Type="CorpSMSModel.Store.SentSetting" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Account">
+              <PropertyRef Name="AccountID" />
+            </Principal>
+            <Dependent Role="SentSetting">
+              <PropertyRef Name="AccountID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ShortCodeSetting_Account">
+          <End Role="Account" Type="CorpSMSModel.Store.Account" Multiplicity="1" />
+          <End Role="ShortCodeSetting" Type="CorpSMSModel.Store.ShortCodeSetting" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Account">
+              <PropertyRef Name="AccountID" />
+            </Principal>
+            <Dependent Role="ShortCodeSetting">
+              <PropertyRef Name="AccountID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblBaredNumbers_Origin">
+          <End Role="Origin" Type="CorpSMSModel.Store.Origin" Multiplicity="1" />
+          <End Role="tblBaredNumbers" Type="CorpSMSModel.Store.tblBaredNumbers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Origin">
+              <PropertyRef Name="OriginID" />
+            </Principal>
+            <Dependent Role="tblBaredNumbers">
+              <PropertyRef Name="OriginId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="CreateAsymetricKey" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="AsymmetricKeyName" Type="varchar" Mode="In" />
+          <Parameter Name="Filename" Type="varchar" Mode="In" />
+          <Parameter Name="Password" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="CreateBatchQueue" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="XML" Type="varchar(max)" Mode="In" />
+          <Parameter Name="OriginId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="CreateSymmetricKey" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="SymmetricKeyName" Type="varchar" Mode="In" />
+          <Parameter Name="AsymmetricKeyName" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="fn_diagramobjects" ReturnType="int" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="GetShortCodeMessage" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="AsymmetricKey" Type="varchar" Mode="In" />
+          <Parameter Name="Password" Type="varchar" Mode="In" />
+          <Parameter Name="StarDate" Type="datetime" Mode="In" />
+          <Parameter Name="EndDate" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="IsNumericEx" ReturnType="bit" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="value" Type="nvarchar(max)" Mode="In" />
+        </Function>
+        <Function Name="SendQueuedMessages" ReturnType="nvarchar(max)" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="batchId" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="SendSMS" ReturnType="nvarchar(max)" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="number" Type="nvarchar" Mode="In" />
+          <Parameter Name="text" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="originId" Type="int" Mode="In" />
+          <Parameter Name="uniqueId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="SetReplyMessage" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Sender" Type="varchar" Mode="In" />
+          <Parameter Name="Text" Type="varchar" Mode="In" />
+          <Parameter Name="ReplyID" Type="int" Mode="In" />
+          <Parameter Name="DateSent" Type="datetime" Mode="In" />
+          <Parameter Name="DateReceived" Type="datetime" Mode="In" />
+          <Parameter Name="BatchID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="SetShortCodeMessage" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Number" Type="varchar" Mode="In" />
+          <Parameter Name="Sender" Type="varchar" Mode="In" />
+          <Parameter Name="Text" Type="varchar" Mode="In" />
+          <Parameter Name="ChangeID" Type="int" Mode="In" />
+          <Parameter Name="DateReceived" Type="datetime" Mode="In" />
+          <Parameter Name="BatchID" Type="int" Mode="In" />
+          <Parameter Name="AsymmetricKey" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="sp_alterdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="version" Type="int" Mode="In" />
+          <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+        </Function>
+        <Function Name="sp_creatediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="version" Type="int" Mode="In" />
+          <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+        </Function>
+        <Function Name="sp_dropdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_helpdiagramdefinition" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_helpdiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_renamediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="new_diagramname" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="sp_upgraddiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="spAddStopReplies" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="spRemoveBarredMessages" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="spRemoveSentMessages" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="uniqueID" Type="int" Mode="In" />
+        </Function>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="CorpSMSModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+        <EntityContainer Name="CorpSMSEntities" annotation:LazyLoadingEnabled="true">
+          <FunctionImport Name="SetShortCodeMessage">
+            <Parameter Name="Number" Mode="In" Type="String" />
+            <Parameter Name="Sender" Mode="In" Type="String" />
+            <Parameter Name="Text" Mode="In" Type="String" />
+            <Parameter Name="ChangeID" Mode="In" Type="Int32" />
+            <Parameter Name="DateReceived" Mode="In" Type="DateTime" />
+            <Parameter Name="BatchID" Mode="In" Type="Int32" />
+            <Parameter Name="AsymmetricKey" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="SetReplyMessage">
+            <Parameter Name="Sender" Mode="In" Type="String" />
+            <Parameter Name="Text" Mode="In" Type="String" />
+            <Parameter Name="ReplyID" Mode="In" Type="Int32" />
+            <Parameter Name="DateSent" Mode="In" Type="DateTime" />
+            <Parameter Name="DateReceived" Mode="In" Type="DateTime" />
+            <Parameter Name="BatchID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetShortCodeMessage" EntitySet="Messages" ReturnType="Collection(CorpSMSModel.Message)">
+            <Parameter Name="AsymmetricKey" Mode="In" Type="String" />
+            <Parameter Name="Password" Mode="In" Type="String" />
+            <Parameter Name="StarDate" Mode="In" Type="DateTime" />
+            <Parameter Name="EndDate" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <EntitySet Name="Accounts" EntityType="CorpSMSModel.Account" />
+          <EntitySet Name="Credits" EntityType="CorpSMSModel.Credit" />
+          <EntitySet Name="Messages" EntityType="CorpSMSModel.Message" />
+          <EntitySet Name="MessageReplies" EntityType="CorpSMSModel.MessageReply" />
+          <EntitySet Name="Origins" EntityType="CorpSMSModel.Origin" />
+          <EntitySet Name="ReplySettings" EntityType="CorpSMSModel.ReplySetting" />
+          <EntitySet Name="SendSettings" EntityType="CorpSMSModel.SendSetting" />
+          <EntitySet Name="SentSettings" EntityType="CorpSMSModel.SentSetting" />
+          <EntitySet Name="ShortCodeSettings" EntityType="CorpSMSModel.ShortCodeSetting" />
+          <AssociationSet Name="FK_Credit_Account" Association="CorpSMSModel.FK_Credit_Account">
+            <End Role="Account" EntitySet="Accounts" />
+            <End Role="Credit" EntitySet="Credits" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReplySetting_Account" Association="CorpSMSModel.FK_ReplySetting_Account">
+            <End Role="Account" EntitySet="Accounts" />
+            <End Role="ReplySetting" EntitySet="ReplySettings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SentSetting_Account" Association="CorpSMSModel.FK_SentSetting_Account">
+            <End Role="Account" EntitySet="Accounts" />
+            <End Role="SentSetting" EntitySet="SentSettings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ShortCodeSetting_Account" Association="CorpSMSModel.FK_ShortCodeSetting_Account">
+            <End Role="Account" EntitySet="Accounts" />
+            <End Role="ShortCodeSetting" EntitySet="ShortCodeSettings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Message_Origin" Association="CorpSMSModel.FK_Message_Origin">
+            <End Role="Origin" EntitySet="Origins" />
+            <End Role="Message" EntitySet="Messages" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MessageReply_Message" Association="CorpSMSModel.FK_MessageReply_Message">
+            <End Role="Message" EntitySet="Messages" />
+            <End Role="MessageReply" EntitySet="MessageReplies" />
+          </AssociationSet>
+          <EntitySet Name="MessageQueues" EntityType="CorpSMSModel.MessageQueue" />
+          <EntitySet Name="sysdiagrams" EntityType="CorpSMSModel.sysdiagram" />
+          <EntitySet Name="tblBaredNumbers" EntityType="CorpSMSModel.tblBaredNumber" />
+          <FunctionImport Name="spRemoveSentMessages">
+          <Parameter Name="uniqueID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="spRemoveBarredMessages" />
+          <AssociationSet Name="FK_tblBaredNumbers_Origin" Association="CorpSMSModel.FK_tblBaredNumbers_Origin">
+            <End Role="Origin" EntitySet="Origins" />
+            <End Role="tblBaredNumber" EntitySet="tblBaredNumbers" />
+          </AssociationSet>
+          <FunctionImport Name="spAddStopReplies" />
+          <EntitySet Name="ShortCodeData" EntityType="CorpSMSModel.ShortCodeData" />
+          <EntitySet Name="DeliveryReports" EntityType="CorpSMSModel.DeliveryReport" />
+          <AssociationSet Name="MessageDeliveryReport" Association="CorpSMSModel.MessageDeliveryReport">
+            <End Role="Message" EntitySet="Messages" />
+            <End Role="DeliveryReport" EntitySet="DeliveryReports" />
+          </AssociationSet>
+          </EntityContainer>
+        <EntityType Name="Account">
+          <Key>
+            <PropertyRef Name="AccountID" />
+          </Key>
+          <Property Type="Int32" Name="AccountID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Description" Nullable="false" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="CountryCodePrefix" Nullable="false" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Username" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Password" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="Boolean" Name="IsDefault" Nullable="false" />
+          <NavigationProperty Name="Credits" Relationship="CorpSMSModel.FK_Credit_Account" FromRole="Account" ToRole="Credit" />
+          <NavigationProperty Name="ReplySettings" Relationship="CorpSMSModel.FK_ReplySetting_Account" FromRole="Account" ToRole="ReplySetting" />
+          <NavigationProperty Name="SentSettings" Relationship="CorpSMSModel.FK_SentSetting_Account" FromRole="Account" ToRole="SentSetting" />
+          <NavigationProperty Name="ShortCodeSettings" Relationship="CorpSMSModel.FK_ShortCodeSetting_Account" FromRole="Account" ToRole="ShortCodeSetting" />
+        </EntityType>
+        <EntityType Name="Credit">
+          <Key>
+            <PropertyRef Name="CreditID" />
+          </Key>
+          <Property Type="Int32" Name="CreditID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="AccountID" Nullable="false" />
+          <Property Type="Int32" Name="Amount" Nullable="false" />
+          <Property Type="DateTime" Name="CreditDate" Nullable="false" />
+          <NavigationProperty Name="Account" Relationship="CorpSMSModel.FK_Credit_Account" FromRole="Credit" ToRole="Account" />
+        </EntityType>
+        <EntityType Name="Message">
+          <Key>
+            <PropertyRef Name="MessageId" />
+          </Key>
+          <Property Type="Int32" Name="MessageId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Number" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Sender" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Text" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Type="Binary" Name="EncryptedText" MaxLength="Max" FixedLength="false" />
+          <Property Type="DateTime" Name="Created" Nullable="false" />
+          <Property Type="Int32" Name="OriginId" Nullable="false" />
+          <Property Type="Int32" Name="UniqueId" Nullable="false" />
+          <Property Type="Int32" Name="EventId" Nullable="false" />
+          <Property Type="Guid" Name="RowGuid" Nullable="false" />
+          <Property Type="String" Name="Status" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Origin" Relationship="CorpSMSModel.FK_Message_Origin" FromRole="Message" ToRole="Origin" />
+          <NavigationProperty Name="MessageReplies" Relationship="CorpSMSModel.FK_MessageReply_Message" FromRole="Message" ToRole="MessageReply" />
+          <NavigationProperty Name="DeliveryReports" Relationship="CorpSMSModel.MessageDeliveryReport" FromRole="Message" ToRole="DeliveryReport" />
+        </EntityType>
+        <EntityType Name="MessageReply">
+          <Key>
+            <PropertyRef Name="MessageReplyId" />
+          </Key>
+          <Property Type="Int32" Name="MessageReplyId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="MessageId" Nullable="false" />
+          <Property Type="Int32" Name="ReplyId" Nullable="false" />
+          <Property Type="String" Name="Text" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="DateReceived" Nullable="false" />
+          <NavigationProperty Name="Message" Relationship="CorpSMSModel.FK_MessageReply_Message" FromRole="MessageReply" ToRole="Message" />
+        </EntityType>
+        <EntityType Name="Origin">
+          <Key>
+            <PropertyRef Name="OriginID" />
+          </Key>
+          <Property Type="Int32" Name="OriginID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="SystemName" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Messages" Relationship="CorpSMSModel.FK_Message_Origin" FromRole="Origin" ToRole="Message" />
+          <NavigationProperty Name="tblBaredNumbers" Relationship="CorpSMSModel.FK_tblBaredNumbers_Origin" FromRole="Origin" ToRole="tblBaredNumber" />
+        </EntityType>
+        <EntityType Name="ReplySetting">
+          <Key>
+            <PropertyRef Name="ReplySettingID" />
+          </Key>
+          <Property Type="Int32" Name="ReplySettingID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="AccountID" Nullable="false" />
+          <Property Type="Int64" Name="LatestID" Nullable="false" />
+          <Property Type="Int32" Name="RecordCount" Nullable="false" />
+          <Property Type="String" Name="ReturnColumns" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="DateFormat" Nullable="false" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Type="Boolean" Name="IsActive" Nullable="false" />
+          <Property Type="String" Name="CreatedBy" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="DateCreated" Nullable="false" />
+          <NavigationProperty Name="Account" Relationship="CorpSMSModel.FK_ReplySetting_Account" FromRole="ReplySetting" ToRole="Account" />
+        </EntityType>
+        <EntityType Name="SendSetting">
+          <Key>
+            <PropertyRef Name="SendSettingID" />
+          </Key>
+          <Property Type="Int32" Name="SendSettingID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Boolean" Name="IsLive" Nullable="false" />
+          <Property Type="Boolean" Name="ReturnCredits" Nullable="false" />
+          <Property Type="Boolean" Name="ReturnMessageSuccessCount" Nullable="false" />
+          <Property Type="Boolean" Name="ReturnMessageFailedCount" Nullable="false" />
+          <Property Type="Boolean" Name="ReturnEntriesSuccessStatus" Nullable="false" />
+          <Property Type="Boolean" Name="ReturnEntriesFailedStatus" Nullable="false" />
+          <Property Type="String" Name="DefaultSender" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="DefaultText1" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="DefaultText2" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="DefaultDateFormat" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="DefaultTimeFormat" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Type="Boolean" Name="Flash" Nullable="false" />
+          <Property Type="String" Name="Type" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="CostCentre" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Type="Boolean" Name="IsActive" Nullable="false" />
+          <Property Type="String" Name="CreatedBy" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="DateCreated" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SentSetting">
+          <Key>
+            <PropertyRef Name="SentSettingID" />
+          </Key>
+          <Property Type="Int32" Name="SentSettingID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="AccountID" Nullable="false" />
+          <Property Type="Int64" Name="LatestID" Nullable="false" />
+          <Property Type="Int32" Name="RecordCount" Nullable="false" />
+          <Property Type="String" Name="ReturnColumns" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="DateFormat" Nullable="false" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Type="Boolean" Name="IsActive" Nullable="false" />
+          <Property Type="String" Name="CreatedBy" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="DateCreated" Nullable="false" />
+          <NavigationProperty Name="Account" Relationship="CorpSMSModel.FK_SentSetting_Account" FromRole="SentSetting" ToRole="Account" />
+        </EntityType>
+        <EntityType Name="ShortCodeSetting">
+          <Key>
+            <PropertyRef Name="ShortCodeSettingID" />
+          </Key>
+          <Property Type="Int32" Name="ShortCodeSettingID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="AccountID" Nullable="false" />
+          <Property Type="Int64" Name="LatestID" Nullable="false" />
+          <Property Type="String" Name="DateFormat" Nullable="false" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Type="Boolean" Name="IsActive" Nullable="false" />
+          <Property Type="String" Name="CreatedBy" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="DateCreated" Nullable="false" />
+          <NavigationProperty Name="Account" Relationship="CorpSMSModel.FK_ShortCodeSetting_Account" FromRole="ShortCodeSetting" ToRole="Account" />
+        </EntityType>
+        <Association Name="FK_Credit_Account">
+          <End Type="CorpSMSModel.Account" Role="Account" Multiplicity="1" />
+          <End Type="CorpSMSModel.Credit" Role="Credit" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Account">
+              <PropertyRef Name="AccountID" />
+            </Principal>
+            <Dependent Role="Credit">
+              <PropertyRef Name="AccountID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReplySetting_Account">
+          <End Type="CorpSMSModel.Account" Role="Account" Multiplicity="1" />
+          <End Type="CorpSMSModel.ReplySetting" Role="ReplySetting" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Account">
+              <PropertyRef Name="AccountID" />
+            </Principal>
+            <Dependent Role="ReplySetting">
+              <PropertyRef Name="AccountID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SentSetting_Account">
+          <End Type="CorpSMSModel.Account" Role="Account" Multiplicity="1" />
+          <End Type="CorpSMSModel.SentSetting" Role="SentSetting" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Account">
+              <PropertyRef Name="AccountID" />
+            </Principal>
+            <Dependent Role="SentSetting">
+              <PropertyRef Name="AccountID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ShortCodeSetting_Account">
+          <End Type="CorpSMSModel.Account" Role="Account" Multiplicity="1" />
+          <End Type="CorpSMSModel.ShortCodeSetting" Role="ShortCodeSetting" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Account">
+              <PropertyRef Name="AccountID" />
+            </Principal>
+            <Dependent Role="ShortCodeSetting">
+              <PropertyRef Name="AccountID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Message_Origin">
+          <End Type="CorpSMSModel.Origin" Role="Origin" Multiplicity="1" />
+          <End Type="CorpSMSModel.Message" Role="Message" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Origin">
+              <PropertyRef Name="OriginID" />
+            </Principal>
+            <Dependent Role="Message">
+              <PropertyRef Name="OriginId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MessageReply_Message">
+          <End Type="CorpSMSModel.Message" Role="Message" Multiplicity="1" />
+          <End Type="CorpSMSModel.MessageReply" Role="MessageReply" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Message">
+              <PropertyRef Name="MessageId" />
+            </Principal>
+            <Dependent Role="MessageReply">
+              <PropertyRef Name="MessageId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="MessageQueue">
+          <Key>
+            <PropertyRef Name="MessageQueueId" />
+          </Key>
+          <Property Type="Int32" Name="MessageQueueId" Nullable="false" />
+          <Property Type="Guid" Name="BatchId" Nullable="false" />
+          <Property Type="String" Name="Number" Nullable="false" MaxLength="13" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Text" MaxLength="440" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Type="Int32" Name="MessageId" />
+          <Property Type="Int32" Name="OriginId" Nullable="false" />
+          <Property Type="Int32" Name="UniqueId" Nullable="false" />
+          <Property Type="DateTime" Name="Accessed" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sysdiagram">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Type="String" Name="name" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="principal_id" Nullable="false" />
+          <Property Type="Int32" Name="diagram_id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="version" />
+          <Property Type="Binary" Name="definition" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="tblBaredNumber">
+          <Key>
+            <PropertyRef Name="BaredNumberID" />
+          </Key>
+          <Property Type="Int32" Name="BaredNumberID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Number" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="Added" Nullable="false" />
+          <Property Type="String" Name="Reason" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="OriginId" Nullable="false" />
+          <NavigationProperty Name="Origin" Relationship="CorpSMSModel.FK_tblBaredNumbers_Origin" FromRole="tblBaredNumber" ToRole="Origin" />
+        </EntityType>
+        <Association Name="FK_tblBaredNumbers_Origin">
+          <End Type="CorpSMSModel.Origin" Role="Origin" Multiplicity="1" />
+          <End Type="CorpSMSModel.tblBaredNumber" Role="tblBaredNumber" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Origin">
+              <PropertyRef Name="OriginID" />
+            </Principal>
+            <Dependent Role="tblBaredNumber">
+              <PropertyRef Name="OriginId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ShortCodeData">
+          <Key>
+            <PropertyRef Name="changeid" />
+          </Key>
+          <Property Type="Int32" Name="changeid" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="shortcode" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="keyword" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="phonenumber" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="message" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="received" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="BatchId" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DeliveryReport">
+          <Key>
+            <PropertyRef Name="DeliveryReportId" />
+          </Key>
+          <Property Type="Int32" Name="DeliveryReportId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="MessageId" Nullable="false" />
+          <Property Type="Int64" Name="ChangeId" Nullable="false" />
+          <Property Type="Int64" Name="SentId" Nullable="false" />
+          <Property Type="String" Name="Status" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="StatusDate" Nullable="false" />
+          <NavigationProperty Name="Message" Relationship="CorpSMSModel.MessageDeliveryReport" FromRole="DeliveryReport" ToRole="Message" />
+        </EntityType>
+        <Association Name="MessageDeliveryReport">
+          <End Type="CorpSMSModel.Message" Role="Message" Multiplicity="1" />
+          <End Type="CorpSMSModel.DeliveryReport" Role="DeliveryReport" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Message">
+              <PropertyRef Name="MessageId" />
+            </Principal>
+            <Dependent Role="DeliveryReport">
+              <PropertyRef Name="MessageId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+    <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="CorpSMSModelStoreContainer" CdmEntityContainer="CorpSMSEntities">
+          <FunctionImportMapping FunctionImportName="SetShortCodeMessage" FunctionName="CorpSMSModel.Store.SetShortCodeMessage" />
+          <FunctionImportMapping FunctionImportName="SetReplyMessage" FunctionName="CorpSMSModel.Store.SetReplyMessage" />
+          <FunctionImportMapping FunctionImportName="GetShortCodeMessage" FunctionName="CorpSMSModel.Store.GetShortCodeMessage" />
+          <EntitySetMapping Name="Accounts">
+            <EntityTypeMapping TypeName="CorpSMSModel.Account">
+              <MappingFragment StoreEntitySet="Account">
+                <ScalarProperty Name="IsDefault" ColumnName="IsDefault" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="CountryCodePrefix" ColumnName="CountryCodePrefix" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="AccountID" ColumnName="AccountID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Credits">
+            <EntityTypeMapping TypeName="CorpSMSModel.Credit">
+              <MappingFragment StoreEntitySet="Credit">
+                <ScalarProperty Name="CreditDate" ColumnName="CreditDate" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="AccountID" ColumnName="AccountID" />
+                <ScalarProperty Name="CreditID" ColumnName="CreditID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Messages">
+            <EntityTypeMapping TypeName="CorpSMSModel.Message">
+              <MappingFragment StoreEntitySet="Message">
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="RowGuid" ColumnName="RowGuid" />
+                <ScalarProperty Name="EventId" ColumnName="EventId" />
+                <ScalarProperty Name="UniqueId" ColumnName="UniqueId" />
+                <ScalarProperty Name="OriginId" ColumnName="OriginId" />
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="EncryptedText" ColumnName="EncryptedText" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+                <ScalarProperty Name="Sender" ColumnName="Sender" />
+                <ScalarProperty Name="Number" ColumnName="Number" />
+                <ScalarProperty Name="MessageId" ColumnName="MessageId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MessageReplies">
+            <EntityTypeMapping TypeName="CorpSMSModel.MessageReply">
+              <MappingFragment StoreEntitySet="MessageReply">
+                <ScalarProperty Name="DateReceived" ColumnName="DateReceived" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+                <ScalarProperty Name="ReplyId" ColumnName="ReplyId" />
+                <ScalarProperty Name="MessageId" ColumnName="MessageId" />
+                <ScalarProperty Name="MessageReplyId" ColumnName="MessageReplyId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Origins">
+            <EntityTypeMapping TypeName="CorpSMSModel.Origin">
+              <MappingFragment StoreEntitySet="Origin">
+                <ScalarProperty Name="SystemName" ColumnName="SystemName" />
+                <ScalarProperty Name="OriginID" ColumnName="OriginID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ReplySettings">
+            <EntityTypeMapping TypeName="CorpSMSModel.ReplySetting">
+              <MappingFragment StoreEntitySet="ReplySetting">
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="DateFormat" ColumnName="DateFormat" />
+                <ScalarProperty Name="ReturnColumns" ColumnName="ReturnColumns" />
+                <ScalarProperty Name="RecordCount" ColumnName="RecordCount" />
+                <ScalarProperty Name="LatestID" ColumnName="LatestID" />
+                <ScalarProperty Name="AccountID" ColumnName="AccountID" />
+                <ScalarProperty Name="ReplySettingID" ColumnName="ReplySettingID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SendSettings">
+            <EntityTypeMapping TypeName="CorpSMSModel.SendSetting">
+              <MappingFragment StoreEntitySet="SendSetting">
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="CostCentre" ColumnName="CostCentre" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Flash" ColumnName="Flash" />
+                <ScalarProperty Name="DefaultTimeFormat" ColumnName="DefaultTimeFormat" />
+                <ScalarProperty Name="DefaultDateFormat" ColumnName="DefaultDateFormat" />
+                <ScalarProperty Name="DefaultText2" ColumnName="DefaultText2" />
+                <ScalarProperty Name="DefaultText1" ColumnName="DefaultText1" />
+                <ScalarProperty Name="DefaultSender" ColumnName="DefaultSender" />
+                <ScalarProperty Name="ReturnEntriesFailedStatus" ColumnName="ReturnEntriesFailedStatus" />
+                <ScalarProperty Name="ReturnEntriesSuccessStatus" ColumnName="ReturnEntriesSuccessStatus" />
+                <ScalarProperty Name="ReturnMessageFailedCount" ColumnName="ReturnMessageFailedCount" />
+                <ScalarProperty Name="ReturnMessageSuccessCount" ColumnName="ReturnMessageSuccessCount" />
+                <ScalarProperty Name="ReturnCredits" ColumnName="ReturnCredits" />
+                <ScalarProperty Name="IsLive" ColumnName="IsLive" />
+                <ScalarProperty Name="SendSettingID" ColumnName="SendSettingID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SentSettings">
+            <EntityTypeMapping TypeName="CorpSMSModel.SentSetting">
+              <MappingFragment StoreEntitySet="SentSetting">
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="DateFormat" ColumnName="DateFormat" />
+                <ScalarProperty Name="ReturnColumns" ColumnName="ReturnColumns" />
+                <ScalarProperty Name="RecordCount" ColumnName="RecordCount" />
+                <ScalarProperty Name="LatestID" ColumnName="LatestID" />
+                <ScalarProperty Name="AccountID" ColumnName="AccountID" />
+                <ScalarProperty Name="SentSettingID" ColumnName="SentSettingID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ShortCodeSettings">
+            <EntityTypeMapping TypeName="CorpSMSModel.ShortCodeSetting">
+              <MappingFragment StoreEntitySet="ShortCodeSetting">
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="DateFormat" ColumnName="DateFormat" />
+                <ScalarProperty Name="LatestID" ColumnName="LatestID" />
+                <ScalarProperty Name="AccountID" ColumnName="AccountID" />
+                <ScalarProperty Name="ShortCodeSettingID" ColumnName="ShortCodeSettingID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MessageQueues">
+            <EntityTypeMapping TypeName="CorpSMSModel.MessageQueue">
+              <MappingFragment StoreEntitySet="MessageQueue">
+                <ScalarProperty Name="Accessed" ColumnName="Accessed" />
+                <ScalarProperty Name="UniqueId" ColumnName="UniqueId" />
+                <ScalarProperty Name="OriginId" ColumnName="OriginId" />
+                <ScalarProperty Name="MessageId" ColumnName="MessageId" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+                <ScalarProperty Name="Number" ColumnName="Number" />
+                <ScalarProperty Name="BatchId" ColumnName="BatchId" />
+                <ScalarProperty Name="MessageQueueId" ColumnName="MessageQueueId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="CorpSMSModel.sysdiagram">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="definition" ColumnName="definition" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblBaredNumbers">
+            <EntityTypeMapping TypeName="CorpSMSModel.tblBaredNumber">
+              <MappingFragment StoreEntitySet="tblBaredNumbers">
+                <ScalarProperty Name="OriginId" ColumnName="OriginId" />
+                <ScalarProperty Name="Reason" ColumnName="Reason" />
+                <ScalarProperty Name="Added" ColumnName="Added" />
+                <ScalarProperty Name="Number" ColumnName="Number" />
+                <ScalarProperty Name="BaredNumberID" ColumnName="BaredNumberID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="spRemoveSentMessages" FunctionName="CorpSMSModel.Store.spRemoveSentMessages" />
+          <FunctionImportMapping FunctionImportName="spRemoveBarredMessages" FunctionName="CorpSMSModel.Store.spRemoveBarredMessages" />
+          <FunctionImportMapping FunctionImportName="spAddStopReplies" FunctionName="CorpSMSModel.Store.spAddStopReplies" />
+          <EntitySetMapping Name="ShortCodeData">
+            <EntityTypeMapping TypeName="CorpSMSModel.ShortCodeData">
+              <MappingFragment StoreEntitySet="ShortCodeDatas">
+                <ScalarProperty Name="BatchId" ColumnName="BatchId" />
+                <ScalarProperty Name="received" ColumnName="received" />
+                <ScalarProperty Name="message" ColumnName="message" />
+                <ScalarProperty Name="phonenumber" ColumnName="phonenumber" />
+                <ScalarProperty Name="keyword" ColumnName="keyword" />
+                <ScalarProperty Name="shortcode" ColumnName="shortcode" />
+                <ScalarProperty Name="changeid" ColumnName="changeid" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DeliveryReports">
+            <EntityTypeMapping TypeName="CorpSMSModel.DeliveryReport">
+              <MappingFragment StoreEntitySet="DeliveryReport">
+                <ScalarProperty Name="StatusDate" ColumnName="StatusDate" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="SentId" ColumnName="SentId" />
+                <ScalarProperty Name="ChangeId" ColumnName="ChangeId" />
+                <ScalarProperty Name="MessageId" ColumnName="MessageId" />
+                <ScalarProperty Name="DeliveryReportId" ColumnName="DeliveryReportId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          </EntityContainerMapping>
+</Mapping></edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams>
+      <Diagram Name="CorpSMS" ZoomLevel="74">
+        <EntityTypeShape EntityType="CorpSMSModel.Account" Width="1.5" PointX="0.75" PointY="6.375" Height="2.9417936197916745" />
+        <EntityTypeShape EntityType="CorpSMSModel.Credit" Width="1.5" PointX="3" PointY="1.5" Height="1.9802864583333317" />
+        <EntityTypeShape EntityType="CorpSMSModel.Message" Width="1.5" PointX="8" PointY="1.875" Height="3.7109993489583388" />
+        <EntityTypeShape EntityType="CorpSMSModel.MessageReply" Width="1.5" PointX="10.25" PointY="4.25" Height="2.1725878906250031" />
+        <EntityTypeShape EntityType="CorpSMSModel.Origin" Width="1.5" PointX="5.75" PointY="2.875" Height="1.5956835937500027" />
+        <EntityTypeShape EntityType="CorpSMSModel.ReplySetting" Width="1.5" PointX="3" PointY="4.25" Height="2.9417936197916674" />
+        <EntityTypeShape EntityType="CorpSMSModel.SendSetting" Width="1.5" PointX="5.75" PointY="6.75" Height="4.4802050781250031" />
+        <EntityTypeShape EntityType="CorpSMSModel.SentSetting" Width="1.5" PointX="3" PointY="7.875" Height="2.9417936197916674" />
+        <EntityTypeShape EntityType="CorpSMSModel.ShortCodeSetting" Width="1.5" PointX="3" PointY="11.625" Height="2.5571907552083388" />
+        <AssociationConnector Association="CorpSMSModel.FK_Credit_Account" >
+          <ConnectorPoint PointX="1.5" PointY="6.375" />
+          <ConnectorPoint PointX="1.5" PointY="2.4901432291666659" />
+          <ConnectorPoint PointX="3" PointY="2.4901432291666659" />
+        </AssociationConnector>
+        <AssociationConnector Association="CorpSMSModel.FK_ReplySetting_Account" >
+          <ConnectorPoint PointX="2.25" PointY="6.7833968098958337" />
+          <ConnectorPoint PointX="3" PointY="6.7833968098958337" />
+        </AssociationConnector>
+        <AssociationConnector Association="CorpSMSModel.FK_SentSetting_Account" >
+          <ConnectorPoint PointX="2.25" PointY="8.5958968098958373" />
+          <ConnectorPoint PointX="3" PointY="8.5958968098958373" />
+        </AssociationConnector>
+        <AssociationConnector Association="CorpSMSModel.FK_ShortCodeSetting_Account" >
+          <ConnectorPoint PointX="1.5" PointY="9.3167936197916745" />
+          <ConnectorPoint PointX="1.5" PointY="12.903595377604169" />
+          <ConnectorPoint PointX="3" PointY="12.903595377604169" />
+        </AssociationConnector>
+        <AssociationConnector Association="CorpSMSModel.FK_Message_Origin" >
+          <ConnectorPoint PointX="7.25" PointY="3.7689925130208328" />
+          <ConnectorPoint PointX="8" PointY="3.7689925130208328" />
+        </AssociationConnector>
+        <AssociationConnector Association="CorpSMSModel.FK_MessageReply_Message" >
+          <ConnectorPoint PointX="9.5" PointY="4.8218489583333328" />
+          <ConnectorPoint PointX="10.25" PointY="4.8218489583333328" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="CorpSMSModel.MessageQueue" Width="1.5" PointX="8" PointY="7" Height="2.5571907552083335" />
+        <EntityTypeShape EntityType="CorpSMSModel.sysdiagram" Width="1.5" PointX="10.375" PointY="7.75" Height="1.9802864583333317" />
+        <EntityTypeShape EntityType="CorpSMSModel.tblBaredNumber" Width="1.5" PointX="8" PointY="10.375" Height="1.7879850260416674" />
+        <AssociationConnector Association="CorpSMSModel.FK_tblBaredNumbers_Origin" >
+          <ConnectorPoint PointX="7.25" PointY="4.6629850260416656" />
+          <ConnectorPoint PointX="7.625" PointY="5.0379850260416656" />
+          <ConnectorPoint PointX="7.625" PointY="11.4612939453125" />
+          <ConnectorPoint PointX="8" PointY="11.4612939453125" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="CorpSMSModel.ShortCodeData" Width="1.5" PointX="12.375" PointY="0.75" Height="2.3648893229166674" />
+        <EntityTypeShape EntityType="CorpSMSModel.DeliveryReport" Width="1.5" PointX="10.25" PointY="1.375" Height="2.1725878906250031" />
+        <AssociationConnector Association="CorpSMSModel.MessageDeliveryReport">
+          <ConnectorPoint PointX="9.5" PointY="2.8074446614583337" />
+          <ConnectorPoint PointX="10.25" PointY="2.8074446614583337" />
+        </AssociationConnector>
+      </Diagram>
+    </Diagrams>
+  </Designer>
+</edmx:Edmx>

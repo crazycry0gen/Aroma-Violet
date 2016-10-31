@@ -33,11 +33,17 @@
                     <div class="form-group">
                         @Html.LabelFor(model => model.Text, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-10">
-                            @Html.TextAreaFor(model => model.Text, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.TextAreaFor(model => model.Text,htmlAttributes: new { @class = "form-control", onkeyup = "GetSMSLength('Text')", style="height:300px"} )
                             @Html.ValidationMessageFor(model => model.Text, "", new { @class = "text-danger" })
                         </div>
                     </div>
-                    </td>
+                    <div class="form-group">
+                        <label class = "control-label col-md-2">Length</label>
+                        <div class="col-md-10">
+                            <input type="text" id="SMSLenthDisplay" class = "form-control" value="@Model.Text.Length" readonly />
+                        </div>
+                    </div>
+                </td>
                 <td>
                     @if (preview != null)
                     {
@@ -74,6 +80,7 @@
                     
                 </td>
             </tr>
+            
             <tr>
                 
                 <td>
@@ -132,4 +139,16 @@
         $('#preview').val("true");
         $('#EditTemplateForm').submit();
     });
+
+    function GetSMSLength(controlId) {
+        var control = document.getElementById(controlId);
+        var length = control.textContent.length;
+        DisplaySMSLenth(length);
+
+    }
+
+    function DisplaySMSLenth(len) {
+        var td = document.getElementById("SMSLenthDisplay");
+        td.innerText = len;
+    }
 </script>

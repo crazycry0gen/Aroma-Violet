@@ -2,109 +2,95 @@
 
 @{
     ViewBag.Title = "Index";
+    var header = "";
+    var fmt = "MMMM yyyy";
 }
 
 <h2>Index</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Create Debit Orders", "RunDOCalc")|
+    @Html.ActionLink("Approve", "Approve")
 </p>
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.AccountHolder.AccountHolderName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.AccountType.AccountTypeName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Bank.BankName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Branch.BranchName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Client.ClientInitials)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.AccountHolderOtherDetail)
-        </th>
-        <th>
             @Html.DisplayNameFor(model => model.Initials)
         </th>
-        <th>
+        <th colspan="2">
             @Html.DisplayNameFor(model => model.Surname)
         </th>
-        <th>
-            @Html.DisplayNameFor(model => model.DebitDate)
+        <th colspan="2">
+            @Html.DisplayNameFor(model => model.Bank.BankName)
         </th>
-        <th>
+        <th colspan="2">
             @Html.DisplayNameFor(model => model.AccountNumber)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.SourceID)
+            @Html.DisplayNameFor(model => model.Branch.BranchCode)
+        </th>
+        <th colspan="2">
+            @Html.DisplayNameFor(model => model.DebitDate)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Active)
+            @Html.DisplayNameFor(model => model.Amount)
         </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Created)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ProcessDate)
-        </th>
-        <th></th>
+        @*<th>
+        @Html.DisplayNameFor(model => model.Active)
+    </th>
+    <th>
+        @Html.DisplayNameFor(model => model.Created)
+    </th>
+    <th>
+        @Html.DisplayNameFor(model => model.ProcessDate)
+    </th>*@
+    <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.AccountHolder.AccountHolderName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.AccountType.AccountTypeName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Bank.BankName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Branch.BranchName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Client.ClientInitials)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.AccountHolderOtherDetail)
-        </td>
+@foreach (var item in Model.OrderByDescending(m=>m.DebitDate))
+{
+    var nhead = item.DebitDate.ToString(fmt);
+    if (nhead != header)
+    {
+        header = nhead;
+        <tr style="background:lightblue">
+            <th colspan="12">@header</th>
+        </tr>
+    }
+    <tr class="findisp">
         <td>
             @Html.DisplayFor(modelItem => item.Initials)
         </td>
-        <td>
+        <td colspan="2">
             @Html.DisplayFor(modelItem => item.Surname)
         </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DebitDate)
+        <td colspan="2">
+            @Html.DisplayFor(modelItem => item.Bank.BankName)
         </td>
-        <td>
+        <td colspan="2">
             @Html.DisplayFor(modelItem => item.AccountNumber)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.SourceID)
+            @Html.DisplayFor(modelItem => item.Branch.BranchCode)
+        </td>
+        <td colspan="2">
+            @Html.DisplayFor(modelItem => item.DebitDate)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Active)
+            @Html.DisplayFor(modelItem => item.Amount)
         </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Created)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ProcessDate)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.DebitOrderId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.DebitOrderId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.DebitOrderId })
-        </td>
+        @*<td>
+        @Html.DisplayFor(modelItem => item.Active)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Created)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.ProcessDate)
+    </td>*@
+    <td>
+        @Html.ActionLink(linkText:"Subscription",actionName: "Manage",controllerName: "ClientSubscriptions",routeValues: new { ClientID = item.ClientID },htmlAttributes:null) 
+    </td>
     </tr>
 }
 

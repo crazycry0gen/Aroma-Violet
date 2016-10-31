@@ -52,11 +52,17 @@ namespace Aroma_Violet.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind(Include = "OrderLineId,OrderHeaderId,ProductID,UnitCost,Quantity,Active")] OrderLine orderLine)
         {
+            var header = await db.OrderHeaders.FirstAsync(m => m.OrderHeaderId.Equals(orderLine.OrderHeaderId));
+            var client = await db.Clients.FirstAsync(m => m.ClientId == header.ClientID);
+            var product = await db.Products.FirstAsync(m => m.ProductID == orderLine.ProductID);
+            var subscription = await db.Subscriptions.FirstOrDefaultAsync(m => m.ProductID == orderLine.ProductID && m.ClientTypeID == client.ClientTypeID);
+
+            if (subscription == null)
+            {
+                ModelState.AddModelError("ProductID", string.Format("No subscription set up for \"{0}\" and \"{1}\"", client.ClientType.ClientTypeName, product.ProductName));
+            }
             if (ModelState.IsValid)
             {
-                var header = await db.OrderHeaders.FirstAsync(m=>m.OrderHeaderId.Equals(orderLine.OrderHeaderId));
-                var client = await db.Clients.FirstAsync(m => m.ClientId == header.ClientID);
-                var subscription = await db.Subscriptions.FirstAsync(m => m.ProductID == orderLine.ProductID && m.ClientTypeID == client.ClientTypeID);
                 orderLine.UnitCost = subscription.Price;
                 db.OrderLines.Add(orderLine);
 
@@ -85,7 +91,8 @@ namespace Aroma_Violet.Controllers
                 return HttpNotFound();
             }
             ViewBag.OrderHeaderId = new SelectList(db.OrderHeaders, "OrderHeaderId", "OrderHeaderId", orderLine.OrderHeaderId);
-            ViewBag.ProductID = new SelectList(db.Products, "ProductID", "ProductName", orderLine.ProductID);
+            var productIds = (from item in db.Subscriptions where item.ClientTypeID == orderLine.OrderHeader.Client.ClientTypeID && item.Active select item.ProductID).ToArray();
+            ViewBag.ProductID = new SelectList(db.Products.Where(m => m.Active && productIds.Contains(m.ProductID)), "ProductID", "ProductName",orderLine.ProductID);
             return View(orderLine);
         }
 

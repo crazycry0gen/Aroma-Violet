@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="https://live.stratcol.co.za/dynamic/administration/serv_manager/sysIntegratorAuth.wsdl" name="authenticateAccessService" targetNamespace="https://live.stratcol.co.za/dynamic/administration/serv_manager/sysIntegratorAuth.wsdl" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="https://live.stratcol.co.za/dynamic/administration/serv_manager/sysIntegratorAuth.wsdl">
+      <xsd:element name="authenticateClient">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="key" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="mode" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="authenticateAccess">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="params" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="returnResult">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="message" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="authenticateClient">
+    <wsdl:part name="authenticateClient" element="tns:authenticateClient" />
+  </wsdl:message>
+  <wsdl:message name="authenticateAccessRequest">
+    <wsdl:part name="params" element="tns:authenticateAccess" />
+  </wsdl:message>
+  <wsdl:message name="authenticateAccessResponse">
+    <wsdl:part name="result" element="tns:returnResult" />
+  </wsdl:message>
+  <wsdl:portType name="authenticateAccessPortType">
+    <wsdl:operation name="authenticateAccess">
+      <wsdl:input message="tns:authenticateAccessRequest" />
+      <wsdl:output message="tns:authenticateAccessResponse" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="authenticateAccessBinding" type="tns:authenticateAccessPortType">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="authenticateAccess">
+      <soap:operation soapAction="authenticateAccess" />
+      <wsdl:input>
+        <soap:body use="literal" namespace="urn:live.stratcol.co.za:authenticateAccessService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+        <soap:header message="tns:authenticateClient" part="authenticateClient" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" namespace="urn:live.stratcol.co.za:authenticateAccessService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="authenticateAccessService">
+    <wsdl:port name="authenticateAccessPort" binding="tns:authenticateAccessBinding">
+      <soap:address location="https://live.stratcol.co.za/dynamic/administration/serv_manager/sys_integrator_authaccess.php" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

@@ -12,7 +12,7 @@ namespace Aroma_Violet.Migrations
         {
         
             AutomaticMigrationDataLossAllowed = true;
-            AutomaticMigrationsEnabled = true;
+            AutomaticMigrationsEnabled = false;
             ContextKey = "Aroma_Violet.Models.AromaContext";
         }
 

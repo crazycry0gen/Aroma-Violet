@@ -14,18 +14,18 @@ namespace Aroma_Violet.Models
 
     public class UserMenu : ApplicationMenuList
     {
-        public UserMenu()
+        public UserMenu(string srole)
         {
             this.Text = "Menu";
             var RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(new ApplicationDbContext()));
-            var role = RoleManager.FindByName("User");
+            var role = RoleManager.FindByName(srole);
             var roleId = Guid.Parse(role.Id);
             using (var db = new AromaContext())
             {
                 var menuItems = db.SystemMenuList.Where(m =>m.Active && m.RoleId.Equals(roleId)).Select(m => m.SystemMenuListItem).OrderBy(m => m.Text).ToArray();
                 foreach (var mnuItem in menuItems)
                 {
-                    this.Add(mnuItem.Text, mnuItem.ActionName, mnuItem.ControllerName);
+                    this.Add(mnuItem.Text, mnuItem.ActionName, mnuItem.ControllerName, mnuItem.Parameters);
                 }
             }
             ////fixed items for now, could be fetched from DB at a later stage
@@ -35,5 +35,5 @@ namespace Aroma_Violet.Models
 
         }
     }
-
+    
 }

@@ -44,6 +44,7 @@ namespace Aroma_Violet.Controllers
         // GET: SystemSMSTemplates/Create
         public ActionResult Create()
         {
+            ViewBag.Variables = SystemSMSTemplateModel.GetVariableList();
             return View();
         }
 
@@ -60,7 +61,7 @@ namespace Aroma_Violet.Controllers
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-
+            ViewBag.Variables = SystemSMSTemplateModel.GetVariableList();
             return View(systemSMSTemplate);
         }
 
@@ -86,7 +87,7 @@ namespace Aroma_Violet.Controllers
                 {
                     ViewBag.ClientID = clientId.Value;
                     var template = new SystemSMSTemplateModel(systemSMSTemplate.Text);
-                    template.Populate(client);
+                    template.Populate(client, db);
                     ViewBag.Preview = template.Generate();
                 }
             }
@@ -125,7 +126,7 @@ namespace Aroma_Violet.Controllers
                 {
                     ViewBag.ClientID = clientId.Value;
                     var template = new SystemSMSTemplateModel(systemSMSTemplate.Text);
-                    template.Populate(client);
+                    template.Populate(client,db);
                     ViewBag.Preview = template.Generate();
                 }
             }

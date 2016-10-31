@@ -5,6 +5,9 @@
     var days = new int[31];
     var months = new int[12];
 
+    var call1 = string.Format("UpdateDateTime('{0}');DateChange('{0}');", uniqueName);
+    var call2 = string.Format("UpdateDateTime('{0}');", uniqueName);
+
     if (ViewBag.YearStart == null) { ViewBag.YearStart = 1940; }
     if (ViewBag.YearEnd == null) { ViewBag.YearEnd = DateTime.Now.Year; }
 
@@ -25,15 +28,31 @@
     ViewBag.DPDays = new SelectList(days, Model.Day);
     ViewBag.DPMonths = new SelectList(months, Model.Month);
     ViewBag.DPYears = new SelectList(years, Model.Year);
+
+    bool onChange = ViewBag.HasOnChange!= null && ViewBag.HasOnChange==true;
 }
 
+@if (onChange)
+{
+    <div class="form-control" style="width:280px;">
+        @Html.HiddenFor(model => model, htmlAttributes: new { id = uniqueName })
+        @Html.DropDownList("DPDays", null, htmlAttributes: new { id = "d" + uniqueName, onChange = call1 })
+        @Html.DropDownList("DPMonths", null, htmlAttributes: new { id = "m" + uniqueName, onChange = call1 })
+        @Html.DropDownList("DPYears", null, htmlAttributes: new { id = "y" + uniqueName, onChange = call1 })
+    </div>
 
-        <div class = "form-control" style="width:280px;">
-            @Html.HiddenFor(model => model, htmlAttributes: new { id = uniqueName })
-            @Html.DropDownList("DPDays",null, htmlAttributes: new {id="d"+ uniqueName, onChange=string.Format("UpdateDateTime('{0}')",uniqueName) })
-            @Html.DropDownList("DPMonths", null, htmlAttributes: new { id = "m" + uniqueName, onChange = string.Format("UpdateDateTime('{0}')", uniqueName) })
-            @Html.DropDownList("DPYears", null, htmlAttributes: new { id = "y" + uniqueName, onChange = string.Format("UpdateDateTime('{0}')", uniqueName) })
-        </div>
+}
+else
+{
+    <div class="form-control" style="width:280px;">
+        @Html.HiddenFor(model => model, htmlAttributes: new { id = uniqueName })
+        @Html.DropDownList("DPDays", null, htmlAttributes: new { id = "d" + uniqueName, onChange = call2 })
+        @Html.DropDownList("DPMonths", null, htmlAttributes: new { id = "m" + uniqueName, onChange = call2 })
+        @Html.DropDownList("DPYears", null, htmlAttributes: new { id = "y" + uniqueName, onChange = call2 })
+    </div>
+
+}
+
 
         @*Html.TextBoxFor(model => model, new { @class = "form-control datepicker", placeholder = "Enter date here...",Value=Model.ToString("dd/MM/yyyy") } )*@
         

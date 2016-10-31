@@ -18,7 +18,7 @@ namespace Aroma_Violet.Controllers
         // GET: ShippingMethods
         public async Task<ActionResult> Index()
         {
-            return View(await db.ShippingMethods.ToListAsync());
+            return View(await db.ShippingMethods.OrderBy(m => m.ShippingMethodName).ToListAsync());
         }
 
         // GET: ShippingMethods/Details/5

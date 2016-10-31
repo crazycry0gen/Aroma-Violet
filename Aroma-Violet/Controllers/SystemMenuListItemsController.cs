@@ -47,7 +47,7 @@ namespace Aroma_Violet.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "SystemMenuListItemId,Text,ActionName,ControllerName,Order,Active")] SystemMenuListItem systemMenuListItem)
+        public async Task<ActionResult> Create([Bind(Include = "SystemMenuListItemId,Text,ActionName,ControllerName,Parameters,Order,Active")] SystemMenuListItem systemMenuListItem)
         {
             if (ModelState.IsValid)
             {
@@ -80,7 +80,7 @@ namespace Aroma_Violet.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "SystemMenuListItemId,Text,ActionName,ControllerName,Order,Active")] SystemMenuListItem systemMenuListItem)
+        public async Task<ActionResult> Edit([Bind(Include = "SystemMenuListItemId,Text,ActionName,ControllerName,Parameters,Order,Active")] SystemMenuListItem systemMenuListItem)
         {
             if (ModelState.IsValid)
             {

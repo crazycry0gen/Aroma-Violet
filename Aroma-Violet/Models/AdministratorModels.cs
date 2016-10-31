@@ -26,7 +26,9 @@ namespace Aroma_Violet.Models
                 var menuItems = db.SystemMenuList.Where(m => m.Active && m.RoleId.Equals(roleId)).Select(m=>m.SystemMenuListItem).OrderBy(m=>m.Text).ToArray();
                 foreach (var mnuItem in menuItems)
                 {
-                    this.Add(mnuItem.Text, mnuItem.ActionName,mnuItem.ControllerName);
+                    
+                        this.Add(mnuItem.Text, mnuItem.ActionName, mnuItem.ControllerName,mnuItem.Parameters);
+                    
                 }
             }
             //fixed items for now, could be fetched from DB at a later stage
@@ -62,7 +64,7 @@ namespace Aroma_Violet.Models
             //must always be under admin
             if (this.Where(m => m.Text == "Menu Control").Count() == 0)
             {
-                this.Add("Menu Control", "Index", "SystemMenuLists");
+                this.Add("Menu Control", "Index", "SystemMenuLists","");
             }
             /////////////////////////////////////////////////////////
         }

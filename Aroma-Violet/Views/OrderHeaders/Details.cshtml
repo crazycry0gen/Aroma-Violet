@@ -2,20 +2,21 @@
 
 @{
     ViewBag.Title = "Details";
+    Aroma_Violet.Models.AccountMovementViewModel journals = ViewBag.Journals; 
 }
 
 <h2>Details</h2>
 
 <div>
-    <h4>OrderHeader</h4>
+    <h4>Order Header</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Client.ClientInitials)
+            @Html.DisplayNameFor(model => model.Client.ClientId)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Client.ClientInitials)
+            @Html.DisplayFor(model => model.Client.ClientId)
         </dd>
 
         <dt>
@@ -35,14 +36,6 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.UserId)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.UserId)
-        </dd>
-
-        <dt>
             @Html.DisplayNameFor(model => model.OrderDate)
         </dt>
 
@@ -51,8 +44,131 @@
         </dd>
 
     </dl>
+
+    <table>
+        <tr>
+            <th colspan="2">
+                Product
+            </th>
+            
+            <th>
+                Quantity
+            </th>
+            <th>
+                Unit Cost
+            </th>
+            <th>
+                Line Cost
+            </th>
+        </tr>
+        @foreach (var line in Model.OrderLines.OrderBy(m=>m.Product.ProductName))
+        {
+            
+                var lineCost = line.UnitCost * line.Quantity;
+            
+            <tr class="findisp">
+                <td colspan="2">
+                    @Html.DisplayFor(m=>line.Product.ProductName)
+                </td>
+                
+                <td>
+                    @Html.DisplayFor(m => line.Quantity)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => line.UnitCost)
+                </td>
+                <td>
+                   R @Html.DisplayFor(m =>lineCost)
+                </td>
+
+            </tr>
+        }
+    </table>
+</div>
+
+<div>
+    <table class="findisp">
+        <tr>
+            <td></td>
+        </tr>
+        
+        <tr>
+            <th>Comment</th>
+            <th>Journal Date</th>
+            @for (int i = 0; i < journals.Accounts.Count; i++)
+            {
+                <th>
+                    @journals.Accounts[i].AccountDescription
+                </th>
+            }
+        </tr>
+        <tr>
+            <th>Opening Balance</th>
+            <td></td>
+            @for (int i = 0; i < journals.Accounts.Count; i++)
+            {
+                <td>
+                    @if (journals.Accounts[i].IsClientAccount)
+                    {
+                        @Html.DisplayFor(m => journals.Accounts[i].OpenBalance)
+                    }
+                </td>
+            }
+        </tr>
+        @for (int row = 0; row < journals.Journals.Count - 1; row += 2)
+        {
+            <tr class="findisp">
+                <td style="text-align:left;">
+                    @Html.DisplayFor(m => journals.Journals[row].Comment)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => journals.Journals[row].JournalDate)
+                </td>
+                @for (int i = 0; i < journals.Accounts.Count; i++)
+                {
+                    if (journals.Accounts[i].AccountId.Equals(journals.Journals[row].AccountID))
+                    {
+                        string tclass = journals.Journals[row].EffectiveDate > DateTime.Now ? "futureJournal" : "findisp";
+                        <td id="@journals.Accounts[i].AccountId-@journals.Journals[row].JournalId" onclick="FetchExtraInfo('@journals.Journals[row].JournalId')" class="@tclass">
+                            @Html.DisplayFor(m => journals.Journals[row].Amount)
+                            <div id="Extra-@journals.Journals[row].JournalId"></div>
+                        </td>
+                    }
+                    else if (journals.Accounts[i].AccountId.Equals(journals.Journals[row + 1].AccountID))
+                    {
+                        string tclass = journals.Journals[row + 1].EffectiveDate > DateTime.Now ? "futureJournal" : "findisp";
+                        <td id="@journals.Accounts[i].AccountId-@journals.Journals[row+1].JournalId" onclick="FetchExtraInfo('@journals.Journals[row+1].JournalId')" class="@tclass">
+                            @Html.DisplayFor(m => journals.Journals[row + 1].Amount)
+                            <div id="Extra-@journals.Journals[row+1].JournalId"></div>
+                        </td>
+                    }
+                    else
+                    {
+                        <td class="findisp"></td>
+                    }
+                }
+            </tr>
+
+        }
+        <tr class="fintot">
+
+            <th>Closing Balance</th>
+            <td></td>
+            @for (int i = 0; i < journals.Accounts.Count; i++)
+            {
+                <td>
+                    
+                        @Html.DisplayFor(m => journals.Accounts[i].Balance)
+                    
+                </td>
+            }
+        </tr>
+
+    </table>
 </div>
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.OrderHeaderId }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink(linkText:"Invoice",actionName: "Invoice",controllerName: "OrderHeaders", routeValues: new { id = Model.OrderHeaderId },htmlAttributes:null) |
+    @Html.ActionLink(linkText: "Client", actionName: "Details", controllerName: "Clients", routeValues: new { id = Model.ClientID }, htmlAttributes: null) |
+    <a href="javascript:history.back()">Go Back</a>
 </p>

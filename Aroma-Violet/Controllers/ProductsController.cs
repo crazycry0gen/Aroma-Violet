@@ -18,7 +18,7 @@ namespace Aroma_Violet.Controllers
         // GET: Products
         public async Task<ActionResult> Index()
         {
-            return View(await db.Products.ToListAsync());
+            return View(await db.Products.OrderBy(m => m.ProductName).ToListAsync());
         }
 
         // GET: Products/Details/5

@@ -1,0 +1,101 @@
+﻿@model Aroma_Violet.Models.PayOrderViewModel
+@{
+    ViewBag.Title = "Pay";
+}
+
+<h2>Pay</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.HiddenFor(m=>m.OrderHeaderId)
+<table>
+    <tr>
+        <th>
+            Account
+        </th>
+        <th>
+            Balance
+        </th>
+        <th>
+            Transfer Amount
+        </th>
+        <th>
+            Effective Date
+        </th>
+    </tr>
+    @for (int i = 0; i < Model.AccountInfo.Count; i++)
+    {
+        <tr>
+            
+            @Html.HiddenFor(m=>m.AccountInfo[i].ClientAccountId)
+            <td>
+                @Model.AccountInfo[i].AccountName
+            </td>
+            <td>
+                <div>
+                    @Html.DisplayFor(m => m.AccountInfo[i].Balance)
+
+
+                </div>
+            </td>
+            @if (!Model.AccountInfo[i].DestinationAccount)
+            {
+            <td>
+                @Html.EditorFor(m => m.AccountInfo[i].TransferAmount, new { htmlAttributes = new { @class = "form-control", onchange="Tally()" } })
+            </td>
+            }
+            else
+            {
+                <td></td>
+            }
+
+            <td>
+                @Html.EditorFor(m => m.AccountInfo[i].EffectiveDate, new { htmlAttributes = new { @class = "form-control", onchange = "Tally()" } })
+            </td>
+        </tr>
+    }
+    <tr>
+        <td>
+            Order
+        </td>
+        <td>
+            <div id="OutstandingAmount">
+           @Html.DisplayFor(m => m.OutstandingAmount)
+            </div>
+        </td>
+        <td>
+        <div>@Html.DisplayFor(m => m.OrderAmount)</div>
+        </td>
+        <td></td>
+    </tr>
+   
+    <tr>
+        <td>
+            <input type="submit" value="Transfer" class="btn btn-default" />
+        </td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+</table>
+}
+
+<script type="text/javascript">
+    function Tally()
+    {
+        var val = @Model.OrderAmount.ToString().Replace(",",".");
+        var tot = 0;
+        @for (int i = 0; i < Model.AccountInfo.Count; i++)
+        {
+            if (!Model.AccountInfo[i].DestinationAccount)
+            {
+            <text>
+        tot = tot + Number( document.getElementById('AccountInfo_@i.ToString()__TransferAmount').value.replace(",","."));
+        </text>
+                }
+            }
+
+            var totalElement = document.getElementById("OutstandingAmount");
+            totalElement.innerHTML = 'R' + (val-tot).toString();
+        }
+</script>

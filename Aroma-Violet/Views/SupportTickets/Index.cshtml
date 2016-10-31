@@ -1,0 +1,75 @@
+﻿@model IEnumerable<Aroma_Violet.Models.SupportTicket>
+
+@{
+    //ViewBag.Title = "Index";
+    var data = ViewBag.UserID as KeyValuePair<string, string>[];
+}
+
+<h2>@ViewBag.Title</h2>
+
+<input type="text" value="@ViewBag.currentUserId" id="currentUserId" hidden />
+<input type="text" value="@ViewBag.statusMap" id="statusMap" hidden/>
+
+<p>
+   
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Client.ClientId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SupportTicketStatusID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Description)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UserID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.iDate)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        @{ 
+            var user = string.Empty;
+            if (item.UserID.HasValue)
+            {
+                var entry = data.FirstOrDefault(m => m.Key == item.UserID.Value.ToString());
+                if (!entry.Equals( default(KeyValuePair<string,string>)))
+                {
+                    user = entry.Value;
+                }
+            }
+        }
+        <td>
+            @Html.DisplayFor(modelItem => item.Client.ClientId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SupportTicketStatus.SupportTicketStatusName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Description)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => user)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.iDate)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.SupportTicketId,statusMap=ViewBag.statusMap, currentUserId=ViewBag.currentUserId }) |
+            @Html.ActionLink("Complete", "Complete", new { id=item.SupportTicketId, statusMap = ViewBag.statusMap, currentUserId = ViewBag.currentUserId }) 
+        </td>
+    </tr>
+}
+
+</table>
+<div>
+    <a href="javascript:history.back()">Go Back</a>
+
+</div>

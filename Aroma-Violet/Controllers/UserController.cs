@@ -10,10 +10,10 @@ namespace Aroma_Violet.Controllers
     public class UserController : Controller
     {
         [Authorize]
-        public ActionResult Index()
+        public ActionResult Index(string spec = "User")
         {
             var adminView = new UserViewModel();
-            adminView.Menu = new UserMenu();
+            adminView.Menu = new UserMenu(spec);
             return View(adminView);
         }
     }

@@ -1,0 +1,76 @@
+﻿@model int
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Reports</h2>
+<table>
+    @if ((Model & 1) == Model)
+    {
+        <tr><td>@Html.ActionLink("Cash Sales", "CashSales")</td></tr>
+        <tr><td>@Html.ActionLink("Distributed Sales", "DistrbutedSales")</td></tr>
+        <tr><td>@Html.ActionLink("Credit Sales", "CreditSales")</td></tr>
+        <tr>
+            <td>
+                @Html.ActionLink("Kiosk Sales", "KioskSales")
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.ActionLink("SMS Status", "SmsStatus")
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.ActionLink("Network", "Networkrelationship")
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.ActionLink("Account Balances", "AccountBalance")
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.ActionLink("Credit Notes", "CreditNote")
+            </td>
+        </tr>
+        
+        <tr>
+            <td>
+                @Html.ActionLink("Client Subscribtion","Index" ,"ClientSubscriptions")
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.ActionLink("Starter Pack Purchase Report", "StarterPackPurchaseReport")
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.ActionLink("User Sales", "GetUserSales")
+            </td>
+        </tr>
+    }
+    else
+    {
+        <tr>
+            <td>
+                @Html.ActionLink("Downline Statement", "DownlineStatement")
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.ActionLink("Commission Statement", "CommissionStatement")
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.ActionLink("User Sales", "GetUserSales")
+            </td>
+        </tr>
+    }
+
+
+</table>

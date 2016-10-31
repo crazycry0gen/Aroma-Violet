@@ -1,0 +1,34 @@
+﻿@model Aroma_Violet.Models.PublicHolidays
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>PublicHolidays</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.HolidayDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.HolidayDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.HolidayDescription)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.HolidayDescription)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

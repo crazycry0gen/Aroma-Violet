@@ -49,7 +49,7 @@ namespace Aroma_Violet.Models
         public string TelHome { get; set; }
         public string Email { get; set; }
 
-        public int? ResellerID { get; set; }
+        
         public ClientContactView[] Contacts { get; internal set; }
 
         private string GetAddressLine(Address add, int index)
@@ -68,6 +68,7 @@ namespace Aroma_Violet.Models
 
             if (myBase != null)
             {
+                
                 if (myBase.PostalAddress != null)
                 {
                     int index = 0;

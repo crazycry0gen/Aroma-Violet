@@ -27,7 +27,7 @@
     });
     </script>*@
 
-    <div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar navbar-inverse navbar-fixed-top" id="Nav">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -58,18 +58,14 @@
     
     <div class="container body-content">
         @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - Novus@*<img src="~/Content/Images/Novus Logo.svg" class="logo-small"/>*@</p>
-        </footer>
     </div>
-
+    
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
  
 </body>
 </html>
-}
+
 
 <script type="text/javascript">
     $(function () { // will trigger when the document is ready
@@ -77,4 +73,25 @@
             format: "dd/mm/yyyy"
         }); //Initialise any date pickers
     });
+
+    function SetVisible(id, bVal) {
+        var element = document.getElementById(id);
+        if (!bVal) {
+            element.style.display = 'none';
+        }
+        else {
+            element.style.display = 'block';
+        }
+
+    }
+    function UpdateDateTime(key) {
+        var day = document.getElementById('d' + key);
+        var month = document.getElementById('m' + key);
+        var year = document.getElementById('y' + key);
+        var newValue = day.value + '/' + month.value + '/' + year.value + ' 00:00:00';
+        var dateTime = document.getElementById(key);
+        //alert(dateTime.value);
+        //alert(newValue);
+        dateTime.value = newValue;
+    }
 </script>

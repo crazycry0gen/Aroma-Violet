@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="https://live.stratcol.co.za/dynamic/administration/serv_manager/sysIntegratorAhv.wsdl" name="outputAhvTransService" targetNamespace="https://live.stratcol.co.za/dynamic/administration/serv_manager/sysIntegratorAhv.wsdl" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="https://live.stratcol.co.za/dynamic/administration/serv_manager/sysIntegratorAhv.wsdl">
+      <xsd:element name="authenticateClient">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="key" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="mode" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ahvTransRequest">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="file_code" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="ahvTranDetails">
+        <xsd:sequence>
+          <xsd:element name="user_id" type="xsd:string" />
+          <xsd:element name="tran_status" type="xsd:string" />
+          <xsd:element name="acb_status" type="xsd:string" />
+          <xsd:element name="id_no_match" type="xsd:string" />
+          <xsd:element name="acc_no_match" type="xsd:string" />
+          <xsd:element name="acc_open" type="xsd:string" />
+          <xsd:element name="allow_debit" type="xsd:string" />
+          <xsd:element name="allow_credit" type="xsd:string" />
+          <xsd:element name="open3_months" type="xsd:string" />
+          <xsd:element name="surname_match" type="xsd:string" />
+          <xsd:element name="initials_match" type="xsd:string" />
+          <xsd:element name="otid" type="xsd:string" />
+          <xsd:element name="batch_ref" type="xsd:string" />
+          <xsd:element name="surname" type="xsd:string" />
+          <xsd:element name="initials" type="xsd:string" />
+          <xsd:element name="id_no" type="xsd:string" />
+          <xsd:element name="branch_code" type="xsd:string" />
+          <xsd:element name="account_no" type="xsd:string" />
+          <xsd:element name="status_date" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="arrayOfTrans">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="unbounded" name="trans" nillable="true" type="tns:ahvTranDetails" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="authenticateClient">
+    <wsdl:part name="authenticateClient" element="tns:authenticateClient" />
+  </wsdl:message>
+  <wsdl:message name="outputAhvTransRequest">
+    <wsdl:part name="parameter" element="tns:ahvTransRequest" />
+  </wsdl:message>
+  <wsdl:message name="outputAhvTransResponse">
+    <wsdl:part name="result" element="tns:arrayOfTrans" />
+  </wsdl:message>
+  <wsdl:portType name="outputAhvTransPortType">
+    <wsdl:operation name="outputAhvTrans">
+      <wsdl:input message="tns:outputAhvTransRequest" />
+      <wsdl:output message="tns:outputAhvTransResponse" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="outputAhvTransBinding" type="tns:outputAhvTransPortType">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="outputAhvTrans">
+      <soap:operation soapAction="outputAhvTrans" />
+      <wsdl:input>
+        <soap:body use="literal" namespace="urn:live.stratcol.co.za:outputAhvTrans" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+        <soap:header message="tns:authenticateClient" part="authenticateClient" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" namespace="urn:live.stratcol.co.za:outputAhvTrans" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="outputAhvTransService">
+    <wsdl:port name="outputAhvTransServicePort" binding="tns:outputAhvTransBinding">
+      <soap:address location="https://live.stratcol.co.za/dynamic/administration/serv_manager/sys_integrator_ahv.php" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

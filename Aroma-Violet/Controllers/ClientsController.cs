@@ -8,6 +8,8 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Aroma_Violet.Models;
+using System.Threading;
+using Microsoft.AspNet.Identity;
 
 namespace Aroma_Violet.Controllers
 {
@@ -16,6 +18,36 @@ namespace Aroma_Violet.Controllers
         private AromaContext db = new AromaContext();
         private const int maxResult = 20;
 
+        public void EnforceClientNumberConcurrency()
+        {
+            const string sSqlCheckSeed = "select i.last_value from sys.sysobjects o left join 	 sys.identity_columns i on o.id = i.[object_id] where o.name = 'Client'";
+            const string sSqlReseed = "DBCC CHECKIDENT ('dbo.Client',RESEED,{0});";
+
+            var clientNos = (from item in db.Clients select item.ClientId).ToArray();
+            var checkNo = 0;
+            if (clientNos.Length > 0) checkNo = clientNos[0];
+            for (int index = 0; index < clientNos.Length - 1; index++)
+            {
+                if (clientNos[index] != checkNo)
+                {
+                    break;
+                }
+                checkNo++;
+            }
+            var currentSeed = db.Database.SqlQuery<int>(sSqlCheckSeed).FirstOrDefault();
+            for (int reTry = 0; reTry < 10 && currentSeed != checkNo; reTry++)
+            {
+                try
+                {
+                    db.Database.ExecuteSqlCommand(string.Format(sSqlReseed, checkNo));
+                    currentSeed = db.Database.SqlQuery<int>(sSqlCheckSeed).FirstOrDefault();
+                }
+                catch
+                {
+                    Thread.Sleep(500);
+                }
+            }
+        }
         public async Task<ActionResult> Index(string criteria)
         {
             if (criteria == null) criteria = string.Empty;
@@ -26,6 +58,9 @@ namespace Aroma_Violet.Controllers
                         || m.ClientSurname.Contains(lowSearch)
                         || m.IDNumber.Contains(lowSearch)
                         || m.ClientType.ClientTypeName.Contains(lowSearch)
+                        || m.CompanyName.ToLower().Contains(lowSearch)
+                        || m.NickName.ToLower().Contains(lowSearch)
+                        || m.Contact.Where(c=>c.Active).Select(c=>c.ContactName.ToLower()).Any(x => x.Contains(lowSearch))
                         ).Take(maxResult)
                         .Include(c => c.ClientType)
                         .Include(c => c.Country)
@@ -35,7 +70,8 @@ namespace Aroma_Violet.Controllers
                         .Include(c=>c.BankingDetails)
                         .Include(c => c.Title);
             ViewBag.Criteria = criteria;
-            
+            var userId = Guid.Parse(User.Identity.GetUserId());
+            ViewBag.MyClientId = Generic.GetMyClientId(db, userId);
             return View(await clients.ToListAsync());
         }
 
@@ -51,11 +87,7 @@ namespace Aroma_Violet.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.ResellerID = (from item in db.ClientRelationShips
-                                  where item.ChildID == client.ClientId
-                                  && item.Active
-                                  select item.ParentID).FirstOrDefault();
-
+ 
             ViewBag.ContactInfo = (from item in db.ContactTypes.Where(m => m.Active).ToArray()
                                    select new string[] { item.ContactTypeName, db.Contacts.Where(m=>m.Active
                                                                                                 && m.ContactTypeID == item.ContactTypeId
@@ -69,21 +101,29 @@ namespace Aroma_Violet.Controllers
         public ActionResult Create()
         {
             ViewBag.ClientTypeID = new SelectList(db.ClientTypes, "ClientTypeId", "ClientTypeName");
-            ViewBag.CountryID = new SelectList(db.Countries, "CountryId", "CountryName");
+            ViewBag.CountryID = new SelectList(db.Countries.OrderBy(m=>m.CountryName), "CountryId", "CountryName");
             ViewBag.EthnicGroupID = new SelectList(db.EthnicGroups, "EthnicGroupId", "EthnicGroupName");
             ViewBag.IncomeGroupID = new SelectList(db.IncomeGroups, "IncomeGroupId", "IncomeGroupName");
-            ViewBag.ProvinceID = new SelectList(db.Provinces, "ProvinceId", "ProvinceName");
+                        ViewBag.ProvinceId = new SelectList(db.Provinces.OrderBy(m=>m.ProvinceName), "ProvinceId", "ProvinceName");
             ViewBag.TitleID = new SelectList(db.Titles, "TitleId", "TitleName");
             ViewBag.LanguageID = new SelectList(db.Languages, "LanguageID", "LanguageName");
             ViewBag.AddressTypeID = new SelectList(db.AddressTypes, "AddressTypeID", "AddressTypeName");
             ViewBag.PreviousYearCount = 80;
             ViewBag.NextYearCount = 0;
 
+            EnforceClientNumberConcurrency();
 
             var newClient = new ClientViewModel();
             newClient.PostalAddress = GetNewAddress("Postal");
             newClient.DeliveryAddress = GetNewAddress("Physical");
             newClient.DateOfBirth = DateTime.Parse("1 Jan 1950");
+
+            //newClient.ClientId = 10000;
+            //try
+            //{
+            //    newClient.ClientId = db.Clients.Select(m => m.ClientId).Max()+1;
+            //}
+            //catch { }
 
             return View(newClient);
         }
@@ -143,64 +183,24 @@ namespace Aroma_Violet.Controllers
             return newContact.ContactId;
         }
 
-        private void CreateClientBankingDetails(int clientId, string initials, string surname, int cellContactId, int homeContactId, int workContactId, int emailContactId)
+        public JsonResult CheckCode(string code)
         {
-            const string accountHolderText = "Self";
-            const string accountTypeText = "Cheque";
-            const string BankText = "ABSA";
-
-            var accountHolder = db.AccountHolders.FirstOrDefault(m => m.AccountHolderName == accountHolderText);
-            if (accountHolder == null)
+            var ret = string.Empty;
+            var objCode = db.PostalCodes.FirstOrDefault(m => m.PostalCodeName == code);
+            if (objCode == null)
             {
-                string errorMessage = string.Format("Account holder \"{0}\" not defined in lookup", accountHolderText);
-                throw new Exception(errorMessage);
+                ret = string.Format("The code \"{0}\" does not exist in postal codes or in shipping method postal code.", code);
             }
-            var accountType = db.AccountTypes.FirstOrDefault(m => m.AccountTypeName == accountTypeText);
-            if (accountType == null)
+            else
             {
-                string errorMessage = string.Format("Account type \"{0}\" not defined in lookup", accountTypeText);
-                throw new Exception(errorMessage);
-            }
-            var bank = db.Banks.FirstOrDefault(m => m.BankName == BankText);
-            if (bank == null)
-            {
-                string errorMessage = string.Format("Bank name \"{0}\" not defined in lookup", BankText);
-                throw new Exception(errorMessage);
-            }
-
-            var branch = db.Branches.FirstOrDefault(m => m.BankId == bank.BankId);
-            if (branch == null)
-            {
-                string errorMessage = string.Format("No branch defined for \"{0}\" not defined in lookup", BankText);
-                throw new Exception(errorMessage);
-            }
-
-            if (db.BankingDetails.Where(m => m.ClientID == clientId).Count() == 0)
-            {
-                var bankingDetail = new BankingDetail()
+                var shipping = db.ShippingMethodPostalCodes.FirstOrDefault(m => m.PostalCodeId == objCode.PostalCodeId);
+                if (shipping == null)
                 {
-                    Initials = initials,
-                    Surname = surname,
-                    AccountHolderID = accountHolder.AccountHolderId,
-                    AccountTypeID = accountType.AccountTypeId,
-                    BankID = bank.BankId,
-                    ClientID = clientId,
-                    CommencementDate = DateTime.Now.AddMonths(1),
-                    SalaryDate = DateTime.Now,
-                    AccountNumber = "0",
-                    BranchID = branch.BranchId,
-                    CellContact = db.Contacts.First(m => m.ContactId == cellContactId).ContactName,
-                    HomeContact = db.Contacts.First(m => m.ContactId == homeContactId).ContactName,
-                    WorkContact = db.Contacts.First(m => m.ContactId == workContactId).ContactName,
-                    EmailContact = db.Contacts.First(m => m.ContactId == emailContactId).ContactName,
-                    Active = false
-                };
-
-                db.BankingDetails.Add(bankingDetail);
-                db.SaveChanges();
+                    ret = string.Format("The code \"{0}\" is not set up in shipping method postal code", code);
+                }
             }
+            return Json(ret);
         }
-
 
         public JsonResult CheckIDNumber(string id)
         {
@@ -218,11 +218,15 @@ namespace Aroma_Violet.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "ClientId,ClientInitials,NickName,FullNames,LanguageID,Employer,DateOfBirth,ClientSurname,SAResident,IDNumber,ClientTypeID,TitleID,EthnicGroupID,IncomeGroupID,PostalAddress,DeliveryAddress,DeliveryAddressLines,ProvinceID,CountryID,Lines,AddressLine,PostalAddressLines,AddressTypeID,DeliveryAddress,PostalAddress,TelWork,Cell,TelHome,EMail,ResellerID,RegistrationNumber,CompanyName,IgnoreRebate")] ClientViewModel clientView)
+        public async Task<ActionResult> Create([Bind(Include = "ClientId,ClientInitials,NickName,FullNames,LanguageID,Employer,DateOfBirth,ClientSurname,SAResident,IDNumber,ClientTypeID,TitleID,EthnicGroupID,IncomeGroupID,PostalAddress,DeliveryAddress,DeliveryAddressLines,ProvinceID,CountryID,Lines,AddressLine,PostalAddressLines,AddressTypeID,DeliveryAddress,PostalAddress,TelWork,Cell,TelHome,EMail,ResellerID,RegistrationNumber,CompanyName,IgnoreRebate,Occupation")] ClientViewModel clientView)
         {
             
             var client = clientView.GetBaseClient();
+            client.iDate = DateTime.Now;
             db.Log(Generic.enumLGActivity.CreateClient, client.ClientId, "Base client fetch");
+
+
+
             if (ModelState.IsValid)
             {
 
@@ -254,17 +258,34 @@ namespace Aroma_Violet.Controllers
                 }
 
                 //Create contact
-                var workContactId = CreateContact(client.ClientId, "Tel (Work)", clientView.TelWork);
-                var cellContactId = CreateContact(client.ClientId, "Cell", clientView.Cell);
-                var homeContactId = CreateContact(client.ClientId, "Tel (Home)", clientView.TelHome);
+                if (clientView.TelWork == null)       clientView.TelWork = string.Empty;
+                if (clientView.TelHome == null)       clientView.TelHome = string.Empty;
+                if (clientView.Cell == null) clientView.Cell = string.Empty;
+                var workContactId = CreateContact(client.ClientId, "Tel (Work)", clientView.TelWork.Replace(" ",string.Empty));
+                var cellContactId = CreateContact(client.ClientId, "Cell", clientView.Cell.Replace(" ", string.Empty));
+                var homeContactId = CreateContact(client.ClientId, "Tel (Home)", clientView.TelHome.Replace(" ", string.Empty));
                 var emailContactId = CreateContact(client.ClientId, "EMail", clientView.Email);
 
-                CreateClientBankingDetails(client.ClientId, client.ClientInitials, client.ClientSurname, cellContactId, homeContactId, workContactId, emailContactId);
+                BankingDetailsController.CreateClientBankingDetails(db,client.ClientId, client.ClientInitials, client.ClientSurname, cellContactId, homeContactId, workContactId, emailContactId);
+
+                var userId = Guid.Parse(User.Identity.GetUserId());
+                if (client.ClientTypeID == 2)
+                {
+                    SystemSMSController.SendSMSEvent(db, 2, client.ClientId,userId, null);
+                }
+                if (client.ResellerID.HasValue && client.ResellerID.Value > 0)
+                {
+                    var cId = new KeyValuePair<string, string>("ChildClientId", client.ClientId.ToString());
+                    var cInit = new KeyValuePair<string, string>("ChildInitials", client.ClientInitials);
+                    var cSur = new KeyValuePair<string, string>("ChildSurname", client.ClientSurname);
+                    SystemSMSController.SendSMSEvent(db, 3, client.ResellerID.Value, userId,null,cId,cInit,cSur);
+                }
+
                 return RedirectToAction("Manage", "ClientSubscriptions", new { ClientID = client.ClientId });
             }
             
             ViewBag.ClientTypeID = new SelectList(db.ClientTypes, "ClientTypeId", "ClientTypeName", client.ClientTypeID);
-            ViewBag.CountryID = new SelectList(db.Countries, "CountryId", "CountryName", client.CountryID);
+            ViewBag.CountryID = new SelectList(db.Countries.OrderBy(m=>m.CountryName), "CountryId", "CountryName", client.CountryID);
             ViewBag.EthnicGroupID = new SelectList(db.EthnicGroups, "EthnicGroupId", "EthnicGroupName", client.EthnicGroupID);
             ViewBag.IncomeGroupID = new SelectList(db.IncomeGroups, "IncomeGroupId", "IncomeGroupName", client.IncomeGroupID);
             ViewBag.ProvinceID = new SelectList(db.Provinces, "ProvinceId", "ProvinceName", client.ProvinceID);
@@ -335,7 +356,7 @@ namespace Aroma_Violet.Controllers
 
 
             ViewBag.ClientTypeID = new SelectList(db.ClientTypes, "ClientTypeId", "ClientTypeName", client.ClientTypeID);
-            ViewBag.CountryID = new SelectList(db.Countries, "CountryId", "CountryName", client.CountryID);
+            ViewBag.CountryID = new SelectList(db.Countries.OrderBy(m=>m.CountryName), "CountryId", "CountryName", client.CountryID);
             ViewBag.EthnicGroupID = new SelectList(db.EthnicGroups, "EthnicGroupId", "EthnicGroupName", client.EthnicGroupID);
             ViewBag.IncomeGroupID = new SelectList(db.IncomeGroups, "IncomeGroupId", "IncomeGroupName", client.IncomeGroupID);
             ViewBag.ProvinceID = new SelectList(db.Provinces, "ProvinceId", "ProvinceName", client.ProvinceID);
@@ -357,7 +378,7 @@ namespace Aroma_Violet.Controllers
                 curContact = new Contact() { Active=true, ClientID=clientId, ContactTypeID = contactTypeId };
                 db.Contacts.Add(curContact);
             }
-            curContact.ContactName = value;
+            curContact.ContactName = value.Replace(" ", string.Empty);
             db.SaveChanges();
         }
 
@@ -366,17 +387,44 @@ namespace Aroma_Violet.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "ClientId, ResellerID,ClientInitials,NickName,FullNames,LanguageID,Employer,DateOfBirth,ClientSurname,SAResident,IDNumber,ClientTypeID,TitleID,EthnicGroupID,IncomeGroupID,ProvinceID,CountryID,Active,RegistrationNumber,CompanyName,IgnoreRebate")] ClientViewModel clientView)
+        public async Task<ActionResult> Edit([Bind(Include = "ClientId, ResellerID,ClientInitials,NickName,FullNames,LanguageID,Employer,DateOfBirth,ClientSurname,SAResident,IDNumber,ClientTypeID,TitleID,EthnicGroupID,IncomeGroupID,ProvinceID,CountryID,Active,RegistrationNumber,CompanyName,IgnoreRebate,Occupation,iDate,DeliveryAddress_AddressId,PostalAddress_AddressId")] ClientViewModel clientView)
         {
             var client = clientView.GetBaseClient();
             if (ModelState.IsValid)
             {
+              
                 db.Entry(client).State = EntityState.Modified;
+                if (client.PostalAddress_AddressId == 0 || client.DeliveryAddress_AddressId == 0)
+                {
+                    var addresses = db.Addresses.Where(m => m.ClientID == client.ClientId);
+                    var delivery = addresses.FirstOrDefault(m => m.AddressTypeID == 2 && m.Active);
+                    if (delivery == null)
+                    {
+                        delivery = addresses.FirstOrDefault(m => m.AddressTypeID == 2);
+                    }
+                    if (client.DeliveryAddress_AddressId == 0 && delivery != null)
+                    {
+                        client.DeliveryAddress_AddressId = delivery.AddressId;
+                        delivery.Active = true;
+                    }
+
+                    var post = addresses.FirstOrDefault(m => m.AddressTypeID == 1 && m.Active);
+                    if (post == null)
+                    {
+                        post = addresses.FirstOrDefault(m => m.AddressTypeID == 1);
+                    }
+                    if (client.PostalAddress_AddressId == 0 && post != null)
+                    {
+                        client.PostalAddress_AddressId = post.AddressId;
+                        post.Active = true;
+                    }
+
+                }
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
             ViewBag.ClientTypeID = new SelectList(db.ClientTypes, "ClientTypeId", "ClientTypeName", client.ClientTypeID);
-            ViewBag.CountryID = new SelectList(db.Countries, "CountryId", "CountryName", client.CountryID);
+            ViewBag.CountryID = new SelectList(db.Countries.OrderBy(m=>m.CountryName), "CountryId", "CountryName", client.CountryID);
             ViewBag.EthnicGroupID = new SelectList(db.EthnicGroups, "EthnicGroupId", "EthnicGroupName", client.EthnicGroupID);
             ViewBag.IncomeGroupID = new SelectList(db.IncomeGroups, "IncomeGroupId", "IncomeGroupName", client.IncomeGroupID);
             ViewBag.ProvinceID = new SelectList(db.Provinces, "ProvinceId", "ProvinceName", client.ProvinceID);

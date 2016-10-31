@@ -1,0 +1,160 @@
+﻿@model Aroma_Violet.Models.Client
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Client</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ClientType.ClientTypeName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ClientType.ClientTypeName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Country.CountryName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Country.CountryName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EthnicGroup.EthnicGroupName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EthnicGroup.EthnicGroupName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IncomeGroup.IncomeGroupName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IncomeGroup.IncomeGroupName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Province.ProvinceName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Province.ProvinceName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Title.TitleName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Title.TitleName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ClientInitials)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ClientInitials)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NickName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NickName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FullNames)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FullNames)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LanguageID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LanguageID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Employer)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Employer)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DateOfBirth)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DateOfBirth)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ClientSurname)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ClientSurname)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SAResident)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SAResident)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IDNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IDNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PostalAddress.AddressId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PostalAddress.AddressId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DeliveryAddress.AddressId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DeliveryAddress.AddressId)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

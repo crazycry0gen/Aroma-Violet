@@ -18,7 +18,7 @@ namespace Aroma_Violet.Controllers
         // GET: AccountHolders
         public async Task<ActionResult> Index()
         {
-            return View(await db.AccountHolders.ToListAsync());
+            return View(await db.AccountHolders.OrderBy(m=>m.AccountHolderName).ToListAsync());
         }
 
         // GET: AccountHolders/Details/5

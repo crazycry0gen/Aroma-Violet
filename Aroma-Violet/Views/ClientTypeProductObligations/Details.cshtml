@@ -1,0 +1,42 @@
+﻿@model Aroma_Violet.Models.ClientTypeProductObligation
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Client Type Product Obligation</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ClientType.ClientTypeName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ClientType.ClientTypeName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Product.ProductName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Product.ProductName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Active)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Active)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ClientTypeProductObligationId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

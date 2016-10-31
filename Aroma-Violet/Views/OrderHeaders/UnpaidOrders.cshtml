@@ -1,0 +1,72 @@
+﻿@model IEnumerable<Aroma_Violet.Models.OrderHeader>
+
+@{
+    ViewBag.Title = "UnpaidOrders";
+    var balances = ViewBag.Balances as decimal[];
+    var orders = Model.ToArray();
+}
+
+<h2>Unpaid Orders</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.ClientID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.OrderStatus.OrderStatusName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ShippingType.ShippingTypeName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Total)
+        </th>
+        
+        <th>
+            @Html.DisplayNameFor(model => model.OrderDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Active)
+        </th>
+        <th>
+            Outstanding Balance
+        </th>
+        <th></th>
+    </tr>
+
+@for (int i = 0; i < orders.Length; i++)
+{
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => orders[i].ClientID)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => orders[i].OrderStatus.OrderStatusName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => orders[i].ShippingType.ShippingTypeName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => orders[i].Total)
+        </td>
+       
+        <td>
+            @Html.DisplayFor(modelItem => orders[i].OrderDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => orders[i].Active)
+        </td>
+        <td>
+            R @Html.DisplayFor(modelItem => balances[i])
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id= orders[i].OrderHeaderId })
+            @*|
+            @Html.ActionLink("Pay", "Pay", new { id= orders[i].OrderHeaderId, amount=balances[i], clientId=orders[i].ClientID })*@
+        </td>
+    </tr>
+}
+
+</table>
+<a href="javascript:history.back()">Go Back</a>

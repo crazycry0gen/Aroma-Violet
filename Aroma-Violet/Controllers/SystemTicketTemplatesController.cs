@@ -124,5 +124,43 @@ namespace Aroma_Violet.Controllers
             }
             base.Dispose(disposing);
         }
+
+        internal static void PersistTicket(AromaContext db, Guid systemEventId, Guid id,int clientId, int supportTicketType, string text, Guid userId)
+        {
+            var evnt = db.SystemEvents.Find(systemEventId);
+                      
+            var links = (from item in db.SystemLinks
+                        where item.Parent.Equals(id)
+                        select item.Child).ToArray();
+            var ticket = (from item in db.SupportTickets
+                          where links.Contains(item.SupportTicketId)
+                          && item.SupportTicketTypeId == supportTicketType
+                          select item).FirstOrDefault();
+            if (ticket == null)
+            {
+                ticket = new SupportTicket()
+                {
+                    ClientID = clientId,
+                    Description = text,
+                    iDate = DateTime.Now,
+                    SupportTicketId=Guid.NewGuid(),
+                    SupportTicketStatusID = 1,
+                    SupportTicketTypeId = supportTicketType,
+                    UserID = evnt.UserId
+                };
+                db.SupportTickets.Add(ticket);
+
+                var link = new SystemLink() {
+                    Parent =id,
+                    Child = ticket.SupportTicketId,
+                    Created = DateTime.Now,
+                    UserID = userId,
+                    LinkId = Guid.NewGuid()
+                };
+                db.SystemLinks.Add(link);
+
+                db.SaveChanges();
+            }
+        }
     }
 }

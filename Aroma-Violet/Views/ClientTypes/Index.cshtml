@@ -14,6 +14,10 @@
         <th>
             @Html.DisplayNameFor(model => model.ClientTypeName)
         </th>
+        
+        <th>
+            @Html.DisplayNameFor(model => model.AddShipping)
+        </th>
         <th>
             @Html.DisplayNameFor(model => model.Active)
         </th>
@@ -24,6 +28,9 @@
     <tr>
         <td>
             @Html.DisplayFor(modelItem => item.ClientTypeName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AddShipping)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Active)

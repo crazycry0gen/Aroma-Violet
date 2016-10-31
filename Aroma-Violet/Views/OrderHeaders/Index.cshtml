@@ -2,50 +2,371 @@
 
 @{
     ViewBag.Title = "Index";
+    DateTime fromDate = ViewBag.FromDate;
+    DateTime toDate = ViewBag.ToDate;
+    int statuses = ViewBag.Statuses;
+    KeyValuePair<int, string>[] statusList = ViewBag.StatusList;
+    bool[] chechs = statusList.Select(m => (m.Key & statuses) == m.Key).ToArray();
+    KeyValuePair<Guid, string[]>[] trackingNumbers = ViewBag.TrackingNumbers;
+    decimal total = 0;
+    decimal validTotal = 0;
+    decimal unpaid = 0;
+    decimal credited = 0;
+    int[] validIds = new int[] {2,3,4 };
+    string fmt = "#,###,###,##0.00";
+    Guid? specificUserId= ViewBag.SpecificUserId;
+
 }
+<div id="NoPrintBit" style="width:100%;">
 
-<h2>Index</h2>
+    <h2>Index</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create", new {ClientId=ViewBag.ClientId })
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Client.ClientId)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.OrderStatus.OrderStatusName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Total)
-        </th>
-        
-        <th>
-            @Html.DisplayNameFor(model => model.OrderDate)
-        </th>
-        <th></th>
-    </tr>
+    <p>
+        @if (!((User.IsInRole("Area Distributor")) || (User.IsInRole("Distributor"))))
+        {
+            <text>
+                @Html.ActionLink("Create New", "Create", new { ClientId = ViewBag.ClientId })
+            </text>
+        }
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.ClientID)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.OrderStatus.OrderStatusName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Total)
-        </td>
-        
-        <td>
-            @Html.DisplayFor(modelItem => item.OrderDate)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.OrderHeaderId, clientId=item.ClientID }) 
-        </td>
-    </tr>
-}
+    </p>
+    @using (Html.BeginForm())
+    {
+        <div>
+            @Html.HiddenFor(m => statuses)
+            @Html.HiddenFor(m => specificUserId)
+        </div>
+        <table>
+            <tr>
+                @for (int i = 0; i < statusList.Length; i++)
+                {
+                    <td>
+                        @Html.CheckBoxFor(m => chechs[i], new { onchange = string.Format("CheckChange(this,{0})", statusList[i].Key) })
+                        @Html.DisplayFor(m => statusList[i].Value)
+                    </td>
+                }
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <th>From Date</th>
+                <th>To Date</th>
+                <td></td>
+            </tr>
+            <tr>
+                <td>@Html.EditorFor(m => fromDate)</td>
+                <td>@Html.EditorFor(m => toDate)</td>
+                <td>
+                    <input type="submit" value="Filter" class="btn btn-default" />
+                </td>
+            </tr>
+        </table>
 
-</table>
+    }
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Client.ClientId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Client.FullNames)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Client.ClientSurname)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderStatus.OrderStatusName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SalesType.SalesTypeDescription)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Total)
+            </th>
+            @if (!((User.IsInRole("Area Distributor")) || (User.IsInRole("Distributor"))))
+            {
+                <th>
+                    @Html.DisplayNameFor(model => model.Shipping)
+                </th>
+                <th>
+                    Invoice amount
+                </th>
+            }
+            <th>
+                @Html.DisplayNameFor(model => model.OrderDate)
+            </th>
+            @if (!((User.IsInRole("Area Distributor")) || (User.IsInRole("Distributor"))))
+            {
+                <th>
+                    Tracking Number(s)
+                </th>
+            }
+            <th colspan="3"></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            if (item.OrderStatusId == 1) { unpaid += item.Total; }
+            if (item.OrderStatusId == 5) { credited += item.Total; }
+            if (validIds.Contains(item.OrderStatusId)) { validTotal += item.Total; }
+            total += item.Total;
+            <tr style="max-height:10px;">
+                <td>
+                    @if (!((User.IsInRole("Area Distributor")) || (User.IsInRole("Distributor"))))
+                    {
+                        @Html.ActionLink(linkText: item.ClientID.ToString(), actionName: "Details", controllerName: "Clients", routeValues: new { id = item.ClientID }, htmlAttributes: null)
+                    }
+                    else
+                    {
+                        @Html.DisplayFor(model => item.ClientID)
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.Client.FullNames)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.Client.ClientSurname)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderStatus.OrderStatusName)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.SalesType.SalesTypeDescription)
+                </td>
+                <td class="Number">
+                    @Html.DisplayFor(modelItem => item.Total)
+                </td>
+                @if (!((User.IsInRole("Area Distributor")) || (User.IsInRole("Distributor"))))
+                {
+                    <td class="Number">
+                        @Html.DisplayFor(modelItem => item.Shipping)
+                    </td>
+                    <td class="Number">
+                        @{var amt = (item.Total + item.Shipping); }
+                        @Html.DisplayFor(modelItem => amt)
+                    </td>
+                            }
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderDate)
+                </td>
+                <td>
+                    @{
+                        if (!((User.IsInRole("Area Distributor")) || (User.IsInRole("Distributor"))))
+                        {
+                            var tracking = trackingNumbers.Where(m => m.Key.Equals(item.OrderHeaderId)).Select(m => m.Value).FirstOrDefault();
+                            if (tracking != null)
+                            {
+                                for (int t = 0; t < tracking.Length; t++)
+                                {
+                                    var link = string.Format("http://www.fastway.co.za/our-services/track-your-parcel?l={0}", tracking[t]);
+                                    <a href="@link" target="_blank">@tracking[t]</a>
+                                }
+                            }
+                        }
+                    }
+                </td>
+                <td colspan="3">
+                    @if (User.IsInRole("Administrator"))
+                    {
+                        <text>
+                            @Html.ActionLink("Edit", "Edit", new { id = item.OrderHeaderId, clientId = item.ClientID }) |
+                        </text>
+                    }
+                    @if (!((User.IsInRole("Area Distributor")) || (User.IsInRole("Distributor"))))
+                    {
+                        <text>
+                            @Html.ActionLink("Details", "Details", new { id = item.OrderHeaderId, clientId = item.ClientID }) |
+                        </text>
+                    }
+
+                    @Html.ActionLink("Invoice", "Invoice", new { id = item.OrderHeaderId }) |
+                    @if (item.OrderStatusId == 5) //canceled
+                    {
+                        <text>
+                            @Html.ActionLink("Credit Note", "CreditNote", new { id = item.OrderHeaderId })
+                        </text>
+                    }
+                    else
+                    {
+                        <text>
+                            @Html.ActionLink("Issue Credit Note", "IssueCreditNote", new { id = item.OrderHeaderId, editLineItems = 0 })|
+                            @Html.ActionLink("Credit Line Items", "IssueCreditNote", new { id = item.OrderHeaderId, editLineItems = 1 })
+                        </text>
+                    }
+
+                </td>
+            </tr>
+
+                        }
+        @if ((User.IsInRole("Area Distributor")) || (User.IsInRole("Distributor")))
+        {
+            <tr>
+                <th colspan="5">
+                    Unpaid
+                </th>
+                <td class="Number">
+                    @unpaid.ToString(fmt)
+                </td>
+            </tr>
+            <tr>
+                <th colspan="5">
+                    Credited
+                </th>
+                <td class="Number">
+                    @credited.ToString(fmt)
+                </td>
+            </tr>
+            <tr>
+                <th colspan="5">
+                    Valid Total
+                </th>
+                <td class="Number">
+                    @validTotal.ToString(fmt)
+                </td>
+            </tr>
+            <tr>
+                <th colspan="5">
+                    Total
+                </th>
+                <td class="Number">
+                    @total.ToString(fmt)
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+<div id="PrintBit" style="width:100%;display:none;">
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Client.ClientId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Client.FullNames)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Client.ClientSurname)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderStatus.OrderStatusName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SalesType.SalesTypeDescription)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Total)
+            </th>
+            
+            <th>
+                @Html.DisplayNameFor(model => model.OrderDate)
+            </th>
+            
+         
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            if (item.OrderStatusId == 1) { unpaid += item.Total; }
+            if (item.OrderStatusId == 5) { credited += item.Total; }
+            if (validIds.Contains(item.OrderStatusId)) { validTotal += item.Total; }
+            total += item.Total;
+            <tr>
+                <td>
+                    @Html.DisplayFor(model => item.ClientID)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.Client.FullNames)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.Client.ClientSurname)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderStatus.OrderStatusName)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.SalesType.SalesTypeDescription)
+                </td>
+                <td class="Number">
+                    @Html.DisplayFor(modelItem => item.Total)
+                </td>
+               
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderDate)
+                </td>
+            </tr>
+
+         }
+        @if ((User.IsInRole("Area Distributor")) || (User.IsInRole("Distributor")))
+        {
+            <tr>
+                <th colspan="5">
+                    Unpaid
+                </th>
+                <td class="Number">
+                    @unpaid.ToString(fmt)
+                </td>
+            </tr>
+            <tr>
+                <th colspan="5">
+                    Credited
+                </th>
+                <td class="Number">
+                    @credited.ToString(fmt)
+                </td>
+            </tr>
+            <tr>
+                <th colspan="5">
+                    Valid Total
+                </th>
+                <td class="Number">
+                    @validTotal.ToString(fmt)
+                </td>
+            </tr>
+            <tr>
+                <th colspan="5">
+                    Total
+                </th>
+                <td class="Number">
+                    @total.ToString(fmt)
+                </td>
+            </tr>
+        }
+    </table>
+    </div>
+    <div id="NoPrintHeader">
+        <a href="#" onclick="SwitchToPrint()">Print</a>|
+        <a href="javascript:history.back()">Go Back</a>
+    </div>
+
+    <script type="text/javascript">
+        function SwitchToPrint() {
+
+            var printDiv = document.getElementById("PrintBit");
+            printDiv.style.position = "absolute";
+            printDiv.style.top = 0;
+            SetVisible("NoPrintHeader", false);
+            SetVisible("PrintBit", true);
+            SetVisible("NoPrintBit", false);
+           
+            window.print();
+            SetVisible("NoPrintHeader", true);
+            SetVisible("PrintBit", false);
+            SetVisible("NoPrintBit", true);
+           
+
+            printDiv.style.position = "relative";
+            
+        }
+        function CheckChange(check, val) {
+            var checked = check.checked;
+            var statuses = document.getElementById("statuses");
+            var currentVal = parseInt(statuses.value);
+            if (checked) {
+                currentVal = currentVal + val;
+            }
+            else {
+                currentVal = currentVal - val;
+            }
+            statuses.value = currentVal;
+        }
+    </script>

@@ -18,7 +18,7 @@ namespace Aroma_Violet.Controllers
         // GET: Countries
         public async Task<ActionResult> Index()
         {
-            return View(await db.Countries.ToListAsync());
+            return View(await db.Countries.OrderBy(m=>m.CountryName).OrderBy(m => m.CountryName).ToListAsync());
         }
 
         // GET: Countries/Details/5

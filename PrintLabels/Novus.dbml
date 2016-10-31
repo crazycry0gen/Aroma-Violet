@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="Novus" Class="NovusDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=(LocalDb)\MSSQLLocalDB;Initial Catalog=Novus;Integrated Security=True" SettingsObjectName="PrintLabels.Properties.Settings" SettingsPropertyName="NovusConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.PickingListHeader" Member="PickingListHeaders">
+    <Type Name="PickingListHeader">
+      <Column Name="PickingListHeaderId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="ShippingTypeId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ShippingMethodId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="PickingDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="ShippedDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Association Name="PickingListHeader_PickingListDetail" Member="PickingListDetails" ThisKey="PickingListHeaderId" OtherKey="PickingListHeaderId" Type="PickingListDetail" />
+    </Type>
+  </Table>
+  <Table Name="dbo.PickingListDetail" Member="PickingListDetails">
+    <Type Name="PickingListDetail">
+      <Column Name="PickingListDetailId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="PickingListHeaderId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ProductID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="TotalItems" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="TransferQuantity" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ClientID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="OrderLineId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="TrackingNumber" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Active" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="GroupId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="Address_AddressId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="PickingListHeader_PickingListDetail" Member="PickingListHeader" ThisKey="PickingListHeaderId" OtherKey="PickingListHeaderId" Type="PickingListHeader" IsForeignKey="true" />
+      <Association Name="Address_PickingListDetail" Member="Address" ThisKey="Address_AddressId" OtherKey="AddressId" Type="Address" IsForeignKey="true" />
+      <Association Name="Client_PickingListDetail" Member="Client" ThisKey="ClientID" OtherKey="ClientId" Type="Client" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Address" Member="Addresses">
+    <Type Name="Address">
+      <Column Name="AddressId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Code" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="ClientID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="AddressTypeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Active" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="Client_ClientId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="Address_PickingListDetail" Member="PickingListDetails" ThisKey="AddressId" OtherKey="Address_AddressId" Type="PickingListDetail" />
+      <Association Name="Address_AddressLine" Member="AddressLines" ThisKey="AddressId" OtherKey="AddressID" Type="AddressLine" />
+      <Association Name="Address_Client" Member="Clients" ThisKey="AddressId" OtherKey="DeliveryAddress_AddressId" Type="Client" />
+      <Association Name="Address_Client1" Member="Clients1" ThisKey="AddressId" OtherKey="PostalAddress_AddressId" Type="Client" />
+      <Association Name="Client_Address" Member="Client" ThisKey="Client_ClientId" OtherKey="ClientId" Type="Client" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.AddressLine" Member="AddressLines">
+    <Type Name="AddressLine">
+      <Column Name="AddressLineId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="AddressLineText" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="AddressID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="[Order]" Member="Order" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Active" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Association Name="Address_AddressLine" Member="Address" ThisKey="AddressID" OtherKey="AddressId" Type="Address" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Client" Member="Clients">
+    <Type Name="Client">
+      <Column Name="ClientId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="ClientInitials" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="NickName" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="FullNames" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Occupation" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="LanguageID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Employer" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="DateOfBirth" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="ClientSurname" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="SAResident" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="IDNumber" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="ClientTypeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="TitleID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="EthnicGroupID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="IncomeGroupID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ProvinceID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="CountryID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="CompanyName" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="RegistrationNumber" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="ResellerID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Active" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="IgnoreRebate" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="TelWork" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Cell" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="TelHome" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Email" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Discriminator" Type="System.String" DbType="NVarChar(128) NOT NULL" CanBeNull="false" />
+      <Column Name="DeliveryAddress_AddressId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="PostalAddress_AddressId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="Client_PickingListDetail" Member="PickingListDetails" ThisKey="ClientId" OtherKey="ClientID" Type="PickingListDetail" />
+      <Association Name="Client_Address" Member="Addresses" ThisKey="ClientId" OtherKey="Client_ClientId" Type="Address" />
+      <Association Name="Address_Client" Member="Address" ThisKey="DeliveryAddress_AddressId" OtherKey="AddressId" Type="Address" IsForeignKey="true" />
+      <Association Name="Address_Client1" Member="Address1" ThisKey="PostalAddress_AddressId" OtherKey="AddressId" Type="Address" IsForeignKey="true" />
+    </Type>
+  </Table>
+</Database>

@@ -1,0 +1,101 @@
+﻿@model Aroma_Violet.Models.ReportViewModel
+@{
+    ViewBag.Title = "CashSales";
+    var sales = Aroma_Violet.Models.ReportViewModel.Sales.OrderBy(m => m.ClientID).ToList();
+    var summary = Aroma_Violet.Models.ReportViewModel.PaymentSummary.OrderBy(m => m.Key).ToList();
+    var fromDate = Model.FromDate;
+    var toDate = Model.ToDate;
+}
+
+<h2>Kiosk Sale Summary</h2>
+
+@using (Html.BeginForm())
+{
+
+@Html.AntiForgeryToken()
+
+<table>
+    <tr>
+        <th>
+            From
+        </th>
+        <td>
+            @Html.EditorFor(m => fromDate)
+        </td>
+        <th></th>
+        <th>
+            To
+        </th>
+        <td>
+            @Html.EditorFor(m => toDate)
+        </td>
+        <th></th>
+        <td>
+            <input type="submit" value="Filter" class="btn btn-default" />
+        </td>
+    </tr>
+</table>
+
+
+<table>
+    <tr>
+        <th>Client ID</th>
+        <th>Client Initials & Surname</th>
+        <th>Invoice</th>
+        <th>How Paid</th>
+        <th>Amount</th>
+    </tr>
+    @for (int i = 0; i < sales.Count; i++)
+    {
+        <tr class="findisp">
+            <td>@Html.DisplayFor(m=>sales[i].ClientID)</td>
+            <td>@Html.DisplayFor(m=>sales[i].Description)</td>
+            <td>@Html.DisplayFor(m=>sales[i].Invoice)</td>
+            <td>@Html.DisplayFor(m=>sales[i].PaymentType)</td>
+            <td class="Number">@Html.DisplayFor(m=>sales[i].Total)</td>
+        </tr>
+    }
+    <tr>
+        <th colspan="4">
+            Total
+        </th>
+        <th class="Number">@Html.DisplayFor(m=>m.Total)</th>
+    </tr>
+</table>
+
+<h2>Summary</h2>
+<table>
+    <tr>
+        <th colspan="3">Type</th>
+        <th>Total</th>
+        <th></th>
+        <th colspan="2">Actual Value</th>
+        <th colspan="2">Short/Over</th>
+        <th colspan="4"></th>
+    </tr>
+    @for (int i = 0; i < summary.Count; i++)
+    {
+        <tr class="findisp">
+            <td colspan="3">@Html.DisplayFor(m => summary[i].Key)</td>
+            <td class="Number">@Html.DisplayFor(m=>summary[i].Value)</td>
+            <td></td>
+            <td colspan="2">
+                <input type="text" class="form-control" />
+            </td>
+            <td colspan="2">
+                <input type="text" class="form-control" />
+            </td>
+        </tr>
+    }
+    <tr>
+        <th colspan="3">
+            Total
+        </th>
+        <th class="Number">@Html.DisplayFor(m => m.Total)</th>
+    </tr>
+</table>
+}
+<p>
+@Html.ActionLink("Reports", "Index")
+
+</p>

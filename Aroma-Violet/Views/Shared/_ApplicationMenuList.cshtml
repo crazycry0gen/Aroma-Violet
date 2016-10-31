@@ -5,7 +5,15 @@
 <nav>
     <ul id="left menu">
         @foreach(var menuItem in Model){
+            if (menuItem.Parameters == null || menuItem.Parameters.Length == 0)
+            {
             <li>@Html.ActionLink(menuItem.Text, menuItem.ActionName, menuItem.ControllerName)</li>
+            }
+            else
+            {
+                var url = Url.Action(menuItem.ActionName, menuItem.ControllerName) + "?" + menuItem.Parameters;
+                <li><a href=@url>@menuItem.Text</a></li>
+            }
         }
     </ul>
 </nav>

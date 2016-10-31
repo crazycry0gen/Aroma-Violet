@@ -15,19 +15,22 @@
         <th>
             @Html.DisplayNameFor(model => model.ClientID)
         </th>
-        <th>
+        <th colspan="2">
             @Html.DisplayNameFor(model => model.Number)
         </th>
-        <th>
+        <th colspan="7">
             @Html.DisplayNameFor(model => model.SMSDescription)
         </th>
         <th>
+            Count
+        </th>
+        <th colspan="2">
             @Html.DisplayNameFor(model => model.iDate)
         </th>
-        <th>
+        <th colspan="2">
             @Html.DisplayNameFor(model => model.Sent)
         </th>
-        <th>
+        <th colspan="2">
             @Html.DisplayNameFor(model => model.LastSendAttempt)
         </th>
         <th>
@@ -47,34 +50,37 @@
         <td>
             @Html.DisplayFor(modelItem => item.ClientID)
         </td>
-        <td>
+        <td colspan="2">
             @Html.DisplayFor(modelItem => item.Number)
         </td>
-        <td>
+        <td colspan="7">
             @Html.DisplayFor(modelItem => item.SMSDescription)
         </td>
         <td>
+            @Html.DisplayFor(modelItem => item.SMSDescription.Length)
+        </td>        
+        <td colspan="2">
             @Html.DisplayFor(modelItem => item.iDate)
         </td>
         @if (item.Sent == null)
         {
-            <td>Not sent</td>
+            <td colspan="2">Not sent</td>
         }
         else
         {
-        <td>
+        <td colspan="2">
             @Html.DisplayFor(modelItem => item.Sent)
         </td>
         }
         @if (item.LastSendAttempt == null)
         {
-        <td>
+        <td colspan="2">
             Not Attempted
         </td>
         }
         else
         {
-            <td>
+            <td colspan="2">
                 @Html.DisplayFor(modelItem => item.LastSendAttempt)
 
                
@@ -87,7 +93,15 @@
             @Html.DisplayFor(modelItem => item.Active)
         </td>
         <td>
-            @Statuses[item.SystemSMSStatusId-1]
+            @if (Statuses.Length > item.SystemSMSStatusId)
+            {
+                <text>@Statuses[item.SystemSMSStatusId - 1]</text>
+
+            }
+            else
+            {
+                <text>Unknown</text>
+}
         </td>
         @*@if (User.IsInRole("Administrator"))
         {
@@ -136,3 +150,4 @@
         }
     </div>
 }
+<a href="javascript:history.back()">Go Back</a>

@@ -1,0 +1,77 @@
+﻿@model IEnumerable<Aroma_Violet.Models.ShippingMethodPostalCode>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+
+<table class="table">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <tr>
+            <td colspan="4">
+                <input name="criteria" class="form-control text-box single-line" id="criteria" type="text" value="@ViewBag.Criteria" data-val="true">
+            </td>
+            <td>
+                <input type="submit" value="Find" class="btn btn-default" />
+            </td>
+            <td></td>
+            <td>
+
+            </td>
+            <td></td>
+        </tr>
+
+    }
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.PostalCode.PostalCodeName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ShippingMethod.ShippingMethodName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Description)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ExtraCost)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Active)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.PostalCode.PostalCodeName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ShippingMethod.ShippingMethodName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Description)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ExtraCost)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Active)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ShippingMethodPostalCodeId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ShippingMethodPostalCodeId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ShippingMethodPostalCodeId })
+        </td>
+    </tr>
+}
+
+</table>

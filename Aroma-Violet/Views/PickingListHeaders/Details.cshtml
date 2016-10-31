@@ -2,57 +2,140 @@
 
 @{
     ViewBag.Title = "Details";
+    var prevClientId = 0;
+    var detail = Model.PickingListDetail.ToArray();
+    const string detailFormat = "{0} {1} x {2}";
+    int p = 0;
 }
 
-<h2>Details</h2>
+<h4>Date:@ViewBag.dts Type:@Model.ShippingType.ShippingTypeName Method:@Model.ShippingMethod.ShippingMethodName</h4>
 
 <div>
-    <h4>PickingListHeader</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.ShippingMethod.ShippingMethodName)
-        </dt>
+ <table class="pickingList">
+     <tr class="pickingList">
+         <th class="pickingList" colspan="2">Picking List ID</th>
+         <th class="pickingList">Client</th>
+         @*<th class="pickingList" colspan="5">Product List</th>*@
+         <th colspan="6">Product</th>
+         <th>Total Items</th>
+         <th>Transfer qty</th>
+         
+      </tr>
+     
+     @for (int i = 0; i < detail.Length; i++)
+     {
+         prevClientId = detail[i].ClientID;
+         <tr class="pickingList" >
+            <td class="pickingList" colspan="2">@detail[i].PickingListDetailId.ToString("0000000000")</td>
+             <td class="pickingList">@detail[i].ClientID</td>
+             
+             <td  class="pickingList" colspan="8">
 
-        <dd>
-            @Html.DisplayFor(model => model.ShippingMethod.ShippingMethodName)
-        </dd>
+                 <table>
+                        @while (i < detail.Length)
+                        {
+                        <tr class="findisp">
+                            <td colspan="6" >
+                                @detail[i].Product.ProductName
+                            </td>
+                            <td >
+                                @detail[i].TotalItems
+                            </td>
+                            <td >
+                                @detail[i].TransferQuantity
+                            </td>
+                            
+                        </tr>
+                            if (i < detail.Length-1 && detail[i + 1].ClientID == prevClientId)
+                            {
+                                i++;
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
 
-        <dt>
-            @Html.DisplayNameFor(model => model.ShippingType.ShippingTypeName)
-        </dt>
+                    
 
-        <dd>
-            @Html.DisplayFor(model => model.ShippingType.ShippingTypeName)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.PickingDate)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.PickingDate)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.ShippedDate)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.ShippedDate)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.PickingListDetailId)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.PickingListDetailId)
-        </dd>
-
-    </dl>
+                 </table>
+     </td>
+             
+         </tr>
+        
+     }
+     <tr >
+         <th colspan="9">
+             Total
+         </th>
+         <th>
+             @detail.Sum(m => m.TotalItems)
+         </th>
+         <th>
+             @detail.Sum(m => m.TransferQuantity)
+         </th>
+     </tr>
+     <tr class="bigrow">
+         <td class="pickingList" colspan="2">Packed by:</td>
+         <td class="pickingList" colspan="5"></td>
+     </tr>
+     <tr class="bigrow">
+         <td class="pickingList" colspan="2">Signature:</td>
+         <td class="pickingList" colspan="5"></td>
+     </tr>
+     <tr class="bigrow">
+         <td class="pickingList" colspan="2">Picked Date:</td>
+         <td class="pickingList" colspan="5"></td>
+     </tr>
+ </table>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.PickingListHeaderId }) |
-    @Html.ActionLink("Back to List", "Index")
+<p id="links">
+    @Html.ActionLink("Previous Picking Lists", "Index")|
+    @Html.ActionLink("Picking List", "Create")|
+    <a href="#" onclick="PrintForm()">Print</a> | 
+    <a href="#" onclick="PrintInvoices()">Print Invoice(s)</a>
+    @foreach(KeyValuePair<Guid,string> invoice in ViewBag.Invoices)
+    { 
+        <text>
+     | <a href="@Url.Action("Invoice","OrderHeaders", new {id= invoice.Key})" target="_blank">@invoice.Value</a>
+    </text>
+    }
 </p>
+
+<script type="text/javascript">
+    function PrintForm()
+    {
+        SetVisible("links", false);
+        //setVisible("Novus_Side_Logo", false);
+        window.print();
+        SetVisible("links", true);
+        //setVisible("Novus_Side_Logo", true);
+    }
+
+    function PrintInvoices()
+    {
+        //window.frames["printf"].focus();
+        //window.frames["printf"].print();
+
+        @foreach (KeyValuePair<Guid, string> invoice in ViewBag.Invoices)
+            {
+            <text>
+        var win = window.open('@Url.Action("Invoice", "OrderHeaders", new { id = invoice.Key })');
+        win.focus();
+        win.print();
+
+        </text>
+            }
+        }
+
+    function SetVisible(id, bVal) {
+        var element = document.getElementById(id);
+        if (!bVal) {
+            element.style.display = 'none';
+        }
+        else {
+            element.style.display = 'block';
+        }
+
+    }
+</script>

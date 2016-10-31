@@ -63,6 +63,20 @@ select
     *overflow: hidden;
 }
 
+input,
+select
+ {
+    max-width: 280px;
+    /*width: 13px;
+    height: 13px;*/
+    padding: 0;
+    margin:0;
+    vertical-align: bottom;
+    position: relative;
+    top: -1px;
+    *overflow: hidden;
+}
+
 textarea
  {
     max-width: 280px;
@@ -110,6 +124,15 @@ table.findisp {
     text-align:right;
 }
 
+table.account-display{
+    
+}
+
+td.GiveMeSpace {
+    padding:10px;
+
+}
+
 td.findisp {
     border-left:1px solid lightgray;
     border-right:1px solid lightgray;
@@ -136,6 +159,15 @@ table {
     /*border:5px solid red;*/
 }
 
+ table.pickingList, th.pickingList, td.pickingList {
+    border: 3px double black;
+    }
+
+tr.bigrow {
+    height:70px;
+    border: 3px double black;
+}
+
 td.futureJournal{
     color:lightgray;
     
@@ -156,4 +188,77 @@ td {
     align-content:center;
     height:20px;
     /*white-space:nowrap;*/
+}
+
+table.Invoice {
+    border-collapse: separate;
+    border-spacing: 5px 5px;
+}
+
+td.Invoice {
+    border:1px solid;
+}
+
+tr.Invoice {
+    border-bottom:1px solid;
+    font-size:12px;
+}
+tr.InvoiceLine {
+    border-bottom:None;
+    font-size:12px;
+    
+}
+td.InvoiceCellHead {
+    border-bottom:1px solid;
+    text-align:center;
+}
+td.Number, th.Number {
+    text-align:right;
+}
+
+
+table.CreditNote {
+    border-collapse: separate;
+    border-spacing: 5px 5px;
+}
+
+table.network {
+    border:solid; 
+    border-color:lightblue;
+    border-bottom-right-radius:10px;
+}
+td.network {
+    width:50px;
+}
+
+td.CreditNote {
+    border:1px solid;
+}
+
+tr.CreditNote {
+    border-bottom:1px solid;
+    font-size:12px;
+}
+tr.CreditNoteLine {
+    border-bottom:None;
+    font-size:8px;
+}
+td.CreditNoteCellHead {
+    border-bottom:1px solid;
+    text-align:center;
+}
+
+td.PrintLabel {
+    font-size:18px;
+    /*border:1px solid;*/
+    width:580px;
+    height:219px;
+    /*width:640px;
+    height:240px;*/
+}
+
+table.PrintLable{
+    position:absolute;
+    top:60px;
+    left:40px;
 }

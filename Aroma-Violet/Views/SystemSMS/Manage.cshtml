@@ -16,9 +16,14 @@
 
 <h1>SMS</h1>
 
-@using (Html.BeginForm())
+@for (int i = 0; i < templates.Length; i++)
 {
-    
+<div id="templateTest-@i" hidden>@templates[i]</div>
+}
+
+@using (Html.BeginForm(null,null,FormMethod.Post,new { id="MainSMSForm"}))
+{
+
     <div class="holder" id="SelectedClientTypeData"></div>
     <div class="holder" id="SelectedCountryData"></div>
     <div class="holder" id="SelectedProvinceData"></div>
@@ -93,6 +98,7 @@
         <td id="SMSLenthDisplay">
             0
         </td>
+        
     </tr>
     <tr>
     <td colspan="4">
@@ -115,7 +121,8 @@
         </tr>
     <tr>
         <td>
-            
+            @if (Model.ClientTypes != null)
+            {
             <div class="holder" id="RowClientTypes" >
                 @for (int i = 0; i < Model.ClientTypes.Count; i++)
                 {
@@ -125,10 +132,10 @@
                         <input type="checkbox" id="@muKey" class='checks' value="@Model.ClientTypes[i].Id" onclick="PersistChecks('SelectedClientTypeData', 'RowClientTypes', '4')" />@Model.ClientTypes[i].Description
                     </div>
                 }
-</div>
-
+            </div>
+            }
 </td>
-        <td>
+        <td colspan="2">
             <textarea name="SMSText" id="SMSText" rows="2" cols="20" onkeyup="GetSMSLength('SMSText')" ></textarea>
         </td>
         <td>
@@ -146,8 +153,9 @@
            
         </td>
         <td>
+            <input type="submit" class="btn btn-default" value="@sendText" />
+            <a href="#" class="btn btn-default" style="visibility:hidden" onclick="GetTemplate()" id="Customize">Customize</a>
             
-            <input type="submit" class="btn btn-default" value="@sendText"/>
         </td>
     </tr>
     <tr>
@@ -196,6 +204,19 @@
 
 <script type="text/javascript">
 
+    function GetTemplate()
+    {
+        var i = document.getElementById("SystemSMSTemplateID").selectedIndex;
+        var text = document.getElementById('templateTest-' + i.toString()).innerText;
+        var textBox = document.getElementById("SMSText");
+        var custom = document.getElementById("Customize");
+        document.getElementById("SystemSMSTemplateID").selectedIndex = 0;
+        textBox.style.visibility = 'visible';
+        custom.style.visibility = 'hidden';
+        textBox.textContent = text;
+        div.innerText = textBox.textContent;
+    }
+
     function GetSMSLength(controlId)
     {
 
@@ -214,13 +235,17 @@
     function CheckList(daList)
     {
         var textBox = document.getElementById("SMSText");
+        var custom = document.getElementById("Customize");
         var div = document.getElementById("template-" + daList.value);
         if (daList.value == 0) {
             textBox.style.visibility = 'visible';
+            custom.style.visibility = 'hidden';
             div.innerText = textBox.textContent;
                     }
         else {
             textBox.style.visibility = 'hidden';
+            custom.style.visibility = 'visible';
+
         }
         
         DisplaySMSLenth(div.innerText.length);
@@ -228,6 +253,10 @@
 
     function PersistChecks(holderKey,tdKey, type)
     {
+        //alert(holderKey);
+        //alert(tdKey);
+        //alert(type);
+
         variables = ["selectedCountries", "selectedProvinces", "selectedAreas", "selectedCodes","selectedClientTypes"];
         id = 0;
         innerHtml = "";
@@ -238,6 +267,8 @@
             for (c = 0; c < checkboxes.length; c++) {
                 if (checkboxes[c].checked == true)
                 {
+                    //alert(type);
+                    //alert(checkboxes[c].value);
                     var elementHtml = "<input name=\"" + variables[type] + "[" + id + "]\" class=\"text-box single-line\" id=\"" + variables[type] + "_" + id + "_\" type=\"number\" hidden value=\"" + checkboxes[c].value + "\" data-val=\"true\">";
                     //elementHtml = "Test";
                     innerHtml = innerHtml + elementHtml;
@@ -262,6 +293,7 @@
             }
         }
     }
+
 
     function DisplayPreview( clientId)
     {

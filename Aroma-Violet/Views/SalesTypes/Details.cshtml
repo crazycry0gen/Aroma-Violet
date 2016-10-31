@@ -1,0 +1,42 @@
+﻿@model Aroma_Violet.Models.SalesType
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Sales Type</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.SourceAccount.AccountName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SourceAccount.AccountName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SalesTypeDescription)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SalesTypeDescription)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Active)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Active)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.SalesTypeId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

@@ -130,5 +130,36 @@ namespace Aroma_Violet.Controllers
             }
             base.Dispose(disposing);
         }
+
+        internal static Guid Create(Guid accountId, int clientId, AromaContext db)
+        {
+            var clientAccount = (from item in db.ClientAccounts
+                                 where item.AccountId.Equals(accountId)
+                                 && item.ClientID == clientId
+                                 select item).FirstOrDefault();
+            if (clientAccount == null)
+            {
+                var account = (from item in db.Accounts
+                               where item.AccountId.Equals(accountId)
+                               select item).FirstOrDefault();
+                if (account == null)
+                {
+                    throw new Exception("Cannot create client account");
+                }
+
+                if (account.IsSystemAccount) return account.AccountId;
+
+                clientAccount = new finClientAccount()
+                {
+                    AccountId = account.AccountId,
+                    Active = true,
+                    ClientID = clientId,
+                    ClientAccountId = Guid.NewGuid()
+                };
+                db.ClientAccounts.Add(clientAccount);
+                db.SaveChanges();
+            }
+            return clientAccount.ClientAccountId;
+        }
     }
 }

@@ -18,7 +18,7 @@ namespace Aroma_Violet.Controllers
         // GET: Branches
         public async Task<ActionResult> Index()
         {
-            return View(await db.Branches.ToListAsync());
+            return View(await db.Branches.OrderBy(m => m.BranchName).ToListAsync());
         }
 
         // GET: Branches/Details/5

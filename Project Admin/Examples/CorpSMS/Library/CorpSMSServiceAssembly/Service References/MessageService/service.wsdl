@@ -1,0 +1,308 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="http://tempuri.org/" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="MessageService" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://tempuri.org/Imports">
+      <xsd:import namespace="http://tempuri.org/" />
+      <xsd:import namespace="http://schemas.datacontract.org/2004/07/StratCorp.CorpSMS.ServiceLibrary" />
+      <xsd:import namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import namespace="http://schemas.datacontract.org/2004/07/StratCorp.CorpSMS.ServiceLibrary.DataContracts" />
+      <xsd:import namespace="http://schemas.datacontract.org/2004/07/System" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="IMessageService_SendSingleSMS_InputMessage">
+    <wsdl:part name="parameters" element="tns:SendSingleSMS" />
+  </wsdl:message>
+  <wsdl:message name="IMessageService_SendSingleSMS_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SendSingleSMSResponse" />
+  </wsdl:message>
+  <wsdl:message name="IMessageService_SendSingleSMS_ServiceCallFaultFault_FaultMessage">
+    <wsdl:part xmlns:q1="http://schemas.datacontract.org/2004/07/StratCorp.CorpSMS.ServiceLibrary" name="detail" element="q1:ServiceCallFault" />
+  </wsdl:message>
+  <wsdl:message name="IMessageService_SendSMS_InputMessage">
+    <wsdl:part name="parameters" element="tns:SendSMS" />
+  </wsdl:message>
+  <wsdl:message name="IMessageService_SendSMS_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SendSMSResponse" />
+  </wsdl:message>
+  <wsdl:message name="IMessageService_SendSMS_ServiceCallFaultFault_FaultMessage">
+    <wsdl:part xmlns:q2="http://schemas.datacontract.org/2004/07/StratCorp.CorpSMS.ServiceLibrary" name="detail" element="q2:ServiceCallFault" />
+  </wsdl:message>
+  <wsdl:message name="IMessageService_SendQueuedMessages_InputMessage">
+    <wsdl:part name="parameters" element="tns:SendQueuedMessages" />
+  </wsdl:message>
+  <wsdl:message name="IMessageService_SendQueuedMessages_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SendQueuedMessagesResponse" />
+  </wsdl:message>
+  <wsdl:message name="IMessageService_SendQueuedMessages_ServiceCallFaultFault_FaultMessage">
+    <wsdl:part xmlns:q3="http://schemas.datacontract.org/2004/07/StratCorp.CorpSMS.ServiceLibrary" name="detail" element="q3:ServiceCallFault" />
+  </wsdl:message>
+  <wsdl:message name="IMessageService_SendAllQueuedMessages_InputMessage">
+    <wsdl:part name="parameters" element="tns:SendAllQueuedMessages" />
+  </wsdl:message>
+  <wsdl:message name="IMessageService_SendAllQueuedMessages_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SendAllQueuedMessagesResponse" />
+  </wsdl:message>
+  <wsdl:message name="IMessageService_SendAllQueuedMessages_ServiceCallFaultFault_FaultMessage">
+    <wsdl:part xmlns:q4="http://schemas.datacontract.org/2004/07/StratCorp.CorpSMS.ServiceLibrary" name="detail" element="q4:ServiceCallFault" />
+  </wsdl:message>
+  <wsdl:message name="IMessageService_RefreshDeliveryReport_InputMessage">
+    <wsdl:part name="parameters" element="tns:RefreshDeliveryReport" />
+  </wsdl:message>
+  <wsdl:message name="IMessageService_RefreshDeliveryReport_OutputMessage">
+    <wsdl:part name="parameters" element="tns:RefreshDeliveryReportResponse" />
+  </wsdl:message>
+  <wsdl:message name="IMessageService_RefreshDeliveryReport_ServiceCallFaultFault_FaultMessage">
+    <wsdl:part xmlns:q5="http://schemas.datacontract.org/2004/07/StratCorp.CorpSMS.ServiceLibrary" name="detail" element="q5:ServiceCallFault" />
+  </wsdl:message>
+  <wsdl:message name="IMessageService_RefreshCredits_InputMessage">
+    <wsdl:part name="parameters" element="tns:RefreshCredits" />
+  </wsdl:message>
+  <wsdl:message name="IMessageService_RefreshCredits_OutputMessage">
+    <wsdl:part name="parameters" element="tns:RefreshCreditsResponse" />
+  </wsdl:message>
+  <wsdl:message name="IMessageService_RefreshCredits_ServiceCallFaultFault_FaultMessage">
+    <wsdl:part xmlns:q6="http://schemas.datacontract.org/2004/07/StratCorp.CorpSMS.ServiceLibrary" name="detail" element="q6:ServiceCallFault" />
+  </wsdl:message>
+  <wsdl:message name="IMessageService_RefreshReplies_InputMessage">
+    <wsdl:part name="parameters" element="tns:RefreshReplies" />
+  </wsdl:message>
+  <wsdl:message name="IMessageService_RefreshReplies_OutputMessage">
+    <wsdl:part name="parameters" element="tns:RefreshRepliesResponse" />
+  </wsdl:message>
+  <wsdl:message name="IMessageService_RefreshReplies_ServiceCallFaultFault_FaultMessage">
+    <wsdl:part xmlns:q7="http://schemas.datacontract.org/2004/07/StratCorp.CorpSMS.ServiceLibrary" name="detail" element="q7:ServiceCallFault" />
+  </wsdl:message>
+  <wsdl:message name="IMessageService_RefreshShortCodes_InputMessage">
+    <wsdl:part name="parameters" element="tns:RefreshShortCodes" />
+  </wsdl:message>
+  <wsdl:message name="IMessageService_RefreshShortCodes_OutputMessage">
+    <wsdl:part name="parameters" element="tns:RefreshShortCodesResponse" />
+  </wsdl:message>
+  <wsdl:message name="IMessageService_RefreshShortCodes_ServiceCallFaultFault_FaultMessage">
+    <wsdl:part xmlns:q8="http://schemas.datacontract.org/2004/07/StratCorp.CorpSMS.ServiceLibrary" name="detail" element="q8:ServiceCallFault" />
+  </wsdl:message>
+  <wsdl:message name="IMessageService_GetDeliveryReports_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetDeliveryReports" />
+  </wsdl:message>
+  <wsdl:message name="IMessageService_GetDeliveryReports_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetDeliveryReportsResponse" />
+  </wsdl:message>
+  <wsdl:message name="IMessageService_GetDeliveryReports_ServiceCallFaultFault_FaultMessage">
+    <wsdl:part xmlns:q9="http://schemas.datacontract.org/2004/07/StratCorp.CorpSMS.ServiceLibrary" name="detail" element="q9:ServiceCallFault" />
+  </wsdl:message>
+  <wsdl:message name="IMessageService_GetDeliveryReportByOriginId_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetDeliveryReportByOriginId" />
+  </wsdl:message>
+  <wsdl:message name="IMessageService_GetDeliveryReportByOriginId_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetDeliveryReportByOriginIdResponse" />
+  </wsdl:message>
+  <wsdl:message name="IMessageService_GetDeliveryReportByOriginId_ServiceCallFaultFault_FaultMessage">
+    <wsdl:part xmlns:q10="http://schemas.datacontract.org/2004/07/StratCorp.CorpSMS.ServiceLibrary" name="detail" element="q10:ServiceCallFault" />
+  </wsdl:message>
+  <wsdl:message name="IMessageService_GetShortCodeMessages_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetShortCodeMessages" />
+  </wsdl:message>
+  <wsdl:message name="IMessageService_GetShortCodeMessages_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetShortCodeMessagesResponse" />
+  </wsdl:message>
+  <wsdl:message name="IMessageService_GetShortCodeMessages_ServiceCallFaultFault_FaultMessage">
+    <wsdl:part xmlns:q11="http://schemas.datacontract.org/2004/07/StratCorp.CorpSMS.ServiceLibrary" name="detail" element="q11:ServiceCallFault" />
+  </wsdl:message>
+  <wsdl:portType name="IMessageService">
+    <wsdl:operation name="SendSingleSMS">
+      <wsdl:input wsaw:Action="http://tempuri.org/IMessageService/SendSingleSMS" message="tns:IMessageService_SendSingleSMS_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IMessageService/SendSingleSMSResponse" message="tns:IMessageService_SendSingleSMS_OutputMessage" />
+      <wsdl:fault wsaw:Action="http://tempuri.org/IMessageService/SendSingleSMSServiceCallFaultFault" name="ServiceCallFaultFault" message="tns:IMessageService_SendSingleSMS_ServiceCallFaultFault_FaultMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SendSMS">
+      <wsdl:input wsaw:Action="http://tempuri.org/IMessageService/SendSMS" message="tns:IMessageService_SendSMS_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IMessageService/SendSMSResponse" message="tns:IMessageService_SendSMS_OutputMessage" />
+      <wsdl:fault wsaw:Action="http://tempuri.org/IMessageService/SendSMSServiceCallFaultFault" name="ServiceCallFaultFault" message="tns:IMessageService_SendSMS_ServiceCallFaultFault_FaultMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SendQueuedMessages">
+      <wsdl:input wsaw:Action="http://tempuri.org/IMessageService/SendQueuedMessages" message="tns:IMessageService_SendQueuedMessages_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IMessageService/SendQueuedMessagesResponse" message="tns:IMessageService_SendQueuedMessages_OutputMessage" />
+      <wsdl:fault wsaw:Action="http://tempuri.org/IMessageService/SendQueuedMessagesServiceCallFaultFault" name="ServiceCallFaultFault" message="tns:IMessageService_SendQueuedMessages_ServiceCallFaultFault_FaultMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SendAllQueuedMessages">
+      <wsdl:input wsaw:Action="http://tempuri.org/IMessageService/SendAllQueuedMessages" message="tns:IMessageService_SendAllQueuedMessages_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IMessageService/SendAllQueuedMessagesResponse" message="tns:IMessageService_SendAllQueuedMessages_OutputMessage" />
+      <wsdl:fault wsaw:Action="http://tempuri.org/IMessageService/SendAllQueuedMessagesServiceCallFaultFault" name="ServiceCallFaultFault" message="tns:IMessageService_SendAllQueuedMessages_ServiceCallFaultFault_FaultMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="RefreshDeliveryReport">
+      <wsdl:input wsaw:Action="http://tempuri.org/IMessageService/RefreshDeliveryReport" message="tns:IMessageService_RefreshDeliveryReport_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IMessageService/RefreshDeliveryReportResponse" message="tns:IMessageService_RefreshDeliveryReport_OutputMessage" />
+      <wsdl:fault wsaw:Action="http://tempuri.org/IMessageService/RefreshDeliveryReportServiceCallFaultFault" name="ServiceCallFaultFault" message="tns:IMessageService_RefreshDeliveryReport_ServiceCallFaultFault_FaultMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="RefreshCredits">
+      <wsdl:input wsaw:Action="http://tempuri.org/IMessageService/RefreshCredits" message="tns:IMessageService_RefreshCredits_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IMessageService/RefreshCreditsResponse" message="tns:IMessageService_RefreshCredits_OutputMessage" />
+      <wsdl:fault wsaw:Action="http://tempuri.org/IMessageService/RefreshCreditsServiceCallFaultFault" name="ServiceCallFaultFault" message="tns:IMessageService_RefreshCredits_ServiceCallFaultFault_FaultMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="RefreshReplies">
+      <wsdl:input wsaw:Action="http://tempuri.org/IMessageService/RefreshReplies" message="tns:IMessageService_RefreshReplies_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IMessageService/RefreshRepliesResponse" message="tns:IMessageService_RefreshReplies_OutputMessage" />
+      <wsdl:fault wsaw:Action="http://tempuri.org/IMessageService/RefreshRepliesServiceCallFaultFault" name="ServiceCallFaultFault" message="tns:IMessageService_RefreshReplies_ServiceCallFaultFault_FaultMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="RefreshShortCodes">
+      <wsdl:input wsaw:Action="http://tempuri.org/IMessageService/RefreshShortCodes" message="tns:IMessageService_RefreshShortCodes_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IMessageService/RefreshShortCodesResponse" message="tns:IMessageService_RefreshShortCodes_OutputMessage" />
+      <wsdl:fault wsaw:Action="http://tempuri.org/IMessageService/RefreshShortCodesServiceCallFaultFault" name="ServiceCallFaultFault" message="tns:IMessageService_RefreshShortCodes_ServiceCallFaultFault_FaultMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDeliveryReports">
+      <wsdl:input wsaw:Action="http://tempuri.org/IMessageService/GetDeliveryReports" message="tns:IMessageService_GetDeliveryReports_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IMessageService/GetDeliveryReportsResponse" message="tns:IMessageService_GetDeliveryReports_OutputMessage" />
+      <wsdl:fault wsaw:Action="http://tempuri.org/IMessageService/GetDeliveryReportsServiceCallFaultFault" name="ServiceCallFaultFault" message="tns:IMessageService_GetDeliveryReports_ServiceCallFaultFault_FaultMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDeliveryReportByOriginId">
+      <wsdl:input wsaw:Action="http://tempuri.org/IMessageService/GetDeliveryReportByOriginId" message="tns:IMessageService_GetDeliveryReportByOriginId_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IMessageService/GetDeliveryReportByOriginIdResponse" message="tns:IMessageService_GetDeliveryReportByOriginId_OutputMessage" />
+      <wsdl:fault wsaw:Action="http://tempuri.org/IMessageService/GetDeliveryReportByOriginIdServiceCallFaultFault" name="ServiceCallFaultFault" message="tns:IMessageService_GetDeliveryReportByOriginId_ServiceCallFaultFault_FaultMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetShortCodeMessages">
+      <wsdl:input wsaw:Action="http://tempuri.org/IMessageService/GetShortCodeMessages" message="tns:IMessageService_GetShortCodeMessages_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IMessageService/GetShortCodeMessagesResponse" message="tns:IMessageService_GetShortCodeMessages_OutputMessage" />
+      <wsdl:fault wsaw:Action="http://tempuri.org/IMessageService/GetShortCodeMessagesServiceCallFaultFault" name="ServiceCallFaultFault" message="tns:IMessageService_GetShortCodeMessages_ServiceCallFaultFault_FaultMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="BasicHttpBinding_IMessageService" type="tns:IMessageService">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="SendSingleSMS">
+      <soap:operation soapAction="http://tempuri.org/IMessageService/SendSingleSMS" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="ServiceCallFaultFault">
+        <soap:fault use="literal" name="ServiceCallFaultFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="SendSMS">
+      <soap:operation soapAction="http://tempuri.org/IMessageService/SendSMS" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="ServiceCallFaultFault">
+        <soap:fault use="literal" name="ServiceCallFaultFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="SendQueuedMessages">
+      <soap:operation soapAction="http://tempuri.org/IMessageService/SendQueuedMessages" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="ServiceCallFaultFault">
+        <soap:fault use="literal" name="ServiceCallFaultFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="SendAllQueuedMessages">
+      <soap:operation soapAction="http://tempuri.org/IMessageService/SendAllQueuedMessages" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="ServiceCallFaultFault">
+        <soap:fault use="literal" name="ServiceCallFaultFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="RefreshDeliveryReport">
+      <soap:operation soapAction="http://tempuri.org/IMessageService/RefreshDeliveryReport" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="ServiceCallFaultFault">
+        <soap:fault use="literal" name="ServiceCallFaultFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="RefreshCredits">
+      <soap:operation soapAction="http://tempuri.org/IMessageService/RefreshCredits" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="ServiceCallFaultFault">
+        <soap:fault use="literal" name="ServiceCallFaultFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="RefreshReplies">
+      <soap:operation soapAction="http://tempuri.org/IMessageService/RefreshReplies" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="ServiceCallFaultFault">
+        <soap:fault use="literal" name="ServiceCallFaultFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="RefreshShortCodes">
+      <soap:operation soapAction="http://tempuri.org/IMessageService/RefreshShortCodes" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="ServiceCallFaultFault">
+        <soap:fault use="literal" name="ServiceCallFaultFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="GetDeliveryReports">
+      <soap:operation soapAction="http://tempuri.org/IMessageService/GetDeliveryReports" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="ServiceCallFaultFault">
+        <soap:fault use="literal" name="ServiceCallFaultFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="GetDeliveryReportByOriginId">
+      <soap:operation soapAction="http://tempuri.org/IMessageService/GetDeliveryReportByOriginId" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="ServiceCallFaultFault">
+        <soap:fault use="literal" name="ServiceCallFaultFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="GetShortCodeMessages">
+      <soap:operation soapAction="http://tempuri.org/IMessageService/GetShortCodeMessages" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="ServiceCallFaultFault">
+        <soap:fault use="literal" name="ServiceCallFaultFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="MessageService">
+    <wsdl:port name="BasicHttpBinding_IMessageService" binding="tns:BasicHttpBinding_IMessageService">
+      <soap:address location="http://localhost:8732/StratCorp.CorpSMS.ServiceLibrary/SMSService/" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

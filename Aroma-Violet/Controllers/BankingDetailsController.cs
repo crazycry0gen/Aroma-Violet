@@ -57,7 +57,7 @@ namespace Aroma_Violet.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "BankingDetailId,ClientID,AccountHolderID,AccountHolderOtherDetail,Initials,Surname,EmailContactID,WorkContactID,HomeContactID,CellContactID,AccountTypeID,CommencementDate,AccountNumber,BankID,BranchID,SalaryDate,Active")] BankingDetail bankingDetail)
+        public async Task<ActionResult> Create([Bind(Include = "BankingDetailId,ClientID,AccountHolderID,AccountHolderOtherDetail,Initials,Surname,EmailContactID,WorkContactID,HomeContactID,CellContactID,AccountTypeID,CommencementDate,AccountNumber,BankID,BranchID,SalaryDate,Interval,Active")] BankingDetail bankingDetail)
         {
             if (ModelState.IsValid)
             {
@@ -72,6 +72,66 @@ namespace Aroma_Violet.Controllers
             ViewBag.BranchID = new SelectList(db.Branches, "BranchId", "BranchName", bankingDetail.BranchID);
             ViewBag.ClientID = new SelectList(db.Clients, "ClientId", "ClientInitials", bankingDetail.ClientID);
             return View(bankingDetail);
+        }
+
+
+        public static void CreateClientBankingDetails(AromaContext db,int clientId, string initials, string surname, int cellContactId, int homeContactId, int workContactId, int emailContactId)
+        {
+            const string accountHolderText = "Self";
+            const string accountTypeText = "Cheque";
+            const string BankText = "ABSA";
+
+            var accountHolder = db.AccountHolders.FirstOrDefault(m => m.AccountHolderName == accountHolderText);
+            if (accountHolder == null)
+            {
+                string errorMessage = string.Format("Account holder \"{0}\" not defined in lookup", accountHolderText);
+                throw new Exception(errorMessage);
+            }
+            var accountType = db.AccountTypes.FirstOrDefault(m => m.AccountTypeName == accountTypeText);
+            if (accountType == null)
+            {
+                string errorMessage = string.Format("Account type \"{0}\" not defined in lookup", accountTypeText);
+                throw new Exception(errorMessage);
+            }
+            var bank = db.Banks.FirstOrDefault(m => m.BankName == BankText);
+            if (bank == null)
+            {
+                string errorMessage = string.Format("Bank name \"{0}\" not defined in lookup", BankText);
+                throw new Exception(errorMessage);
+            }
+
+            var branch = db.Branches.FirstOrDefault(m => m.BankId == bank.BankId);
+            if (branch == null)
+            {
+                string errorMessage = string.Format("No branch defined for \"{0}\" not defined in lookup", BankText);
+                throw new Exception(errorMessage);
+            }
+
+            if (db.BankingDetails.Where(m => m.ClientID == clientId).Count() == 0)
+            {
+                var bankingDetail = new BankingDetail()
+                {
+                    Initials = initials,
+                    Surname = surname,
+                    AccountHolderID = accountHolder.AccountHolderId,
+                    AccountTypeID = accountType.AccountTypeId,
+                    BankID = bank.BankId,
+                    ClientID = clientId,
+                    CommencementDate = DateTime.Now.AddMonths(1),
+                    SalaryDate = DateTime.Now,
+                    AccountNumber = "0",
+                    BranchID = branch.BranchId,
+                    CellContact = db.Contacts.First(m => m.ContactId == cellContactId).ContactName,
+                    HomeContact = db.Contacts.First(m => m.ContactId == homeContactId).ContactName,
+                    WorkContact = db.Contacts.First(m => m.ContactId == workContactId).ContactName,
+                    EmailContact = db.Contacts.First(m => m.ContactId == emailContactId).ContactName,
+                     Interval=1,
+                    Active = false
+                };
+
+                db.BankingDetails.Add(bankingDetail);
+                db.SaveChanges();
+            }
         }
 
         // GET: BankingDetails/Edit/5
@@ -105,7 +165,7 @@ namespace Aroma_Violet.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "BankingDetailId,ClientID,AccountHolderID,AccountHolderOtherDetail,Initials,Surname,EmailContact,WorkContact,HomeContact,CellContact,AccountTypeID,CommencementDate,AccountNumber,BankID,BranchID,SalaryDate,Active")] BankingDetail bankingDetail)
+        public async Task<ActionResult> Edit([Bind(Include = "BankingDetailId,ClientID,AccountHolderID,AccountHolderOtherDetail,Initials,Surname,EmailContact,WorkContact,HomeContact,CellContact,AccountTypeID,CommencementDate,AccountNumber,BankID,BranchID,SalaryDate,Interval,Active")] BankingDetail bankingDetail)
         {
             if (ModelState.IsValid)
             {

@@ -18,7 +18,7 @@ namespace Aroma_Violet.Controllers
         // GET: ShippingTypes
         public async Task<ActionResult> Index()
         {
-            return View(await db.ShippingTypes.ToListAsync());
+            return View(await db.ShippingTypes.OrderBy(m => m.ShippingTypeName).ToListAsync());
         }
 
         // GET: ShippingTypes/Details/5
@@ -47,7 +47,7 @@ namespace Aroma_Violet.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "ShippingTypeId,ShippingTypeName")] ShippingType shippingType)
+        public async Task<ActionResult> Create([Bind(Include = "ShippingTypeId,ShippingTypeName,PickingList,ShippingList,Active")] ShippingType shippingType)
         {
             if (ModelState.IsValid)
             {
@@ -79,7 +79,7 @@ namespace Aroma_Violet.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "ShippingTypeId,ShippingTypeName")] ShippingType shippingType)
+        public async Task<ActionResult> Edit([Bind(Include = "ShippingTypeId,ShippingTypeName,PickingList,ShippingList,Active")] ShippingType shippingType)
         {
             if (ModelState.IsValid)
             {

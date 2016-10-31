@@ -1,0 +1,83 @@
+﻿@model IEnumerable<Aroma_Violet.Models.ClientSubscription>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.ClientID)
+        </th>
+        <th colspan="3">
+            @Html.DisplayNameFor(model => model.Product.ProductName)
+        </th>
+       
+        <th>
+            @Html.DisplayNameFor(model => model.Quantity)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Active)
+        </th>
+        <th>
+            Banking @Html.DisplayNameFor(m => m.Client.BankingDetails.First().Active)
+        </th>
+        <th>
+            @Html.DisplayNameFor(m => m.Client.BankingDetails.First().NextDOMonth)
+        </th>
+        <th>
+            @Html.DisplayNameFor(m => m.Client.BankingDetails.First().CommencementDate.Day)
+        </th>
+        <th colspan="2">
+            @Html.DisplayNameFor(m => m.Client.BankingDetails.First().CommencementDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(m => m.Client.BankingDetails.First().Interval)
+        </th>
+        <th colspan="2"></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.ClientID)
+        </td>
+        <td colspan="3">
+            @Html.DisplayFor(modelItem => item.Product.ProductName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Quantity)
+        </td>
+         <td>
+            @Html.DisplayFor(modelItem => item.Active)
+        </td>
+        <td>
+            @Html.DisplayFor(m => item.Client.BankingDetails.First().Active)
+        </td>
+        <td>
+            @Html.DisplayFor(m => item.Client.BankingDetails.First().NextDOMonth)
+        </td>
+        <td>
+            @Html.DisplayFor(m => item.Client.BankingDetails.First().CommencementDate.Day)
+        </td>
+        <td colspan="2">
+            @Html.DisplayFor(m => item.Client.BankingDetails.First().CommencementDate)
+        </td>
+        <td>
+            @Html.DisplayFor(m => item.Client.BankingDetails.First().Interval)
+        </td>
+
+        <td colspan="2">
+            @Html.ActionLink("Edit", "Edit", new { id=item.ClientSubscriptionId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ClientSubscriptionId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ClientSubscriptionId })
+        </td>
+    </tr>
+}
+
+</table>

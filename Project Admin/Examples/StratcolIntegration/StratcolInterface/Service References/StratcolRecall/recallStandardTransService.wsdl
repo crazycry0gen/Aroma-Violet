@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="https://live.stratcol.co.za/dynamic/administration/serv_manager/sysIntegratorRecall.wsdl" name="recallStandardTransService" targetNamespace="https://live.stratcol.co.za/dynamic/administration/serv_manager/sysIntegratorRecall.wsdl" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="https://live.stratcol.co.za/dynamic/administration/serv_manager/sysIntegratorRecall.wsdl">
+      <xsd:element name="authenticateClient">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="key" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="mode" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="recallTrans">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="file_code" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="received_trans" type="xsd:int" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="received_total" type="xsd:double" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="returnResult">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="message" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="file_code" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="authenticateClient">
+    <wsdl:part name="authenticateClient" element="tns:authenticateClient" />
+  </wsdl:message>
+  <wsdl:message name="recallStandardTransRequest">
+    <wsdl:part name="params" element="tns:recallTrans" />
+  </wsdl:message>
+  <wsdl:message name="recallStandardTransResponse">
+    <wsdl:part name="result" element="tns:returnResult" />
+  </wsdl:message>
+  <wsdl:portType name="recallStandardTransPortType">
+    <wsdl:operation name="recallStandardTrans">
+      <wsdl:input message="tns:recallStandardTransRequest" />
+      <wsdl:output message="tns:recallStandardTransResponse" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="recallStandardTransBinding" type="tns:recallStandardTransPortType">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="recallStandardTrans">
+      <soap:operation soapAction="recallStandardTrans" />
+      <wsdl:input>
+        <soap:body use="literal" namespace="urn:live.stratcol.co.za:recallStandardTransService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+        <soap:header message="tns:authenticateClient" part="authenticateClient" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" namespace="urn:live.stratcol.co.za:recallStandardTransService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="recallStandardTransService">
+    <wsdl:port name="recallStandardTransServicePort" binding="tns:recallStandardTransBinding">
+      <soap:address location="https://live.stratcol.co.za/dynamic/administration/serv_manager/sys_integrator_recall.php" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

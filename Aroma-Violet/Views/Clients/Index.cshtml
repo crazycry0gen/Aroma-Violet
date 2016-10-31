@@ -1,0 +1,149 @@
+﻿@model IEnumerable<Aroma_Violet.Models.Client>
+
+@{
+    ViewBag.Title = "Index";
+    int? myClientId = ViewBag.MyClientId;
+    var distribIds = new int[] {1,6 };
+}
+
+<h2>Index</h2>
+<table class="table" >
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        
+            <tr>
+                <td colspan="4">
+                    <input name="criteria" class="form-control text-box single-line" id="criteria" type="text" value="@ViewBag.Criteria" data-val="true">
+                </td>
+                <td>
+                    <input type="submit" value="Find" class="btn btn-default" />
+                </td>
+            </tr>
+
+    }
+
+    <tr>
+        <td colspan="3">
+            @Html.ActionLink("Create New", "Create")
+        </td>
+    </tr>
+   
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.ClientId)
+        </th>
+        <th colspan="2">
+            @Html.DisplayNameFor(model => model.Title.TitleName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ClientInitials)
+        </th>
+        <th colspan="2">
+            @Html.DisplayNameFor(model => model.ClientSurname)
+        </th>
+
+        <th colspan="2">
+            @Html.DisplayNameFor(model => model.NickName)
+        </th>
+        <th colspan="2">
+            @Html.DisplayNameFor(model => model.FullNames)
+        </th>
+        <th colspan="2">
+            @Html.DisplayNameFor(model => model.ClientType.ClientTypeName)
+        </th>
+        <th colspan="2">
+            @Html.DisplayNameFor(model => model.IDNumber)
+        </th>
+        <th>
+            Client Active
+        </th>
+        <th>
+            Banking Detail Active
+        </th>
+        <th colspan="4"></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ClientId)
+            </td>
+            <td colspan="2">
+                @Html.DisplayFor(modelItem => item.Title.TitleName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ClientInitials)
+            </td>
+            <td colspan="2">
+                @Html.DisplayFor(modelItem => item.ClientSurname)
+            </td>
+            <td colspan="2">
+                @Html.DisplayFor(modelItem => item.NickName)
+            </td>
+            <td colspan="2">
+                @Html.DisplayFor(modelItem => item.FullNames)
+            </td>
+            <td colspan="2">
+                @Html.DisplayFor(modelItem => item.ClientType.ClientTypeName)
+            </td>
+            <td colspan="2">
+                @Html.DisplayFor(modelItem => item.IDNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Active)
+            </td>
+            <td>
+                @{ 
+                    var BankingActive = (item.BankingDetails.Where(m => m.Active).Count() > 0);
+                    var checkedText = BankingActive ? "checked" : "";
+                }
+                <input type="checkbox" readonly @checkedText/>
+            </td>
+            <td colspan="4">
+                @if (User.IsInRole("User") || User.IsInRole("Administrator"))
+                {
+                   
+                  <div>
+                      @Html.ActionLink("Edit", "Edit", new { id = item.ClientId })|
+                      @Html.ActionLink("Details", "Details", new { id = item.ClientId })|
+                      @Html.ActionLink("Send SMS", "Manage", "SystemSMS", new { clientId = item.ClientId }, htmlAttributes: null)|
+                      @Html.ActionLink("Market", "Create", "OrderHeaders", new { clientId = item.ClientId }, htmlAttributes: null)|
+                      @Html.ActionLink("Create Ticket", "Create", "SupportTickets", new { clientId = item.ClientId }, htmlAttributes: null)|
+                        @Html.ActionLink("Downline Statement", "DownlineStatement", "Reporting", new { clientId = item.ClientId }, htmlAttributes: null)|
+                        @Html.ActionLink("Commission Statement", "CommissionStatement", "Reporting", new { specificClientId = item.ClientId }, htmlAttributes: null)
+                     
+                  </div>
+  
+                    
+                }
+                @if ((User.IsInRole("Area Distributor")|| User.IsInRole("Distributor")))
+                {
+                    if (item.ClientId == myClientId)
+                    {
+                        @Html.ActionLink("Create Order", "CreateOrder", "OrderHeaders", new { clientId = item.ClientId, salesTypeId = Aroma_Violet.Models.Generic.OwnOrderSalesTypeId }, htmlAttributes: null)<text>|</text>
+    }
+    else
+    {
+                        @Html.ActionLink("Create Sale", "CreateOrder", "OrderHeaders", new { clientId = item.ClientId, salesTypeId = Aroma_Violet.Models.Generic.DistributorSalesTypeId }, htmlAttributes: null)<text>|</text>
+    }
+                    <text>
+                    @Html.ActionLink("Downline Statement", "DownlineStatement", "Reporting", new { clientId = item.ClientId }, htmlAttributes: null)|
+                    @Html.ActionLink("Commission Statement", "CommissionStatement", "Reporting", new { specificClientId = item.ClientId }, htmlAttributes: null)
+                </text>
+                }
+                @*@if (User.IsInRole("Developer"))
+                {
+                    <div>
+                        | @Html.ActionLink("Delete", "Delete", new { id = item.ClientId })
+                    </div>
+
+                }*@
+
+            </td>
+        </tr>
+    }
+
+</table>
+

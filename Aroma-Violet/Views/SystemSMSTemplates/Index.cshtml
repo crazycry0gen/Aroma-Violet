@@ -16,11 +16,14 @@
 </p>
 <table class="table">
     <tr>
-        <th>
+        <th colspan="2">
             @Html.DisplayNameFor(model => model.Description)
         </th>
-        <th>
+        <th colspan="7">
             @Html.DisplayNameFor(model => model.Text)
+        </th>
+        <th>
+            Count
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Active)
@@ -30,11 +33,14 @@
 
 @foreach (var item in Model) {
     <tr>
-        <td>
+        <td colspan="2">
             @Html.DisplayFor(modelItem => item.Description)
         </td>
-        <td>
+        <td colspan="7">
             @Html.DisplayFor(modelItem => item.Text)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Text.Length)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Active)

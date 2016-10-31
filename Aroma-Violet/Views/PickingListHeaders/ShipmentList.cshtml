@@ -1,0 +1,164 @@
+﻿@model Aroma_Violet.Models.ShipmentViewModel
+@{
+    ViewBag.Title = "ShipmentList";
+    List<Guid> detailIds = new List<Guid>();
+    ViewBag.HideEdit = 1;
+}
+
+@using (Html.BeginForm())
+{
+
+<div id="Section1" >
+    <h2>Shipment List</h2>
+    <div class="form-group">
+        @*@Html.Label("Shipping Type:", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownList("ShippingTypeId", null, htmlAttributes: new { @class = "form-control" })
+        </div>*@
+        @Html.EditorFor(m=>m.Skip, new { htmlAttributes = new { @class = "form-control" } })
+        <a href="#" class="btn btn-default" onclick="SwitchToPrint()">Print Labels</a>
+        <input type="submit" value="Refresh" class="btn btn-default" />
+        
+        <table>
+            <tr>
+                <th>Client</th>
+                <th>Address</th>
+                <th>Tracking Nr</th>
+                <th>Save</th>
+                <th></th>
+            </tr>
+            @{ 
+
+                var detail = Model.Shipments.ToArray();
+            }
+            @for (int detailIndex = 0; detailIndex < Model.Shipments.Count(); detailIndex++)
+            {
+                int ti = 1;
+
+                var name = detail[detailIndex].groupId;
+                detailIds.Add(name);
+                <tr>
+                    <td class="pickingList">
+                        @Html.DisplayFor(modelItem => detail[detailIndex].ClientId)
+                    </td>
+                    <td class="pickingList">
+                        @Html.DisplayFor(modelItem => detail[detailIndex].Address)
+                    </td>
+                    <td class="pickingList">
+                        @Html.EditorFor(modelItem => detail[detailIndex].TrackingNumber, new { htmlAttributes = new { id = name, @class = "form-control", tabindex = ti.ToString()@*, onchange = "UpdateLabel(this, '" + detailIndex.ToString() + "')"*@ } })
+
+                    </td>
+                    <td class="pickingList">
+                        <a href="#" class="btn btn-default" onclick="UpdatePickingListDetail('@name')">Save</a>
+                    </td>
+                    <td>
+                        <div id="@name-res"></div>
+                    </td>
+                </tr>
+                ti++;
+            }
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><a href="#" class="btn btn-default" onclick="UpdateAllPickingListDetail()">Save All</a></td>
+                <td></td>
+            </tr>
+        </table>
+        
+    </div>
+</div>
+
+<div id="Section2" style="display:none" >
+    <table class="PrintLable">
+        @for (int detailIndex = 0; detailIndex < Model.Shipments.Count() + Model.Skip; detailIndex += 2)
+        {
+            var name = detailIndex >= Model.Skip ? detail[detailIndex- Model.Skip].groupId:Guid.Empty;
+
+            <tr>
+                <td class="PrintLabel">
+                    @if(detailIndex>= Model.Skip)
+                    {
+                    @Html.DisplayFor(m => detail[detailIndex- Model.Skip].ClientDescription)
+                    
+                    @Html.DisplayFor(m => detail[detailIndex- Model.Skip].Address)
+                    <div>@Html.DisplayFor(m => detail[detailIndex- Model.Skip].PhoneNumber)</div>
+                    @*<div id="Track-@detailIndex"></div>*@
+                    }
+                </td>
+                <td class="PrintLabel">
+
+                    @if (detailIndex- Model.Skip + 1 < Model.Shipments.Count && detailIndex + 1>= Model.Skip)
+                    {
+                        @Html.DisplayFor(m => detail[detailIndex - Model.Skip + 1].ClientDescription)
+                        
+                        @Html.DisplayFor(m => detail[detailIndex - Model.Skip + 1].Address)
+                        <div>@Html.DisplayFor(m => detail[detailIndex - Model.Skip + 1].PhoneNumber)</div>
+                        @*<div id="Track-@(detailIndex + 1)"></div>*@
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+                }
+<script type="text/javascript">
+
+    function SwitchToPrint()
+    {
+        SetVisible("Section1", false);
+        SetVisible("Section2", true);
+        SetVisible("Novus_Side_Logo", false);
+        SetVisible("main_footer", false);
+        window.print();
+        SetVisible("Section1", true);
+        SetVisible("Section2", false);
+        SetVisible("Novus_Side_Logo", true);
+        SetVisible("main_footer", true);
+         @foreach (var g in detailIds)
+        {
+            <text>
+        Printed('@g');
+            </text>
+        }
+    }
+
+    function UpdateLabel(textbox, index)
+    {
+        document.getElementById("Track-" + index).innerText = textbox.value;
+    }
+
+    function UpdateAllPickingListDetail()
+    {
+        @foreach (var g in detailIds)
+        {
+            <text>
+        UpdatePickingListDetail('@g');
+        </text>
+        }
+    }
+
+    function UpdatePickingListDetail(elementName)
+    {
+        var textBox = document.getElementById(elementName);
+        var clientData = {
+            groupId:elementName,
+            trackingNumber:textBox.value
+        };
+        var url ='@Url.Action("UpdatePickinglistDetail")'
+        callServerMethod(clientData, url, elementName + '-res');
+    }
+
+    function Printed(elementName) {
+        var id = '@Guid.NewGuid().ToString()';
+        var clientData = {
+            groupId: elementName,
+            batchId: id
+        };
+        var url = '@Url.Action("MarkAsPrinted")'
+        callServerMethod(clientData, url, elementName + '-res');
+    }
+
+</script>
+
+

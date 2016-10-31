@@ -1,0 +1,49 @@
+﻿@model IEnumerable<Aroma_Violet.Models.SalesType>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.SalesTypeDescription)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SourceAccount.AccountName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DefaultShippingType.ShippingTypeName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Active)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.SalesTypeDescription)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SourceAccount.AccountName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DefaultShippingType.ShippingTypeName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Active)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.SalesTypeId }) 
+        </td>
+    </tr>
+}
+
+</table>

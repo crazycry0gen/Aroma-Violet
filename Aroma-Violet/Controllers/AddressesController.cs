@@ -15,6 +15,20 @@ namespace Aroma_Violet.Controllers
     {
         private AromaContext db = new AromaContext();
 
+        public JsonResult CheckPostalCode(string code)
+        {
+            var codeEntry = db.PostalCodes.Where(m => m.PostalCodeName == code).FirstOrDefault();
+            if (codeEntry == null)
+            {
+                return Json( "Code not found" );
+            }
+            else
+            {
+                return Json(codeEntry.PostalArea.PostalAreaName );
+
+            }
+        }
+
         // GET: Addresses
         public async Task<ActionResult> Index()
         {

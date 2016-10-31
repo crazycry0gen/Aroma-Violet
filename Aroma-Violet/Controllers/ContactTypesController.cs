@@ -18,7 +18,7 @@ namespace Aroma_Violet.Controllers
         // GET: ContactTypes
         public async Task<ActionResult> Index()
         {
-            return View(await db.ContactTypes.ToListAsync());
+            return View(await db.ContactTypes.OrderBy(m => m.ContactTypeName).ToListAsync());
         }
 
         // GET: ContactTypes/Details/5

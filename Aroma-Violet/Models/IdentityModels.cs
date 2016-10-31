@@ -27,7 +27,9 @@ namespace Aroma_Violet.Models
 
         public static ApplicationDbContext Create()
         {
-            return new ApplicationDbContext();
+            var nc = new ApplicationDbContext();
+            var n = nc.Database.Connection.Database;
+            return nc;
         }
     }
 }

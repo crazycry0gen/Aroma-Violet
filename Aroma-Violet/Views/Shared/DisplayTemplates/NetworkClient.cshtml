@@ -1,0 +1,27 @@
+﻿@model Aroma_Violet.Models.NetworkClient
+    @{ 
+        bool isFirst = ViewBag.IsFirst;
+        ViewBag.IsFirst = false;
+    }
+    <table class="network">
+    <tr>
+        @if (isFirst)
+        {
+            <td class="network">
+                @Html.ActionLink("*" + Model.ClientId.ToString() + "*", "Details", "Clients", routeValues: new { id = Model.ClientId }, htmlAttributes: null)
+        </td>
+        }
+        else
+        {
+            <td class="network">@Html.ActionLink(Model.ClientId.ToString(), "Networkrelationship", "Reporting", routeValues: new { clientId = Model.ClientId }, htmlAttributes: null)</td>
+        }
+        <td>
+            @for (int i = 0; i < Model.DirectChildCount; i++)
+            {
+            <Text>
+                @Html.DisplayFor(m => Model.Children[i])
+            </Text>
+            }
+        </td>
+    </tr>
+</table>

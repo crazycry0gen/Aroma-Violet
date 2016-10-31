@@ -48,6 +48,18 @@
                     {
                         <li>@Html.ActionLink("User", "Index", "User")</li>
                     }
+                    @if (User.IsInRole("Finance"))
+                    {
+                        <li>@Html.ActionLink("Finance", "Index", "User",new {spec="Finance" },htmlAttributes:null)</li>
+                    }
+                    @if ((User.IsInRole("Area Distributor")))
+                    {
+                        <li>@Html.ActionLink("Area Distributor", "Index", "User", new { spec = "Area Distributor" }, htmlAttributes: null)</li>
+                    }
+                    @if ( User.IsInRole("Distributor"))
+                    {
+                        <li>@Html.ActionLink("Distributor", "Index", "User", new { spec = "Distributor" }, htmlAttributes: null)</li>
+                    }
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
                     @*<li>@Html.ActionLink("About", "About", "Home")</li>*@
                     <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
@@ -60,8 +72,7 @@
     <div class="container body-content">
         @Html.Partial("BusyWorking")
         @RenderBody()
-        <hr />
-        <footer>
+        <footer id="main_footer">
             <p>&copy; @DateTime.Now.Year - Novus@*<img src="~/Content/Images/Novus Logo.svg" class="logo-small"/>*@</p>
         </footer>
     </div>
@@ -106,7 +117,7 @@
 
         $.ajax({
             url: url,
-            type: 'POST',                
+            type: 'POST',
             contentType: 'application/json; charset=utf-8',
             data: data
         });
@@ -123,7 +134,16 @@
         }
 
     }
+    function TogleVisibleTBody(id) {
+        var element = document.getElementById(id);
+        if (element.style.display == 'table-header-group' || element.style.display == '') {
+            element.style.display = 'none';
+        }
+        else {
+            element.style.display = 'table-header-group';
+        }
 
+    }
     function SetVisible(id,bVal) {
         var element = document.getElementById(id);
         if (!bVal) {
@@ -143,18 +163,30 @@
     {
         data = JSON.stringify(clientData);
 
+        var ret = 'wtf';
+
         $.ajax({
             url: url,
             type: 'POST',
             contentType: 'application/json; charset=utf-8',
             data: data,
+            async:false,
             success: function (rdata) {
                 if (responceElement != '') {
                     var elementPreview = document.getElementById(responceElement);
                     elementPreview.innerHTML = rdata;
                 }
+                ret = rdata;
+            },
+            error: function () {
+                if (responceElement != '') {
+                    var elementPreview = document.getElementById(responceElement);
+                    elementPreview.innerHTML = 'Opperation failed';
+                }
+                ret = 'Failed';
             }
         });
+        return ret;
     }
 
     //$(function () { // will trigger when the document is ready
@@ -183,4 +215,14 @@
        //);
 
     //});
+    function FetchExtraInfo(JournalId)
+    {
+        var clientData = {
+            journalId:JournalId
+        }
+        var responceElement = "Extra-" + JournalId;
+
+        var url = '@Url.Action("GetJournalExtraInfo","AccountMovement")';
+        callServerMethod(clientData, url, responceElement);
+    }
 </script>

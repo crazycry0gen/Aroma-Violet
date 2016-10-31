@@ -1,0 +1,201 @@
+﻿@model Aroma_Violet.Models.RebateClientType
+
+@{
+    ViewBag.Title = "Edit";
+    var salesTables = Model.SalesTables.ToArray();
+    Aroma_Violet.Models.ClientType[] clientTypes = ViewBag.ClientTypes;
+}
+
+<h2>Edit</h2>
+<h3>Rebate Structure for "@Model.ClientType.ClientTypeName"</h3>
+
+@Html.EditorFor(m=>m.RebateLevelsTable)
+
+<div class="form-horizontal">
+    
+    <table>
+        <tr>
+    <td><h4>Cash Sales Upline</h4></td> <th>@Html.ActionLink("Add", "AddSalesTable", new { id = Model.RebateClientTypeId })</th>
+        </tr>
+        @for (int salesTableIndex = 0; salesTableIndex < Model.SalesTables.Count(); salesTableIndex++)
+        {
+            var ids = salesTables[salesTableIndex].RebateSalesTableClientTypes.Where(m=>m.Active).Select(m => m.ClientTypeId).ToArray();
+            <tr>
+                <th>Description</th>
+                <td>@Html.TextBoxFor(m => salesTables[salesTableIndex].Description, htmlAttributes: new { onchange = string.Format("EditSalesTable(0,this,{0})", salesTables[salesTableIndex].RebateSalesTableId), @class = "form-control" })</td>
+                <th>@Html.ActionLink("Delete", "DeleteSalesTable", new { id = salesTables[salesTableIndex].RebateSalesTableId })</th>
+                <th>Level Range</th>
+                <td>@Html.TextBoxFor(m => salesTables[salesTableIndex].LevelRange.StartLevel, htmlAttributes: new { onchange = string.Format("EditSalesTable(3,this,{0})", salesTables[salesTableIndex].RebateSalesTableId), @class = "form-control" })</td>
+                <td>@Html.TextBoxFor(m => salesTables[salesTableIndex].LevelRange.EndLevel, htmlAttributes: new { onchange = string.Format("EditSalesTable(4,this,{0})", salesTables[salesTableIndex].RebateSalesTableId), @class = "form-control" })</td>
+                
+            </tr>
+            <tr>
+                <th colspan="2">
+                    Minimum own purchase amount to qualify
+                </th>
+                <td>
+                    @Html.TextBoxFor(m => salesTables[salesTableIndex].MinOwnPurchToQualify, htmlAttributes: new { @class = "form-control", onchange = string.Format("EditSalesTable(5, this,{0})", salesTables[salesTableIndex].RebateSalesTableId) })
+                </td>
+            </tr>
+        <tr>
+            <th>From Account</th>
+            <td>@Html.DropDownList("FromAccountID", null, htmlAttributes: new { @class = "form-control", onchange = string.Format("EditSalesTable(1, this,{0})", salesTables[salesTableIndex].RebateSalesTableId), id = string.Format("FromAccountID{0}", salesTables[salesTableIndex].RebateSalesTableId) })</td>
+            <th></th>
+            <th>To Account</th>
+            <td>@Html.DropDownList("ToAccountID",null, htmlAttributes: new { @class = "form-control", onchange = string.Format("EditSalesTable(2, this,{0})", salesTables[salesTableIndex].RebateSalesTableId), id=string.Format("ToAccountID{0}", salesTables[salesTableIndex].RebateSalesTableId) })</td>
+        </tr>
+        <tr>
+            <td colspan="5">
+                <table>
+                    <tr>
+                        <th>Sales From</th>
+                        <th>Sales To</th>
+                        <th></th>
+                        <th>% Rebate</th>
+                        <th>@Html.ActionLink("Add", "AddSalesTableRange", new {id= salesTables[salesTableIndex].RebateSalesTableId })</th>
+                    </tr>
+                    @for (int i = 0; i < salesTables[salesTableIndex].RebateRanges.Count; i++)
+                    {
+                        var ranges = salesTables[salesTableIndex].RebateRanges.ToArray();
+                        <tr>
+                            <td>@Html.TextBoxFor(m => ranges[i].RangeStart, htmlAttributes: new { onchange = string.Format("EditSalesTableRange(0,this,{0},{1})", ranges[i].RebateRangeId, salesTables[salesTableIndex].RebateSalesTableId), @class = "form-control" })</td>
+                            <td>@Html.TextBoxFor(m => ranges[i].RangeEnd, htmlAttributes: new { onchange = string.Format("EditSalesTableRange(1,this,{0},{1})", ranges[i].RebateRangeId, salesTables[salesTableIndex].RebateSalesTableId), @class = "form-control" })</td>
+                            <td></td>
+                            <td>@Html.TextBoxFor(m => ranges[i].Rebate, htmlAttributes: new { onchange = string.Format("EditSalesTableRange(2,this,{0},{1})", ranges[i].RebateRangeId, salesTables[salesTableIndex].RebateSalesTableId), @class = "form-control" })</td>
+                            <td>@Html.ActionLink("Delete", "DeleteRebateRange", new { id = ranges[i].RebateRangeId })</td>
+                        </tr>
+                    }
+                </table>
+            </td>
+            <td>
+                <table>
+                    <tr>
+                        <th>Downline Client Type</th>
+                    </tr>
+                    @for (int c = 0; c < clientTypes.Length; c++)
+                    {
+
+                        string isChecked = (ids.Contains(clientTypes[c].ClientTypeId))?"checked":"";
+                        <tr>
+                            <td>
+                                <input type="checkbox" value="@clientTypes[c].ClientTypeId" @isChecked onchange="SpecifyClientType('@salesTables[salesTableIndex].RebateSalesTableId', '@clientTypes[c].ClientTypeId', this)" /> @clientTypes[c].ClientTypeName
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="5"><div id="ErrorMessage-@salesTables[salesTableIndex].RebateSalesTableId" class="text-danger"></div></td>
+        </tr>
+        }
+        </table>
+    
+    </div>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.RebateClientTypeId)
+        @Html.HiddenFor(model => model.ClientTypeID)
+
+        
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+
+<script type="text/javascript">
+
+    $.ready()
+    {
+        @for (int salesTableIndex = 0; salesTableIndex < Model.SalesTables.Count(); salesTableIndex++)
+        {
+            var key1 = string.Format("FromAccountID{0}", salesTables[salesTableIndex].RebateSalesTableId);
+            var key2 = string.Format("ToAccountID{0}", salesTables[salesTableIndex].RebateSalesTableId);
+
+    <text>
+        document.getElementById('@key1').value = '@salesTables[salesTableIndex].FromAccountId.ToString()';
+        document.getElementById('@key2').value = '@salesTables[salesTableIndex].ToAccountId.ToString()';
+
+    </text>
+            }
+        };
+
+    function AddSalesTableRange(id) {
+        var clientData = {
+            id: id
+        }
+
+        var responceElement = 'ErrorMessage-' + id;
+
+        var url = '@Url.Action("AddSalesTableRange", "RebateClientTypes")';
+
+        callServerMethod(clientData, url, responceElement)
+    }
+
+    function SpecifyClientType(salesTableId, clientTypeId, checkbox)
+    {
+        var clientData = {
+            salesTableId:salesTableId,
+            clientTypeId:clientTypeId,
+            add:checkbox.checked
+        }
+
+        var responceElement = 'ErrorMessage-' + salesTableId;
+
+        var url = '@Url.Action("SpecifyClientType", "RebateClientTypes")';
+
+        callServerMethod(clientData, url, responceElement)
+
+    }
+
+    function EditSalesTableRange(selection, control, rangeId, tableId) {
+        var clientData = {
+            selection: selection,
+            value: control.value,
+            rangeId: rangeId
+        }
+
+        var responceElement = 'ErrorMessage-' + tableId;
+
+        var url = '@Url.Action("EditSalesTableRange", "RebateClientTypes")';
+
+        callServerMethod(clientData, url, responceElement)
+    }
+
+    function EditSalesTable(selection, control, tableId) {
+        var clientData = {
+            selection: selection,
+            value: control.value,
+            tableId: tableId
+        }
+
+        var responceElement = 'ErrorMessage-' + tableId;
+
+        var url = '@Url.Action("EditSalesTable", "RebateClientTypes")';
+
+        callServerMethod(clientData, url, responceElement)
+    }
+
+    @*function EditSalesTableRow(selection, control, rowId, tableId) {
+        var clientData = {
+            selection: selection,
+            value: control.value,
+            rowId: rowId
+        }
+        var responceElement = 'ErrorMessage-' + tableId;
+
+        var url = '@Url.Action("EditSalesTableRow", "RebateClientTypes")';
+
+        callServerMethod(clientData, url, responceElement)
+    }*@
+</script>

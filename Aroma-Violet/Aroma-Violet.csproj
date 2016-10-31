@@ -179,6 +179,7 @@
     <Compile Include="Controllers\BranchesController.cs" />
     <Compile Include="Controllers\ClientsController.cs" />
     <Compile Include="Controllers\ClientSubscriptionsController.cs" />
+    <Compile Include="Controllers\ClientTypeProductObligationsController.cs" />
     <Compile Include="Controllers\ClientTypesController.cs" />
     <Compile Include="Controllers\ContactsController.cs" />
     <Compile Include="Controllers\ContactTypesController.cs" />
@@ -193,13 +194,28 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\OrderHeadersController.cs" />
     <Compile Include="Controllers\OrderLinesController.cs" />
+    <Compile Include="Controllers\PaymentTypesController.cs" />
     <Compile Include="Controllers\OrderStatusController.cs" />
     <Compile Include="Controllers\PickingListDetailsController.cs" />
     <Compile Include="Controllers\PickingListHeadersController.cs" />
+    <Compile Include="Controllers\PostageChargesController.cs" />
+    <Compile Include="Controllers\PostalAreasController.cs" />
+    <Compile Include="Controllers\PostalCodePostageChargesController.cs" />
     <Compile Include="Controllers\PostalCodesController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
     <Compile Include="Controllers\ProvincesController.cs" />
+    <Compile Include="Controllers\PublicHolidaysController.cs" />
+    <Compile Include="Controllers\RebateClientTypesController.cs" />
     <Compile Include="Controllers\RebatesController.cs" />
+    <Compile Include="Controllers\ReportingController.cs" />
+    <Compile Include="Controllers\SystemEventsController.cs" />
+    <Compile Include="Controllers\SystemSMSEventsController.cs" />
+    <Compile Include="Models\AccountAudit.cs" />
+    <Compile Include="Models\Enums.cs" />
+    <Compile Include="Models\NetworkClient.cs" />
+    <Compile Include="Models\ReportViewModel.cs" />
+    <Compile Include="Controllers\SalesTypesController.cs" />
+    <Compile Include="Controllers\ShippingMethodPostalCodesController.cs" />
     <Compile Include="Controllers\ShippingMethodsController.cs" />
     <Compile Include="Controllers\ShippingTypesController.cs" />
     <Compile Include="Controllers\SubscriptionsController.cs" />
@@ -218,6 +234,10 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201603010939532_Initial.cs" />
+    <Compile Include="Migrations\201603010939532_Initial.Designer.cs">
+      <DependentUpon>201603010939532_Initial.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountMovementViewModel.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -228,8 +248,11 @@
     <Compile Include="Models\ClientViewModels.cs" />
     <Compile Include="Models\Generic.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\InterAccountTransferViewModel.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\MenuModels.cs" />
+    <Compile Include="Models\PayOrderViewModel.cs" />
+    <Compile Include="Models\ShipmentViewModel.cs" />
     <Compile Include="Models\SMSManagerModels.cs" />
     <Compile Include="Models\TemplateModels.cs" />
     <Compile Include="Models\UserModels.cs" />
@@ -280,6 +303,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="NovusLocal.bak" />
     <None Include="Properties\PublishProfiles\aroma - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\aroma - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\Novus1.pubxml" />
@@ -307,6 +331,9 @@
     <Content Include="SQL Scripts\dbo.tpfinJournal.sql" />
     <Content Include="SQL Scripts\dbo.tpfinJournal_Base.sql" />
     <Content Include="SQL Scripts\dbo.tpfinJournal_GS.sql" />
+    <Content Include="SQL Scripts\spReverseSale.sql" />
+    <Content Include="SQL Scripts\tpNotes.sql" />
+    <Content Include="SQL Scripts\tpUniqueIdList.sql" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -436,7 +463,6 @@
     <Content Include="Views\DebitOrders\Details.cshtml" />
     <Content Include="Views\DebitOrders\Edit.cshtml" />
     <Content Include="Views\DebitOrders\Index.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\Address.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\AddressLine.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\DateTime.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\Address.cshtml" />
@@ -568,6 +594,93 @@
     <Content Include="Views\PickingListDetails\Index.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\PickingListDetail.cshtml" />
     <Content Include="Views\AccountMovement\Index.cshtml" />
+    <Content Include="Views\PublicHolidays\Create.cshtml" />
+    <Content Include="Views\PublicHolidays\Delete.cshtml" />
+    <Content Include="Views\PublicHolidays\Details.cshtml" />
+    <Content Include="Views\PublicHolidays\Edit.cshtml" />
+    <Content Include="Views\PublicHolidays\Index.cshtml" />
+    <Content Include="Views\PickingListHeaders\ShipmentList.cshtml" />
+    <Content Include="Views\ShippingMethodPostalCodes\Create.cshtml" />
+    <Content Include="Views\ShippingMethodPostalCodes\Delete.cshtml" />
+    <Content Include="Views\ShippingMethodPostalCodes\Details.cshtml" />
+    <Content Include="Views\ShippingMethodPostalCodes\Edit.cshtml" />
+    <Content Include="Views\ShippingMethodPostalCodes\Index.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\Client.cshtml" />
+    <Content Include="Views\OrderHeaders\UnpaidOrders.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\finJournal.cshtml" />
+    <Content Include="Views\OrderHeaders\Pay.cshtml" />
+    <Content Include="Views\AccountMovement\InterAccountTransfer.cshtml" />
+    <Content Include="Views\RebateClientTypes\Create.cshtml" />
+    <Content Include="Views\RebateClientTypes\Delete.cshtml" />
+    <Content Include="Views\RebateClientTypes\Details.cshtml" />
+    <Content Include="Views\RebateClientTypes\Edit.cshtml" />
+    <Content Include="Views\RebateClientTypes\Index.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Address.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\RebateLevelsTable.cshtml" />
+    <Content Include="Views\RebateClientTypes\Copy.cshtml" />
+    <Content Include="Views\AccountMovement\GlobalIndex.cshtml" />
+    <Content Include="Views\SalesTypes\Create.cshtml" />
+    <Content Include="Views\SalesTypes\Delete.cshtml" />
+    <Content Include="Views\SalesTypes\Details.cshtml" />
+    <Content Include="Views\SalesTypes\Edit.cshtml" />
+    <Content Include="Views\SalesTypes\Index.cshtml" />
+    <Content Include="Views\PaymentType\Create.cshtml" />
+    <Content Include="Views\PaymentType\Delete.cshtml" />
+    <Content Include="Views\PaymentType\Details.cshtml" />
+    <Content Include="Views\PaymentType\Edit.cshtml" />
+    <Content Include="Views\PaymentType\Index.cshtml" />
+    <Content Include="Views\PostageCharges\Create.cshtml" />
+    <Content Include="Views\PostageCharges\Delete.cshtml" />
+    <Content Include="Views\PostageCharges\Details.cshtml" />
+    <Content Include="Views\PostageCharges\Edit.cshtml" />
+    <Content Include="Views\PostageCharges\Index.cshtml" />
+    <Content Include="Views\PostalCodePostageCharges\Create.cshtml" />
+    <Content Include="Views\PostalCodePostageCharges\Delete.cshtml" />
+    <Content Include="Views\PostalCodePostageCharges\Details.cshtml" />
+    <Content Include="Views\PostalCodePostageCharges\Edit.cshtml" />
+    <Content Include="Views\PostalCodePostageCharges\Index.cshtml" />
+    <Content Include="Views\OrderHeaders\CreditNote.cshtml" />
+    <Content Include="Views\OrderHeaders\Invoice.cshtml" />
+    <Content Include="Views\Reporting\Index.cshtml" />
+    <Content Include="Views\Reporting\CashSales.cshtml" />
+    <Content Include="Views\Reporting\CreditSales.cshtml" />
+    <Content Include="Views\Reporting\KioskSales.cshtml" />
+    <Content Include="Views\SystemSMSEvents\Create.cshtml" />
+    <Content Include="Views\SystemSMSEvents\Delete.cshtml" />
+    <Content Include="Views\SystemSMSEvents\Details.cshtml" />
+    <Content Include="Views\SystemSMSEvents\Edit.cshtml" />
+    <Content Include="Views\SystemSMSEvents\Index.cshtml" />
+    <Content Include="Views\PostalAreas\Create.cshtml" />
+    <Content Include="Views\PostalAreas\Delete.cshtml" />
+    <Content Include="Views\PostalAreas\Details.cshtml" />
+    <Content Include="Views\PostalAreas\Edit.cshtml" />
+    <Content Include="Views\PostalAreas\Index.cshtml" />
+    <Content Include="Views\Reporting\SmsStatus.cshtml" />
+    <Content Include="Views\Reporting\Networkrelationship.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\NetworkClient.cshtml" />
+    <Content Include="Views\Reporting\AccountBalance.cshtml" />
+    <Content Include="Views\Reporting\CreditNote.cshtml" />
+    <Content Include="Views\RebateClientTypes\MonthEndIndex.cshtml" />
+    <Content Include="Views\RebateClientTypes\ViewMonthEnd.cshtml" />
+    <Content Include="Views\RebateClientTypes\ViewCommisionDetail.cshtml" />
+    <Content Include="Views\SystemEvents\Create.cshtml" />
+    <Content Include="Views\SystemEvents\Delete.cshtml" />
+    <Content Include="Views\SystemEvents\Details.cshtml" />
+    <Content Include="Views\SystemEvents\Edit.cshtml" />
+    <Content Include="Views\SystemEvents\Index.cshtml" />
+    <Content Include="Views\Reporting\DownlineStatement.cshtml" />
+    <Content Include="Views\Reporting\CommissionStatement.cshtml" />
+    <Content Include="Views\Reporting\GetUserSales.cshtml" />
+    <Content Include="Views\ClientTypeProductObligations\Create.cshtml" />
+    <Content Include="Views\ClientTypeProductObligations\Delete.cshtml" />
+    <Content Include="Views\ClientTypeProductObligations\Details.cshtml" />
+    <Content Include="Views\ClientTypeProductObligations\Edit.cshtml" />
+    <Content Include="Views\ClientTypeProductObligations\Index.cshtml" />
+    <Content Include="Views\Reporting\StarterPackPurchaseReport.cshtml" />
+    <Content Include="Views\AccountMovement\AuditAccount.cshtml" />
+    <Content Include="Views\OrderHeaders\AdminEdit.cshtml" />
+    <Content Include="Views\Reporting\DistrbutedSales.cshtml" />
+    <Content Include="Views\DebitOrders\ClientDoState.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -580,6 +693,12 @@
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201603010939532_Initial.resx">
+      <DependentUpon>201603010939532_Initial.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

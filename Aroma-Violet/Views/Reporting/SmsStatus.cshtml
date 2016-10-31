@@ -1,0 +1,88 @@
+﻿@model List<Aroma_Violet.Models.SystemSMS>
+@{
+    ViewBag.Title = "SmsStatus";
+    int maxCount = ViewBag.MaxCount;
+    DateTime fromDate = ViewBag.FromDate;
+    DateTime toDate = ViewBag.ToDate;
+    var smses = Model;
+}
+
+<h2>Sms Status</h2>
+@using (Html.BeginForm())
+{
+
+<table>
+    <tr>
+        <th>From Date</th>
+        <th>To Date</th>
+        <th></th>
+    </tr>
+    <tr>
+        <td>@Html.EditorFor(m => fromDate)</td>
+        <td>@Html.EditorFor(m => toDate)</td>
+        <td></td>
+    </tr>
+    <tr>
+        <th>Max Count</th>
+        <th>Status</th>
+        <th></th>
+    </tr>
+    <tr>
+        <td>@Html.EditorFor(m => maxCount, new { htmlAttributes = new { @class = "form-control" } })</td>
+        <td>@Html.DropDownList("lastSendMessageID", null, htmlAttributes: new { @class = "form-control" })</td>
+        <td><input type="submit" value="Filter" class="btn btn-default"/></td>
+    </tr>
+</table>
+
+<table>
+    <tr>
+        <th>
+            Number
+        </th>
+        <th>
+            Text
+        </th>
+        <th>
+            Created
+        </th>
+        <th>
+            Last Send Attempt
+        </th>
+        <th>
+            Last Send Message
+        </th>
+</tr>
+    @for (int i=0;i< smses.Count;i++)
+    {
+        <tr class="findisp">
+            <td>
+                @Html.DisplayFor(m => smses[i].Number)
+            </td>
+            <td>
+                @Html.DisplayFor(m => smses[i].SMSDescription)
+            </td>
+            <td>
+                @Html.DisplayFor(m => smses[i].iDate)
+            </td>
+                @if (smses[i].LastSendAttempt.HasValue)
+                {
+                    <td>      
+                        @Html.DisplayFor(m => smses[i].LastSendAttempt)
+                    </td>
+                }
+                else
+                {
+                    <td>Never</td>
+                }
+            <td>
+                @Html.DisplayFor(m => smses[i].LastSendMessage)
+            </td>
+
+        </tr>
+    }
+</table>
+
+<p>
+    @Html.ActionLink("Reporting", "Index")
+</p>
+}

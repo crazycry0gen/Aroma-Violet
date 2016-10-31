@@ -8,9 +8,9 @@ namespace Aroma_Violet.Models
     public class ApplicationMenuList : List<ApplicationMenuItem>
     {
         public string Text { get; set; }
-        public ApplicationMenuItem Add(string text, string actionName, string controllerName)
+        public ApplicationMenuItem Add(string text, string actionName, string controllerName, string parameters)
         {
-            var newItem = new ApplicationMenuItem(text, actionName, controllerName);
+            var newItem = new ApplicationMenuItem(text, actionName, controllerName, parameters);
             this.Add(newItem);
             return newItem;
         }
@@ -38,15 +38,17 @@ namespace Aroma_Violet.Models
     {
         public ApplicationMenuItem()
         { }
-        public ApplicationMenuItem(string text, string actionName, string controllerName)
+        public ApplicationMenuItem(string text, string actionName, string controllerName, string parameters)
         {
             this.Text = text;
             this.ActionName = actionName;
             this.ControllerName = controllerName;
+            this.Parameters = parameters;
         }
         public string Text { get; set; }
         public string ActionName { get; set; }
         public string ControllerName { get; set; }
+        public string Parameters { get; private set; }
     }
 
     public static class ExtendContextWithMenuItems
@@ -54,7 +56,7 @@ namespace Aroma_Violet.Models
         public static ApplicationMenuList GetApplicationMenuList(this AromaContext context)
         {
             var items = context.SystemMenuListItems.Where(m=>m.Active).OrderByDescending(m => m.Order).ThenBy(m => m.Text).ToArray();
-            var convertedItems = items.Select(m => new ApplicationMenuItem(m.Text, m.ActionName, m.ControllerName)).ToArray();
+            var convertedItems = items.Select(m => new ApplicationMenuItem(m.Text, m.ActionName, m.ControllerName, m.Parameters)).ToArray();
             var ret = new ApplicationMenuList();
             ret.AddRange(convertedItems);
             return ret;

@@ -18,7 +18,7 @@ namespace Aroma_Violet.Controllers
         // GET: Languages
         public async Task<ActionResult> Index()
         {
-            return View(await db.Languages.ToListAsync());
+            return View(await db.Languages.OrderBy(m => m.LanguageName).ToListAsync());
         }
 
         // GET: Languages/Details/5

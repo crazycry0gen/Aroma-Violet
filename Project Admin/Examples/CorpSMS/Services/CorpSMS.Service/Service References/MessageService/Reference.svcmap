@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="86867a9f-8455-4ed3-9473-3c179c267398" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:8732/StratCorp.CorpSMS.ServiceLibrary/SMSService/mex" Protocol="mex" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="service.wsdl" MetadataType="Wsdl" ID="59c2b456-ec7a-4ef1-b144-9382edfcc58c" SourceId="1" SourceUrl="http://localhost:8732/StratCorp.CorpSMS.ServiceLibrary/SMSService/mex" />
+    <MetadataFile FileName="service.xsd" MetadataType="Schema" ID="59ec7471-5663-45ca-9060-5dd3fb6fe97e" SourceId="1" SourceUrl="http://localhost:8732/StratCorp.CorpSMS.ServiceLibrary/SMSService/mex" />
+    <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="31ada556-651d-4f07-afab-baf430c21327" SourceId="1" SourceUrl="http://localhost:8732/StratCorp.CorpSMS.ServiceLibrary/SMSService/mex" />
+    <MetadataFile FileName="StratCorp.CorpSMS.ServiceLibrary.DataContracts.xsd" MetadataType="Schema" ID="4944a4ab-04bd-400a-a105-c37f61895d5c" SourceId="1" SourceUrl="http://localhost:8732/StratCorp.CorpSMS.ServiceLibrary/SMSService/mex" />
+    <MetadataFile FileName="StratCorp.CorpSMS.ServiceLibrary.xsd" MetadataType="Schema" ID="156b6718-b450-4153-bb5f-7a5618313256" SourceId="1" SourceUrl="http://localhost:8732/StratCorp.CorpSMS.ServiceLibrary/SMSService/mex" />
+    <MetadataFile FileName="System.xsd" MetadataType="Schema" ID="b126c4e6-31b9-4da6-8fff-2053046e01af" SourceId="1" SourceUrl="http://localhost:8732/StratCorp.CorpSMS.ServiceLibrary/SMSService/mex" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

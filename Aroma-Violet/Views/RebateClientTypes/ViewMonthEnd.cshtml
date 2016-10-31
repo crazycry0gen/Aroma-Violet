@@ -1,0 +1,159 @@
+﻿@model Aroma_Violet.Models.MonthEnd[]
+
+@{ 
+    var volumeDiscountsA = Model.Where(m => m.DownlineIndex == 0 && m.AmountValue > 0).ToArray();
+    var volumeDiscountsB = Model.Where(m => m.DownlineIndex == 0 && m.AmountValue == 0).ToArray();
+    var allDiscounts = new Aroma_Violet.Models.MonthEnd[][] { volumeDiscountsA, volumeDiscountsB };
+    var bodyNames = new string[] { "HasDiscounts", "NoDiscounts" };
+    var bodyDisplay = new string[] { "initial", "none" };
+    var commision = Model.Where(m => m.DownlineIndex > 0).ToArray();
+    var commisionClients = commision.Select(m => m.ClientId).Distinct().OrderBy(m => m).ToArray();
+    var fmt = "0.00";
+    bool showApprove = ViewBag.ShowApprove;
+}
+
+<h1>Volume Discounts / Commision Summary Report</h1>
+<h2>Month: @ViewBag.Header</h2>
+<h3>Volume Discounts</h3>
+<table>
+    @{ 
+        decimal totalOwnPurchases = 0;
+        decimal totalDiscountValue = 0;
+    }
+    <tr rowspan="3">
+        <th>No</th>
+        <th colspan="3">Name</th>
+        <th>Member No</th>
+        <th>Own Purchases</th>
+        <th>Volume Discount %</th>
+        <th>Volume Discount Value</th>
+    </tr>
+    
+    @for (int c = 0; c < allDiscounts.Length; c++)
+    {
+        int f = 0;
+        <tbody id="@bodyNames[c]" style="display:@bodyDisplay[c]">
+            @for (int i = 0; i < allDiscounts[c].Length; i++)
+            {
+                var monthEnd = allDiscounts[c][i];
+                var client = monthEnd.Client;
+                totalDiscountValue += monthEnd.AmountValue;
+                totalOwnPurchases += monthEnd.Amount;
+                f++;
+
+                <tr class="findisp">
+                    <td>@f</td>
+                    <td colspan="3">@string.Format("{0} {1}", client.ClientInitials, client.ClientSurname)</td>
+                    <td>@Html.ActionLink( monthEnd.ClientId.ToString(),"Index","AccountMovement",routeValues: new {clientId= monthEnd.ClientId },htmlAttributes: null)</td>
+                    <td class="Number">@monthEnd.Amount.ToString(fmt)</td>
+                    <td class="Number">@monthEnd.AmountPer</td>
+                    <td class="Number">@monthEnd.AmountValue.ToString(fmt)</td>
+                </tr>
+            }
+        </tbody>
+    }
+    <tr rowspan="3" class="fintot">
+        <th>Total</th>
+        <th colspan="4"></th>
+        <th class="Number">@totalOwnPurchases.ToString(fmt)</th>
+        <th></th>
+        <th class="Number">@totalDiscountValue.ToString(fmt)</th>
+    </tr>
+</table>
+
+
+
+@using (Html.BeginForm())
+{
+    
+
+    <h3>Commision(Rebates)</h3>
+    <table>
+        @{
+            totalOwnPurchases = 0;
+            decimal totalAllLevelsCash = 0;
+            decimal totalAllLevelsCashRebate = 0;
+            decimal totalAllSubscription = 0;
+            decimal totalAllSubscriptionRebate = 0;
+            decimal totalGlobal = 0;
+        }
+        <tr rowspan="3">
+            <th>No</th>
+            <th colspan="3">Name</th>
+            <th>Member No</th>
+            <th>Own purchases</th>
+            <th>Qualify for Rebates</th>
+            <th>All Levels Cash Purchases</th>
+            <th>All Levels Cash Rebates</th>
+            <th>All Levels Product Subscription Sales</th>
+            <th>All Levels Product Subscription Rebates</th>
+            <th>Total Rebates</th>
+        </tr>
+        @for (int i = 0; i < commisionClients.Length; i++)
+        {
+            var relevantCommision = commision.Where(m => m.ClientId == commisionClients[i] && m.AmountQualify).ToArray();
+            var client = Model.Where(m => m.ClientId == commisionClients[i]).Select(m => m.Client).First();
+            var ownMonthEnd = Model.Where(m => m.DownlineIndex == 0 && m.ClientId == commisionClients[i]).FirstOrDefault();
+            var amount = ownMonthEnd == null ? 0 : ownMonthEnd.Amount;
+            var qualify = relevantCommision.Count() > 0;
+            var cashPurchases = relevantCommision.Select(m => m.Amount).Sum();
+            var cashRebates = qualify ? relevantCommision.Select(m => m.AmountValue).Sum() : 0;
+            var subscriptionPurchasesFirst = relevantCommision.Select(m => m.SubscriptionFirstProduct).Sum();
+            var subscriptionPurchasesOther = relevantCommision.Select(m => m.SubscriptionOtherProduct).Sum();
+            var subscriptionFirstRebates = qualify ? relevantCommision.Select(m => m.SubscriptionFirstProductValue).Sum() : 0;
+            var subscriptionOtherRebates = qualify ? relevantCommision.Select(m => m.SubscriptionOtherProductValue).Sum() : 0;
+            var total = cashRebates+ subscriptionFirstRebates + subscriptionOtherRebates;
+
+            totalOwnPurchases+= amount;
+            totalAllLevelsCash += cashPurchases;
+            totalAllLevelsCashRebate += cashRebates;
+            totalAllSubscription += (subscriptionPurchasesFirst + subscriptionPurchasesOther);
+            totalAllSubscriptionRebate += (subscriptionFirstRebates + subscriptionOtherRebates);
+            totalGlobal += total;
+
+            <tr class="findisp">
+                @if (client.ClientTypeID == 3004)
+                {
+                    <td>@Html.ActionLink(@i.ToString(),"ViewCommisionDetail",routeValues: new {clientId=client.ClientId, periodId=Model.First().PeriodId },htmlAttributes: null)</td>
+                }
+                else
+                {
+                    <td>@i</td>
+                }
+                <td colspan="3">@string.Format("{0} {1}", client.ClientInitials, client.ClientSurname)</td>
+                <td>@Html.ActionLink(commisionClients[i].ToString(), "Index", "AccountMovement", routeValues: new { clientId = commisionClients[i] }, htmlAttributes: null)</td>
+                <td class="Number">@amount.ToString(fmt)</td>
+                <td class="Number">@qualify</td>
+                <td class="Number">@cashPurchases.ToString(fmt)</td>
+                <td class="Number">@cashRebates.ToString(fmt)</td>
+                <td class="Number">@((subscriptionPurchasesFirst + subscriptionPurchasesOther).ToString(fmt))</td>
+                <td class="Number">@((subscriptionFirstRebates + subscriptionOtherRebates).ToString(fmt))</td>
+                <th class="Number">@total.ToString(fmt)</th>
+            </tr>
+        }
+        <tr class="fintot" >
+            <th>Total</th>
+            <th colspan="4"></th>
+            <th class="Number">@totalOwnPurchases.ToString(fmt)</th>
+            <th></th>
+            <th class="Number">@totalAllLevelsCash.ToString(fmt)</th>
+            <th class="Number">@totalAllLevelsCashRebate.ToString(fmt)</th>
+            <th class="Number">@totalAllSubscription.ToString(fmt)</th>
+            <th class="Number">@totalAllSubscriptionRebate.ToString(fmt)</th>
+            <th class="Number">@totalGlobal.ToString(fmt)</th>
+        </tr>
+
+
+        @if (showApprove && User.IsInRole("Finance") && Model.Length > 0)
+        {
+            <tr>
+                <td colspan="11"></td>
+                <td>
+                    @Html.ActionLink("Approve", "ApproveMonthEnd", new { periodId = Model[0].PeriodId }, htmlAttributes: new { @class = "btn btn-default" })
+                </td>
+            </tr>
+
+        }
+    </table>
+
+}

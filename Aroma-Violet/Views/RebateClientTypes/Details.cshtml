@@ -1,0 +1,26 @@
+﻿@model Aroma_Violet.Models.RebateClientType
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>RebateClientType</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.RebateLevelsTable.RebateLevelsTableId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RebateLevelsTable.RebateLevelsTableId)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.RebateClientTypeId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

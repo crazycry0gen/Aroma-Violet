@@ -21,19 +21,28 @@ namespace Aroma_Violet.Controllers
         public async Task<ActionResult> Index(Guid? currentUserId, int statusMap = 0)
         {
             string description = "View All Tickets";
+            var newMap = statusMap;
+            var statuses = db.SupportTicketStatuses.Select(m => m.SupportTicketStatusId).ToArray();
+            //if (newMap == 0)
+            //{
+            //    newMap = currentUserId.HasValue ? 4 : 14;
+            //}
 
-            if (statusMap == 0)
+            if (currentUserId.HasValue)
             {
-                statusMap = currentUserId.HasValue ? 4 : 14;
+                statuses = new int[] {1,2 };
             }
 
-            var supportTickets = db.SupportTickets.Where(m=>((int)Math.Pow(2, m.SupportTicketStatusID) & statusMap) == (int)Math.Pow(2,m.SupportTicketStatusID) );
-            
+            var supportTickets = db.SupportTickets.Where(m => statuses.Contains(m.SupportTicketStatusID)); //db.SupportTickets.Where(m=>((int)Math.Pow(2, m.SupportTicketStatusID) & newMap) == (int)Math.Pow(2,m.SupportTicketStatusID) );
+
+            var cnt = supportTickets.Count();
+
             if (currentUserId.HasValue)
             {
                 supportTickets = supportTickets.Where(m => m.UserID == currentUserId.Value
                                                             ).Include(s => s.Client).Include(s => s.SupportTicketStatus);
                 description = "View My Tickets";
+                cnt = supportTickets.Count();
             }
 
             ViewBag.Title = description;
@@ -43,7 +52,7 @@ namespace Aroma_Violet.Controllers
 
             ViewBag.UserID = data;
             ViewBag.currentUserId = currentUserId;
-            ViewBag.statusMap = statusMap;
+            ViewBag.statusMap = newMap;
             return View(await supportTickets.OrderByDescending(m=>m.iDate).ToListAsync());
         }
 
@@ -146,8 +155,16 @@ namespace Aroma_Violet.Controllers
             var context = new ApplicationDbContext();
             var data = (from item in context.Users
                              select new { UserID = item.Id, Name = item.UserName }).ToArray();
+            var selection = data.FirstOrDefault(m => m.UserID == supportTicket.UserID?.ToString());
+            if (selection != null)
+            {
+                ViewBag.UserID = new SelectList(data, "UserID", "Name", selection.UserID);
+            }
+            else
+            {
+                ViewBag.UserID = new SelectList(data, "UserID", "Name");
 
-            ViewBag.UserID = new SelectList(data, "UserID", "Name", data.Where(m => m.UserID == supportTicket.UserID?.ToString()));
+            }
             ViewBag.currentUserId = currentUserId;
             ViewBag.statusMap = statusMap;
 

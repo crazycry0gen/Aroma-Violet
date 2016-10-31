@@ -3,21 +3,22 @@
 @{
     IEnumerable<SelectListItem> productList = ViewBag.ProductList;
     ViewBag.ProductID = productList;
+    
 }
 
-@using (Html.BeginForm("Create","OrderLines"))
+@using (Html.BeginForm("Create", "OrderLines", FormMethod.Post, new { id = "OrderLine" }))
 {
-    @Html.AntiForgeryToken()
 
+    @Html.AntiForgeryToken()
     <div class="form-horizontal">
         <h4>Create new order items</h4>
         @Html.HiddenFor(model => model.OrderHeaderId)
         @Html.HiddenFor(model => model.Active)
-
+        
         <div class="form-group">
             @Html.LabelFor(model => model.ProductID, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("ProductID",null, htmlAttributes: new { @class = "form-control" })
+                @Html.DropDownList("ProductID",null, htmlAttributes: new { @class = "form-control", autofocus=true, onkeypress = "FocusOn('Quantity')" })
                 @Html.ValidationMessageFor(model => model.ProductID, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -29,11 +30,41 @@
                 @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger" })
             </div>
         </div>
-
+       
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <a href="#" value="Create" id="CreateButton" class="btn btn-default"   onkeyup = "SubmitForm2()" onclick="SubmitForm2()"  >Create</a>
             </div>
         </div>
     </div>
 }
+
+
+<script type="text/javascript">
+    $(document).ready(
+        FixSize()
+        );
+    function SubmitForm2() {
+        document.getElementById("Navigate").value = "0";
+        document.getElementById("OrderLine").submit();
+    }
+
+    function FixSize(){
+        var control = document.getElementById('ProductID');
+        control.style.maxWidth = '400px';
+        control.style.width = '400px';
+       
+    }
+
+    function FocusOn(element)
+    {
+        var code = event.keyCode;
+        if (code == 13) {
+
+            var control = document.getElementById(element);
+            control.focus();
+            control.select();
+        }
+    }
+    
+</script>

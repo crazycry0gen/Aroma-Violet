@@ -1,7 +1,11 @@
-﻿@model DateTime
+﻿@model DateTime?
 
-@{ 
-    string dt=Model.ToString("dd/MM/yyyy");
+@{
+    string dt = "";
+    if (Model != null)
+    {
+        dt =Model.Value.ToString("dd/MM/yyyy");
+    }
 
 }
 

@@ -30,20 +30,64 @@ namespace Aroma_Violet.Controllers
         {
             var users = UserManager.Users.ToArray();
             var context = new ApplicationDbContext();
+            var db = new AromaContext();
             var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
             var roles = roleManager.Roles.ToArray();
             var userRoles = new List<UserRoleViewModel>();
+            
             ViewBag.Roles = roles.Select(m=>m.Name).ToArray();
             foreach (var user in users)
             {
+                var userClient = db.UserClients.FirstOrDefault(m => m.UserId.ToString() ==user.Id);
                 var data = new UserRoleViewModel() {
                     Id = user.Id,
                     Username = user.UserName,
                     Roles = user.Roles.Select(m=>roles.First(r=>r.Id== m.RoleId).Name).ToList()
                 };
+                if (userClient != null)
+                {
+                    data.ClientId = userClient.ClientId.ToString();
+                }
             userRoles.Add(data);
             }
-            return View(userRoles);
+            return View(userRoles.OrderBy(m=>m.Username).ToList());
+        }
+
+        public JsonResult UpdateUserClient(Guid userId, string clientIdText)
+        {
+            try
+            {
+                int clientId = 0;
+                if (int.TryParse(clientIdText, out clientId))
+                {
+                    var db = new AromaContext();
+                    var client = db.Clients.FirstOrDefault(m=>m.ClientId == clientId);
+                    if (client == null)
+                    {
+                        return Json("Client not found");
+                    }
+                    else
+                    {
+                        var userClient = db.UserClients.FirstOrDefault(m=>m.UserId.Equals(userId));
+                        if (userClient == null)
+                        {
+                            userClient = new UserClient() {UserId=userId };
+                            db.UserClients.Add(userClient);
+                        }
+                        userClient.ClientId = clientId;
+                        db.SaveChanges();
+                        return Json(string.Empty);
+                    }
+                }
+                else
+                {
+                    return Json("Invalid client Id");
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(ex.Message);
+            }
         }
 
         public ActionResult ChangeRole(string userid, string role, bool addUser)
@@ -243,7 +287,7 @@ namespace Aroma_Violet.Controllers
             if (ModelState.IsValid)
             {
                 var user = await UserManager.FindByNameAsync(model.Email);
-                if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
+                if (user == null) //|| !(await UserManager.IsEmailConfirmedAsync(user.Id)))
                 {
                     // Don't reveal that the user does not exist or is not confirmed
                     return View("ForgotPasswordConfirmation");
@@ -251,10 +295,11 @@ namespace Aroma_Violet.Controllers
 
                 // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
                 // Send an email with this link
-                // string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-                // var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);		
-                // await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
-                // return RedirectToAction("ForgotPasswordConfirmation", "Account");
+                string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+                var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code, email=model.Email }, protocol: Request.Url.Scheme);
+                //await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                //return RedirectToAction("ForgotPasswordConfirmation", "Account");
+                return Redirect(callbackUrl);
             }
 
             // If we got this far, something failed, redisplay form
@@ -272,8 +317,9 @@ namespace Aroma_Violet.Controllers
         //
         // GET: /Account/ResetPassword
         [AllowAnonymous]
-        public ActionResult ResetPassword(string code)
+        public ActionResult ResetPassword(string code, Guid userId, string email)
         {
+            var model = new ResetPasswordViewModel() {Email=email, Code=code };
             return code == null ? View("Error") : View();
         }
 
