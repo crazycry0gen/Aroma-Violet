@@ -50,6 +50,7 @@
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
                     @*<li>@Html.ActionLink("About", "About", "Home")</li>*@
                     <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                   
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>
@@ -93,5 +94,47 @@
         //alert(dateTime.value);
         //alert(newValue);
         dateTime.value = newValue;
+    }
+    
+    function callServerMethod(clientData, url, responceElement) {
+        data = JSON.stringify(clientData);
+
+        var ret = 'wtf';
+
+        $.ajax({
+            url: url,
+            type: 'POST',
+            contentType: 'application/json; charset=utf-8',
+            data: data,
+            async: false,
+            success: function (rdata) {
+                if (responceElement != '') {
+                    var elementPreview = document.getElementById(responceElement);
+                    elementPreview.innerHTML = rdata;
+                }
+                ret = rdata;
+            },
+            error: function () {
+                if (responceElement != '') {
+                    var elementPreview = document.getElementById(responceElement);
+                    elementPreview.innerHTML = 'Opperation failed';
+                }
+                ret = 'Failed';
+            }
+        });
+        return ret;
+    }
+
+    function Email(clientId, tagName, subject) {
+        var html = document.getElementById(tagName).innerHTML;
+        var clientData = {
+            clientId: clientId,
+            subject: subject,
+            html: html
+        }
+        var responceElement = "ResponseNode";
+
+        var url = '@Url.Action("CreateSnapshotAndMail", "EmailTemplates")';
+        callServerMethod(clientData, url, responceElement);
     }
 </script>

@@ -29,6 +29,8 @@ namespace Aroma_Violet.Models
         public const  int SupportTicketTypeIdSystem = 2;
         public const int SupportTicketTypeIdOther = 1;
 
+        public const int CreditNoted = 5;
+
         public static t CopyObject<t>(t fromObject, t toObject, params string[] dontCopy)
         {
             var type = typeof(t);

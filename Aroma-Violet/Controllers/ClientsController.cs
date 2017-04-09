@@ -71,8 +71,25 @@ namespace Aroma_Violet.Controllers
                         .Include(c => c.Title);
             ViewBag.Criteria = criteria;
             var userId = Guid.Parse(User.Identity.GetUserId());
-            ViewBag.MyClientId = Generic.GetMyClientId(db, userId);
-            return View(await clients.ToListAsync());
+            var clientId = Generic.GetMyClientId(db, userId);
+            var myAllowedClientTypes = GetMyAllowedClientTypes(clientId);
+            ViewBag.MyClientId = clientId;
+            return View(await clients.Where(m => myAllowedClientTypes.Contains(m.ClientTypeID) || m.ClientId == clientId).ToListAsync());
+        }
+
+        private int[] GetMyAllowedClientTypes(int? clientId)
+        {
+            var result = (from item in this.db.ClientTypes select item.ClientTypeId).ToArray();
+
+            if (!clientId.HasValue)
+            {
+                return result;
+            }
+
+            // TODO:make configurable, get from table ClientTypeRelation
+            var distributors = new int[] { 1, 6 };
+            var clientTypeId = this.db.Clients.Find(clientId.Value).ClientTypeID;
+            return distributors.Contains(clientTypeId) ? new int[] { 2 } : result;
         }
 
         // GET: Clients/Details/5
@@ -346,7 +363,7 @@ namespace Aroma_Violet.Controllers
                        && item.Active
                        select item).FirstOrDefault();
 
-            if (rel != null) clientView.ResellerID = rel.ParentID;
+            if (rel != null && clientView.ResellerID == null) clientView.ResellerID = rel.ParentID;
 
             clientView.Contacts = (from item in db.ContactTypes.Where(m => m.Active).ToArray()
                                    select new ClientContactView {ClientContactTypeName =  item.ContactTypeName,ClientContactTypeId = item.ContactTypeId, ClientContactValue=  db.Contacts.Where(m=>m.Active

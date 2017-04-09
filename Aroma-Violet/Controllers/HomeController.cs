@@ -6,6 +6,8 @@ using System.Web.Mvc;
 
 namespace Aroma_Violet.Controllers
 {
+    using Aroma_Violet.Models;
+
     public class HomeController : Controller
     {
         [Authorize]

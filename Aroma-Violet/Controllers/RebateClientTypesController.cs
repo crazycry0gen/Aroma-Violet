@@ -190,6 +190,28 @@ namespace Aroma_Violet.Controllers
             return View(model);
         }
 
+        public async Task<ActionResult> DeleteMonthEnd(int periodId)
+        {
+            var model = await (from item in this.db.MonthEndRows.Include(m => m.Client)
+                               where item.PeriodId == periodId && item.ApprovedUserId.Equals(Guid.Empty)
+                               select item).ToArrayAsync();
+
+            foreach (var row in model)
+            {
+                var details =
+                    await
+                    (from item in this.db.MonthEndDetail where item.MonthEndRowId == row.MonthEndRowId select item)
+                        .ToArrayAsync();
+                this.db.MonthEndDetail.RemoveRange(details);
+            }
+
+            this.db.MonthEndRows.RemoveRange(model);
+
+            await this.db.SaveChangesAsync();
+
+            return this.RedirectToAction("Index");
+        }
+
         public async Task<ActionResult> ApproveMonthEnd(int periodId)
         {
             const string fmtMoney = "#,###,##0.00";
@@ -333,11 +355,24 @@ namespace Aroma_Violet.Controllers
         {
             var breakAtClient = 10086;
             var periodDate = DateTime.Today.AddMonths(-1);
-            var validOrderStatuses = new int[] {2,3,4 };
+            var validOrderStatuses = new int[] { 2, 3, 4 };
             var periodId = GetPeriodId(periodDate);
             var periodStart = GetPeriodStart(periodDate);
             var periodEnd = GetPeriodEnd(periodDate);
             
+            // TODO: Fix the sales source. This is a work arround for now
+            var subClients = from item in this.db.Clients where item.ClientTypeID == 3 select item.ClientId;
+            var sales =
+                (from item in this.db.OrderHeaders
+                 where subClients.Contains(item.ClientID) && item.SaleSourceId == 0
+                 select item).ToArray();
+            foreach (var item in sales)
+            {
+                item.SaleSourceId = 1;
+            }
+            this.db.SaveChanges();
+            ///////////////////
+
             var result = Json(string.Empty);
             result.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
             var orders = (from item in db.OrderHeaders
@@ -399,6 +434,7 @@ namespace Aroma_Violet.Controllers
                     {
                         //must check source client type
                     }
+
                     var salesTable = salesTables.FirstOrDefault();
                     if (salesTable != null)
                     {
@@ -406,12 +442,14 @@ namespace Aroma_Violet.Controllers
                                               where item.RangeStart <= monthend.Amount
                                               && item.RangeEnd >= monthend.Amount
                                               select item.Rebate).FirstOrDefault();
+
                         monthend.AmountQualify = salesTable.MinOwnPurchToQualify <= monthend.Amount;
                         monthend.AmountValue = (monthend.Amount * monthend.AmountPer) / 100;
                         monthend.AmountFromAccount = salesTable.FromAccountId;
                         monthend.AmountToAccount = salesTable.ToAccountId;
 
                     }
+
                     var rebateLevelTable = (from item in db.RebateLevelsTables
                                             where item.RebateClientType.ClientTypeID == client.ClientTypeID
                                             select item).FirstOrDefault();
@@ -461,16 +499,24 @@ namespace Aroma_Violet.Controllers
 
                     }
 
+                    if (breakAtClient > 0 && client.ResellerID.HasValue && client.ResellerID.Value == breakAtClient)
+                    {
+                    }
+
+                    var descendants = GetDescendants(client.ClientId, currentDownlineLevel);
+                    
                     //get the posible sales tables
                     var salesTables = (from item in db.SalesTables
-                                       where item.LevelRange.StartLevel <= currentDownlineLevel
-                                       && item.LevelRange.EndLevel >= currentDownlineLevel
-                                       && item.RebateClientType.ClientTypeID == client.ClientTypeID
+                                       where item.RebateClientType.ClientTypeID == client.ClientTypeID
                                        select item).ToArray();
+                    salesTables =
+                        salesTables.Where(
+                            item =>
+                            item.LevelRange.StartLevel <= currentDownlineLevel
+                            && item.LevelRange.EndLevel >= currentDownlineLevel).ToArray();
 
                     foreach (var salesTable in salesTables)
                     {
-                        var descendants = GetDescendants(client.ClientId, currentDownlineLevel);
                         var descendentValues = (from item in db.MonthEndRows
                                                 where
                                                     item.PeriodId == periodId && item.DownlineIndex == 0
@@ -481,8 +527,9 @@ namespace Aroma_Violet.Controllers
 
                             var downlineClientTypes = (from item in this.db.RebateSalesTableClientTypes
                                                        where item.RebateSalesTableId == salesTable.RebateSalesTableId
-                                                       select item.ClientTypeId).ToArray();
-                            if (downlineClientTypes.Length > 0)
+                                                       select item.ClientTypeId).ToList();
+
+                            if (downlineClientTypes.Count > 0)
                             {
                                 var clientTypeChkSm =
                                     (int)(from item in downlineClientTypes select Math.Pow(2, item)).Sum();
@@ -495,15 +542,17 @@ namespace Aroma_Violet.Controllers
                                                     && item.ClientId == client.ClientId
                                                 select item).FirstOrDefault();
 
+                                var ownMonthend = (from item in db.MonthEndRows
+                                                   where
+                                                       item.PeriodId == periodId && item.ClientId == client.ClientId
+                                                       && item.DownlineIndex == 0
+                                                   select item).FirstOrDefault();
+
                                 if (monthend == null)
                                 {
                                     var qualify = true;
 
-                                    var ownMonthend = (from item in db.MonthEndRows
-                                                       where
-                                                           item.PeriodId == periodId && item.ClientId == client.ClientId
-                                                           && item.DownlineIndex == 0
-                                                       select item).FirstOrDefault();
+                                    
 
                                     if (ownMonthend != null) qualify = ownMonthend.AmountQualify;
 
@@ -532,7 +581,8 @@ namespace Aroma_Violet.Controllers
                                         (from item in descendentValues
                                          where downlineClientTypes.Contains(item.ClientTypeId)
                                          select item.SubscriptionOtherProduct).Sum();
-
+                                    monthend.SubscriptionFromAccount = ownMonthend.SubscriptionFromAccount;
+                                    monthend.SubscriptionToAccount = ownMonthend.SubscriptionToAccount;
                                     monthend.ClientTypeId = clientTypeChkSm;
 
                                     /*

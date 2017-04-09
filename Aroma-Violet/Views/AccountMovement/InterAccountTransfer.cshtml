@@ -5,7 +5,7 @@
     int? paymentTypeId = null;
     string orderHeaderId = string.Empty;
     if (ViewBag.OrderHeaderId != null) { orderHeaderId = ViewBag.OrderHeaderId.ToString(); }
-    var isReadonly = (User.IsInRole("Area Distributor")|| User.IsInRole("Distributor"));
+    var isReadonly = false;//(User.IsInRole("Area Distributor")|| User.IsInRole("Distributor"));
     var splitPayment = false;
 }
 

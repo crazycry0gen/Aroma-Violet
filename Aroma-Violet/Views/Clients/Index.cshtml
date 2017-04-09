@@ -23,12 +23,14 @@
 
     }
 
-    <tr>
-        <td colspan="3">
-            @Html.ActionLink("Create New", "Create")
-        </td>
-    </tr>
-   
+    @if (!(User.IsInRole("Area Distributor") || User.IsInRole("Distributor")))
+    {
+        <tr>
+            <td colspan="3">
+                @Html.ActionLink("Create New", "Create")
+            </td>
+        </tr>
+    }
     <tr>
         <th>
             @Html.DisplayNameFor(model => model.ClientId)
@@ -131,6 +133,8 @@
                     <text>
                     @Html.ActionLink("Downline Statement", "DownlineStatement", "Reporting", new { clientId = item.ClientId }, htmlAttributes: null)|
                     @Html.ActionLink("Commission Statement", "CommissionStatement", "Reporting", new { specificClientId = item.ClientId }, htmlAttributes: null)
+                    @Html.ActionLink("To Account Movement", "Index", "AccountMovement", new { clientId = item.ClientId }, htmlAttributes: null)
+                    
                 </text>
                 }
                 @*@if (User.IsInRole("Developer"))

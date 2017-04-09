@@ -92,7 +92,7 @@ namespace Aroma_Violet.Controllers
             var detail = new List<PickingListDetail>();
             foreach (var order in orders)
             {
-                var dt = (from item in order.OrderLines
+                var dt = (from item in order.OrderLines.Where(m => m.Active)
                           select new PickingListDetail()
                           {
                               Active = false,

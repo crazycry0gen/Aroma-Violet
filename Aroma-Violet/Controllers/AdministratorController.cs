@@ -15,6 +15,7 @@ namespace Aroma_Violet.Controllers
             var adminView = new AdministratorViewModel();
             adminView.Menu = new AdministratorMenu();
             var context = new AromaContext();
+            OrderHeadersController.FixScewedTotals(context);
             adminView.Menu.Save(context);
             return View(adminView);
         }

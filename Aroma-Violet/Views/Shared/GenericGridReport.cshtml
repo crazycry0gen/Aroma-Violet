@@ -1,0 +1,20 @@
+﻿@model Aroma_Violet.Models.GenericGridReport
+
+    <table class="findisp" cellpadding="2">
+        <tr class="findispHead">
+            @for (int i = 0; i < Model.Columns.Count; i++)
+            {
+                <th colspan="@Model.Columns[i].ColumnCount">@Model.Columns[i].ColumnName</th>
+            }
+        </tr>
+            @for (var r = 0; r < Model.Rows.Count; r++)
+            {
+                <tr class="findisp">
+                @for (int i = 0; i < Model.Columns.Count; i++)
+                {
+                    <th colspan="@Model.Columns[i].ColumnCount" class="@Model.Columns[i].Class">@Model.Rows[r][i]</th>
+                }
+                </tr>
+            }
+    </table>
+

@@ -104,6 +104,9 @@ namespace Aroma_Violet.Models
         public DbSet<RebateSalesTableClientType> RebateSalesTableClientTypes { get; set; }
         public DbSet<SystemEvent> SystemEvents { get; set; }
         public DbSet<ClientTypeProductObligation> ClientTypeProductObligations { get; set; }
+        public DbSet<EmailTemplate> EmailTemplates { get; set; }
+        public DbSet<SavedHtml> SavedHtmls { get; set; }
+        public DbSet<SavedHtmlType> SavedHtmlTypes { get; set; }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
         
@@ -123,7 +126,7 @@ namespace Aroma_Violet.Models
         
     }
 
-    
+
     [Table("ClientTypeProductObligation")]
     public class ClientTypeProductObligation
     {
@@ -138,6 +141,40 @@ namespace Aroma_Violet.Models
 
         [ForeignKey("ClientTypeId")]
         virtual public ClientType ClientType { get; set; }
+    }
+
+    [Table("EmailTemplate")]
+    public class EmailTemplate
+    {
+        [Key]
+        public Guid EmailTemplateId { get; set; }
+        public string EmailTemplateName { get; set; }
+        public string SqlStatement { get; set; }
+        public string EmailAddress { get; set; }
+        public string Subject { get; set; }
+        public string EmailBody { get; set; }
+    }
+
+    [Table("SavedHtml")]
+    public class SavedHtml
+    {
+        [Key]
+        public Guid SavedHtmlId { get; set; }
+        public string SavedHtmlData { get; set; }
+        public int? ClientId { get; set; }
+        public int SavedHtmlTypeId { get; set; }
+        public DateTime Created { get; set; }
+
+        [ForeignKey("SavedHtmlTypeId")]
+        virtual public SavedHtmlType SavedHtmlType { get; set; }
+    }
+
+    [Table("SavedHtmlType")]
+    public class SavedHtmlType
+    {
+        [Key]
+        public int SavedHtmlTypeId { get; set; }
+        public string SavedHtmlTypeName { get; set; }
     }
 
     [Table("SystemEvent")]

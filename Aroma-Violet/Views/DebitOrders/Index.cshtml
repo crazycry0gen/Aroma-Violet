@@ -44,7 +44,7 @@
     <th>
         @Html.DisplayNameFor(model => model.ProcessDate)
     </th>*@
-    <th></th>
+    <th colspan="3"></th>
     </tr>
 
 @foreach (var item in Model.OrderByDescending(m=>m.DebitDate))
@@ -54,7 +54,7 @@
     {
         header = nhead;
         <tr style="background:lightblue">
-            <th colspan="12">@header</th>
+            <th colspan="14">@header</th>
         </tr>
     }
     <tr class="findisp">
@@ -88,8 +88,10 @@
     <td>
         @Html.DisplayFor(modelItem => item.ProcessDate)
     </td>*@
-    <td>
-        @Html.ActionLink(linkText:"Subscription",actionName: "Manage",controllerName: "ClientSubscriptions",routeValues: new { ClientID = item.ClientID },htmlAttributes:null) 
+    <td colspan="3">
+        @Html.ActionLink(linkText: "Subscription", actionName: "Manage", controllerName: "ClientSubscriptions", routeValues: new { ClientID = item.ClientID }, htmlAttributes: null) |
+        @Html.ActionLink(linkText: "Edit", actionName: "Edit", controllerName: "DebitOrders", routeValues: new { id = item.DebitOrderId}, htmlAttributes: null) |
+        @Html.ActionLink(linkText:"Delete",actionName: "Delete",controllerName: "DebitOrders", routeValues: new { id = item.DebitOrderId },htmlAttributes:null) 
     </td>
     </tr>
 }

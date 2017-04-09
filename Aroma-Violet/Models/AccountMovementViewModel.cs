@@ -19,14 +19,14 @@ namespace Aroma_Violet.Models
 
         public static AccountMovementViewModel LoadGlobalJournals(AromaContext db, DateTime fromDate, DateTime toDate)
         {
-            toDate = toDate.AddDays(1).AddMilliseconds(1);
+            var newToDate = toDate.AddDays(1).AddMilliseconds(1);
             var model = new AccountMovementViewModel();
             model.FromDate = fromDate;
             model.ToDate = toDate;
             model.Journals = new List<finJournal>();
 
             var finJournals = (from item in db.Journals
-                               where item.EffectiveDate >= fromDate && item.EffectiveDate <= toDate
+                               where item.EffectiveDate >= fromDate && item.EffectiveDate <= newToDate
                                orderby item.JournalDate
                                select item).ToList();
 
@@ -66,7 +66,7 @@ namespace Aroma_Violet.Models
             foreach (var acc in model.Accounts)
             {
                 AccountBalance openBal = db.Database.SqlQuery<AccountBalance>(string.Format(Generic.sqlGlobalBalanceAtDate, fromDate.ToString(dtfmt), acc.AccountId)).First();
-                AccountBalance closingBal = db.Database.SqlQuery<AccountBalance>(string.Format(Generic.sqlGlobalBalanceAtDate, toDate.ToString(dtfmt), acc.AccountId)).First();
+                AccountBalance closingBal = db.Database.SqlQuery<AccountBalance>(string.Format(Generic.sqlGlobalBalanceAtDate, newToDate.ToString(dtfmt), acc.AccountId)).First();
 
                 /*
                 AccountBalance openBal = db.Database.SqlQuery<AccountBalance>(
@@ -89,7 +89,7 @@ namespace Aroma_Violet.Models
 
     public static AccountMovementViewModel LoadJournals(AromaContext db, DateTime fromDate, DateTime toDate, int? clientId, Guid? clientAccountId)
         {
-            toDate = toDate.AddDays(1).AddMilliseconds(1);
+            var newToDate = toDate.AddDays(1).AddMilliseconds(1);
             var model = new AccountMovementViewModel();
             var clientAccountIds = new Guid[0];
             model.FromDate = fromDate;
@@ -126,7 +126,7 @@ namespace Aroma_Violet.Models
                          select item).ToList();
                          */
             var finJournals = (from item in db.Journals
-                               where item.EffectiveDate >= fromDate && item.EffectiveDate <= toDate
+                               where item.EffectiveDate >= fromDate && item.EffectiveDate <= newToDate
                                && clientAccountIds.Contains(item.AccountID)
                                //&& item.Index == 1
                            orderby item.JournalDate
@@ -180,7 +180,7 @@ namespace Aroma_Violet.Models
                     acc.IsClientAccount = false;
                 }
                 AccountBalance openBal = db.Database.SqlQuery<AccountBalance>(string.Format(Generic.sqlBalanceAtDate, fromDate.ToString(dtfmt), acc.AccountId)).First();
-                AccountBalance closingBal = db.Database.SqlQuery<AccountBalance>(string.Format(Generic.sqlBalanceAtDate, toDate.ToString(dtfmt), acc.AccountId)).First(); 
+                AccountBalance closingBal = db.Database.SqlQuery<AccountBalance>(string.Format(Generic.sqlBalanceAtDate, newToDate.ToString(dtfmt), acc.AccountId)).First(); 
 
                  /*
                  AccountBalance openBal = db.Database.SqlQuery<AccountBalance>(

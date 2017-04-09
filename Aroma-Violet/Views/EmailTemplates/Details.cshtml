@@ -1,0 +1,58 @@
+﻿@model Aroma_Violet.Models.EmailTemplate
+
+@{
+
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Details</title>
+</head>
+<body>
+    <div>
+        <h4>EmailTemplate</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.SqlStatement)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.SqlStatement)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.EmailAddress)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.EmailAddress)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.Subject)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.Subject)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.EmailBody)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.EmailBody)
+            </dd>
+    
+        </dl>
+    </div>
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.EmailTemplateId }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+</body>
+</html>

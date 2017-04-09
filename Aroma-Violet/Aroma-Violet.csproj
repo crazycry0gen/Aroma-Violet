@@ -49,6 +49,14 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Postal, Version=1.0.0.0, Culture=neutral, PublicKeyToken=45719375b8b4d528, processorArchitecture=MSIL">
+      <HintPath>..\packages\Postal.Mvc5.1.2.0\lib\net45\Postal.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="RazorEngine, Version=3.4.1.0, Culture=neutral, PublicKeyToken=9ee697374c7e744a, processorArchitecture=MSIL">
+      <HintPath>..\packages\RazorEngine.3.4.1\lib\net45\RazorEngine.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -185,6 +193,7 @@
     <Compile Include="Controllers\ContactTypesController.cs" />
     <Compile Include="Controllers\CountriesController.cs" />
     <Compile Include="Controllers\DebitOrdersController.cs" />
+    <Compile Include="Controllers\EmailTemplatesController.cs" />
     <Compile Include="Controllers\EthnicGroupsController.cs" />
     <Compile Include="Controllers\finAccountsController.cs" />
     <Compile Include="Controllers\finClientAccountsController.cs" />
@@ -208,10 +217,12 @@
     <Compile Include="Controllers\RebateClientTypesController.cs" />
     <Compile Include="Controllers\RebatesController.cs" />
     <Compile Include="Controllers\ReportingController.cs" />
+    <Compile Include="Controllers\SavedHtmlsController.cs" />
     <Compile Include="Controllers\SystemEventsController.cs" />
     <Compile Include="Controllers\SystemSMSEventsController.cs" />
     <Compile Include="Models\AccountAudit.cs" />
     <Compile Include="Models\Enums.cs" />
+    <Compile Include="Models\Extend.cs" />
     <Compile Include="Models\NetworkClient.cs" />
     <Compile Include="Models\ReportViewModel.cs" />
     <Compile Include="Controllers\SalesTypesController.cs" />
@@ -264,6 +275,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Images\gears_animated.gif" />
     <Content Include="Content\Images\Novus Logo.svg" />
+    <Content Include="Content\Email.css" />
     <Content Include="Content\themes\base\accordion.css" />
     <Content Include="Content\themes\base\all.css" />
     <Content Include="Content\themes\base\autocomplete.css" />
@@ -681,6 +693,23 @@
     <Content Include="Views\OrderHeaders\AdminEdit.cshtml" />
     <Content Include="Views\Reporting\DistrbutedSales.cshtml" />
     <Content Include="Views\DebitOrders\ClientDoState.cshtml" />
+    <Content Include="Views\Reporting\StockMovement.cshtml" />
+    <Content Include="Views\Emails\_ViewStart.cshtml" />
+    <Content Include="Views\Emails\Web.config" />
+    <Content Include="Views\Shared\Test.cshtml" />
+    <Content Include="Views\Reporting\MemberAveragePurchases.cshtml" />
+    <Content Include="Views\Shared\GenericGridReport.cshtml" />
+    <Content Include="Views\Shared\_LayoutReport.cshtml" />
+    <Content Include="Views\EmailTemplates\Create.cshtml" />
+    <Content Include="Views\EmailTemplates\Delete.cshtml" />
+    <Content Include="Views\EmailTemplates\Details.cshtml" />
+    <Content Include="Views\EmailTemplates\Edit.cshtml" />
+    <Content Include="Views\EmailTemplates\Index.cshtml" />
+    <Content Include="Views\SavedHtmls\Create.cshtml" />
+    <Content Include="Views\SavedHtmls\Delete.cshtml" />
+    <Content Include="Views\SavedHtmls\Details.cshtml" />
+    <Content Include="Views\SavedHtmls\Edit.cshtml" />
+    <Content Include="Views\SavedHtmls\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -699,6 +728,16 @@
       <DependentUpon>201603010939532_Initial.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GenericData\GenericData.csproj">
+      <Project>{59d43c87-84b4-4f67-8788-5383db3796b9}</Project>
+      <Name>GenericData</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MassComm\MassComm.csproj">
+      <Project>{457a1219-8e0b-4576-9136-2ccc799772d2}</Project>
+      <Name>MassComm</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

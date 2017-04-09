@@ -1,0 +1,51 @@
+﻿@model IEnumerable<Aroma_Violet.Models.SavedHtml>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.SavedHtmlType.SavedHtmlTypeName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SavedHtmlData)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ClientId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Created)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.SavedHtmlType.SavedHtmlTypeName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SavedHtmlData)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ClientId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Created)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.SavedHtmlId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.SavedHtmlId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.SavedHtmlId })
+        </td>
+    </tr>
+}
+
+</table>

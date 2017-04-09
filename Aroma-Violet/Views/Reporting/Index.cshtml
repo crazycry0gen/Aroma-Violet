@@ -8,6 +8,7 @@
 <table>
     @if ((Model & 1) == Model)
     {
+        /*<tr><td>@Html.ActionLink("Test", "Test")</td></tr>*/
         <tr><td>@Html.ActionLink("Cash Sales", "CashSales")</td></tr>
         <tr><td>@Html.ActionLink("Distributed Sales", "DistrbutedSales")</td></tr>
         <tr><td>@Html.ActionLink("Credit Sales", "CreditSales")</td></tr>
@@ -50,6 +51,16 @@
         <tr>
             <td>
                 @Html.ActionLink("User Sales", "GetUserSales")
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.ActionLink("Stock Movement", "StockMovement")
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.ActionLink("Member Average Purchases", "MemberAveragePurchases")
             </td>
         </tr>
     }

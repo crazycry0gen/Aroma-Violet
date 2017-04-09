@@ -1,0 +1,67 @@
+﻿@model Aroma_Violet.Controllers.StockMovementResult[]
+@{
+    ViewBag.Title = "Stock Movement";
+    var startDate = ViewBag.StartDate;
+    var toDate = ViewBag.ToDate;
+    var fmt = "{0:#,###,###,###,0.00}";
+}
+
+<h2>Stock Movement Report</h2>
+
+@using (Html.BeginForm())
+{
+
+    @Html.AntiForgeryToken()
+
+    <table>
+        <tr>
+            <th>
+                From
+            </th>
+            <td>
+                @Html.EditorFor(m => startDate)
+            </td>
+            <th></th>
+            <th>
+                To
+            </th>
+            <td>
+                @Html.EditorFor(m => toDate)
+            </td>
+            <th></th>
+            <td>
+                <input type="submit" value="Filter" class="btn btn-default"/>
+            </td>
+        </tr>
+    </table>
+
+}
+
+<table>
+    <tr>
+        <th colspan="4">Product Code</th><th colspan="8">Product Description</th><th>Sales</th><th>Credit Notes</th><th>Net Qty Movement</th><th>Total Net Sales (Incl)</th>
+    </tr>
+    @{
+        decimal runTot = 0;
+
+        foreach (var item in Model)
+        {
+            runTot += item.TotalNet;
+            var fmtVal = string.Format(fmt, item.TotalNet);
+            <tr class="findisp">
+                <td colspan="4">@item.ProductCode</td>
+                <td colspan="8">@item.ProductDescription</td>
+                <td class="Number">@item.Sales</td>
+                <td class="Number">@item.CreditNotes</td>
+                <td class="Number">@item.NetQuantityMovement</td>
+                <td class="Number">@fmtVal</td>
+            </tr>
+        }
+    }
+    <tr>
+        <th colspan="14"></th>
+        <th>Total</th>
+        <th class="Number">@string.Format(fmt, runTot)</th>
+    </tr>
+</table>
+

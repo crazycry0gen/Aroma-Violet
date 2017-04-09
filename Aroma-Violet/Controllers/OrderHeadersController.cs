@@ -338,6 +338,7 @@ namespace Aroma_Violet.Controllers
         [LayoutInjecter("_LayoutNoLogo")]
         public async Task<ActionResult> Index(int? clientId, DateTime fromDate, DateTime toDate, int statuses,Guid? specificUserId, bool getSeller = false)
         {
+            var newtoDate = toDate.AddDays(1);
             var statusList = (from item in db.OrderStatuses.Where(m => m.Active).ToArray()
                               select new KeyValuePair<int, string>((int)Math.Pow(2, item.OrderStatusId), item.OrderStatusName)).ToArray();
 
@@ -347,7 +348,7 @@ namespace Aroma_Violet.Controllers
             ViewBag.StatusList = statusList;
 
             var elegibleOrders = db.OrderHeaders.Where(m => m.OrderDate >= fromDate 
-                                                        && m.OrderDate <= toDate
+                                                        && m.OrderDate <= newtoDate
                                                         && ((int)Math.Pow(2, (m.OrderStatusId)) & statuses) == (int)Math.Pow(2, (m.OrderStatusId))
                                                         && m.Active).Include(o => o.Client).Include(o => o.OrderStatus).Include(o => o.SalesType);
             var headerIds = elegibleOrders.Select(m => m.OrderHeaderId).ToArray();
@@ -1029,6 +1030,24 @@ namespace Aroma_Violet.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        public static void FixScewedTotals(AromaContext db)
+        {
+            var incorrectTotals =
+                (from item in db.OrderHeaders
+                 where 
+                 item.Active
+                 && item.Total != item.OrderLines.Where(m => m.Active).Sum(m => m.Quantity * m.UnitCost)
+                 && item.Total != 0
+                 && item.OrderLines.Sum(m => m.Quantity * m.UnitCost) != 0
+                 select item).ToArray();
+            foreach (var incorrectTotal in incorrectTotals)
+            {
+                incorrectTotal.Total = incorrectTotal.OrderLines.Sum(m => m.Quantity * m.UnitCost);
+            }
+
+            db.SaveChanges();
         }
     }
 }

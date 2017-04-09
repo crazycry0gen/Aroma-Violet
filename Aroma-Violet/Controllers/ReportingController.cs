@@ -2,13 +2,21 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Data.Common;
     using System.Data.Entity;
+    using System.Data.Entity.ModelConfiguration.Configuration;
+    using System.Data.Entity.SqlServer;
+    using System.IO;
     using System.Linq;
     using System.Web.Mvc;
+    using System.Web.UI;
 
     using Aroma_Violet.Models;
 
     using Microsoft.AspNet.Identity;
+
+    using Postal;
+    using GenericData;
 
     public class ReportingController : Controller
     {
@@ -17,6 +25,27 @@
         private int[] _distrbutedSaleTypes = new[] { 13 };
 
         private AromaContext db = new AromaContext();
+
+        public ActionResult Test(int x = 0)
+        {
+            this.Mail(10076, "Test");
+            return this.RedirectToAction("Index");
+        }
+
+        public void Mail(int clientId, string view)
+        {
+            var emailAddress = (from item in this.db.Contacts
+                         where item.ClientID == clientId && item.ContactTypeID == 6 && item.Active
+                         select item.ContactName).FirstOrDefault();
+            if (string.IsNullOrEmpty(emailAddress))
+            {
+                throw new Exception("No email address");
+            }
+
+            dynamic email = new Email(view);
+            email.To = emailAddress;
+            email.Send();
+        }
 
         [Authorize]
         [HttpGet]
@@ -37,6 +66,67 @@
         }
 
         [Authorize]
+        [HttpGet]
+        public ActionResult MemberAveragePurchases()
+        {
+            
+            var sSql = "with Sales as (select oh.ClientID, sum(oh.Total) as Total from OrderHeader oh where oh.OrderStatusId in  (2,3,4) group by oh.ClientID) select c.ClientId as [Client ID], ct.ClientTypeName as [Client type], c.iDate as [Sign on date], GETDATE() as Today, datediff(d,c.iDate,getdate()) as [Period signed on days], datediff (MM,c.iDate,getdate()) as [Period signed on months], sales.Total as [Total purchases], \tsales.Total / datediff(d,c.iDate,getdate()) as [Average monthly purchases from sign on date] from Client c left join ClientType ct on ct.ClientTypeId = c.ClientTypeID left join Sales on sales.ClientID = c.ClientId order by \tsales.Total / datediff(d,c.iDate,getdate()) desc";
+            var model = this.GetGenericModel(sSql, null, null, null, null, null, null, "{0:#,###,##0.00}", "{0:#,###,##0.00}");
+            
+            /*
+            var validOrderStatuses = new int[] { 2, 3, 4 };
+            var validOrders = (from item in this.db.OrderHeaders
+                               where validOrderStatuses.Contains(item.OrderStatusId)
+                               group item by item.ClientID
+                               into sales
+                               orderby sales.Sum(m => m.Total) descending 
+                               select sales).ToArray();
+
+            var model = new GenericGridReport();
+
+            model.AddColumn("Client ID");
+            model.AddColumn("Client Type");
+            model.AddColumn("Sign on date");
+            model.AddColumn("Today");
+            model.AddColumn("Period signed on days");
+            model.AddColumn("Period signed on months");
+            model.AddColumn("Total purchases");
+            model.AddColumn("Average monthly purchases from sign on date");
+
+            foreach (var row in validOrders)
+            {
+                var client = this.db.Clients.Find(row.Key);
+                var total = row.Sum(m => m.Total);
+
+                const string dateFormat = "yyyy/MM/dd";
+                const string moneyFormat = "#,###,###,##0.00";
+                const string numberFormat = "#,###,##0.000";
+
+                var span = DateTime.Now.Subtract(client.iDate);
+                var months = span.TotalHours / 730;
+                model.AddRow(
+                    row.Key,
+                    client.ClientType.ClientTypeName,
+                    client.iDate.ToString(dateFormat),
+                    DateTime.Now.ToString(dateFormat),
+                    span.TotalDays.ToString(numberFormat),
+                    months.ToString(numberFormat),
+                    total.ToString(moneyFormat),
+                    (total / (decimal)months).ToString(moneyFormat));
+            }
+            */
+            return this.View(model);
+        }
+
+        private GenericGridReport GetGenericModel(string sSql, params string[] format)
+        {
+            using (var context = new AromaContext())
+            {
+                return GenericData.SqlToData(context, sSql, format);
+            }
+        }
+
+        [Authorize]
         [HttpPost]
         public ActionResult CashSales(DateTime fromDate, DateTime toDate)
         {
@@ -45,6 +135,7 @@
         }
 
         [Authorize]
+        [LayoutInjecter("_LayoutNoLogo")]
         public ActionResult CommissionStatement(int? specificClientId, int? specificPeriodId)
         {
             var clients =
@@ -65,7 +156,7 @@
                 var statement = new ReportCommisionStatementViewModel();
                 statement.Name = string.Format("{0} {1}", client.FullNames, client.ClientSurname);
                 statement.ClientId = clientId;
-                statement.Description = DateTime.Now.ToString("MMM yyyy");
+                statement.Description = RebateClientTypesController.GetPeriodStart(periodIds[0]).ToString("MMM yyyy");
                 statement.Periods = new List<ReportCommisionStatementPeriodViewModel>();
                 foreach (var currentPeriodId in periodIds)
                 {
@@ -248,6 +339,81 @@
         // GET: Reporting
         [Authorize]
         [HttpGet]
+        public ActionResult StockMovement()
+        {
+            var startDate = DateTime.Today.AddMonths(-1);
+            var toDate = DateTime.Today;
+            var model = this.GetStockModel(startDate, toDate);
+            ViewBag.StartDate = startDate;
+            ViewBag.ToDate = toDate;
+            return this.View(model);
+        }
+
+        [HttpPost]
+        public ActionResult StockMovement(DateTime startDate, DateTime toDate)
+        {
+            var model = this.GetStockModel(startDate, toDate);
+            ViewBag.StartDate = startDate;
+            ViewBag.ToDate = toDate;
+            return this.View(model);
+        }
+
+        //public ActionResult MemberSalesAnalysisReport()
+        //{
+        //    var model = (from item in this.db.Clients
+        //                 orderby item.ClientId
+        //                 select new MemberSalesAnalysisReportModel()
+        //                                                    {
+        //        No = item.ClientId,
+        //        NickName = item.NickName,
+        //        Surname = item.ClientSurname,
+        //        ClientType = item.ClientType.ClientTypeName,
+        //        SignOnDate= item.iDate,
+        //        Today = DateTime.Today,
+        //        DaysSinceSignOn = DateTime.Today.Subtract(item.iDate).TotalDays,
+        //                  MonthsSinceSignOn           = Math.Floor( DateTime.Today.Subtract(item.iDate).TotalDays / 30),
+        //                  Introducer
+
+        //                 });
+        //}
+
+        private StockMovementResult[] GetStockModel(DateTime startDate, DateTime toDate)
+        {
+            var newToDate = toDate.AddDays(1);
+            var orderLines = from item in this.db.OrderLines.Include(m => m.OrderHeader).Include(m => m.Product)
+                             where item.OrderHeader.OrderDate >= startDate && item.OrderHeader.OrderDate <= newToDate
+                             select item;
+    
+            var result = (from item in orderLines
+                           where
+                           item.Product != null && item.OrderHeader.SalesTypeId != 13 && (
+                               Generic.ValidOrderStatuses.Contains(item.OrderHeader.OrderStatusId)
+                               || item.OrderHeader.OrderStatusId == Generic.CreditNoted)
+                           orderby item.Product.ProductName
+                           group item by item.Product
+                           into products
+                           select
+                               new StockMovementResult()
+                                   {
+                                       StartDate = startDate,
+                                       ToDate = toDate,
+                                       ProductCode = products.Key.ProductCode,
+                                       ProductDescription = products.Key.ProductName,
+                                       Sales = products.Sum(m => m.Quantity),
+                                       CreditNotes = products.Any(m => m.OrderHeader.OrderStatusId == Generic.CreditNoted) ? products.Where(m => m.OrderHeader.OrderStatusId == Generic.CreditNoted).Sum(m => m.Quantity) : 0,
+                                       NetQuantityMovement = products.Any(m => Generic.ValidOrderStatuses.Contains(m.OrderHeader.OrderStatusId)) ?
+                                           products.Where(
+                                               m => Generic.ValidOrderStatuses.Contains(m.OrderHeader.OrderStatusId))
+                                           .Sum(m => m.Quantity) : 0,
+                                       TotalNet = products.Sum(
+                                                m => 
+                                                    m.UnitCost * m.Quantity)
+                                   }).ToArray();
+            return result;
+        }
+
+        [Authorize]
+        [HttpGet]
         public ActionResult DistrbutedSales()
         {
             var model = this.GetModel(DateTime.Today, DateTime.Today, this._distrbutedSaleTypes);
@@ -264,6 +430,7 @@
 
         [Authorize]
         [HttpGet]
+        [LayoutInjecter("_LayoutNoLogo")]
         public ActionResult DownlineStatement(int? clientId)
         {
             const int numberOfMonths = 3;
@@ -449,12 +616,13 @@
         [HttpPost]
         public ActionResult SmsStatus(DateTime fromDate, DateTime toDate, int maxCount, string lastSendMessageID)
         {
+            var newToDate = toDate.AddDays(1);
             if (lastSendMessageID.Trim().Length == 0) lastSendMessageID = null;
             var smses =
                 this.db.SystemSMSes.Where(
                     m =>
                     (lastSendMessageID == "All" || m.LastSendMessage == lastSendMessageID)
-                    && (m.iDate >= fromDate && m.iDate <= toDate))
+                    && (m.iDate >= fromDate && m.iDate <= newToDate))
                     .OrderByDescending(m => m.iDate)
                     .Take(maxCount)
                     .ToList();
@@ -546,17 +714,18 @@
 
         private ReportLinkedUserSales GetLinkedUserModel(DateTime fromDate, DateTime toDate)
         {
+            var newToDate = toDate.AddDays(1);
             var userClients = this.db.UserClients.ToArray();
             var validUserIds = userClients.Select(m => m.UserId).ToArray();
             var orders = (from item in this.db.OrderHeaders
                           where
-                              item.OrderDate >= fromDate && item.OrderDate <= toDate
+                              item.OrderDate >= fromDate && item.OrderDate <= newToDate
                               && validUserIds.Contains(item.UserId)
                           select item).ToArray();
             var model = new ReportLinkedUserSales()
                             {
                                 FromDate = fromDate,
-                                ToDate = toDate,
+                                ToDate = newToDate,
                                 ClientSales = (from item in orders
                                                group item by item.UserId
                                                into sales
@@ -570,8 +739,7 @@
                                                            UserClientId
                                                                =
                                                                userClients
-                                                               .First
-                                                               (
+                                                               .First(
                                                                    m
                                                                    =>
                                                                    m
@@ -584,8 +752,7 @@
                                                            Total
                                                                =
                                                                sales
-                                                               .Sum
-                                                               (
+                                                               .Sum(
                                                                    m
                                                                    =>
                                                                    m
@@ -742,7 +909,7 @@
             fromDate = new DateTime(fromDate.Year, fromDate.Month, fromDate.Day);
             toDate = new DateTime(toDate.Year, toDate.Month, toDate.Day, 23, 59, 59);
 
-            var orders = (from item in this.db.OrderHeaders
+            var orders = (from item in this.db.OrderHeaders/*.Where(m => m.OrderHeaderId.ToString() == "A1EBFFA3-68DF-E511-8118-2047477CE07A")*/
                           where
                               salesTypeId.Contains(item.SalesTypeId) && validOrderStatuses.Contains(item.OrderStatusId)
                               && item.OrderDate >= fromDate && item.OrderDate <= toDate
@@ -871,7 +1038,37 @@
             ret.TotalIncShipping =
                 (ReportViewModel.Lines.Select(m => m.TotalValue).Sum()
                  + ReportViewModel.Sales.Select(m => m.ShippingValue).Sum()).ToString(currencyFormat);
+            
+            var qry = string.Empty;
+            foreach (var line in ReportViewModel.Lines.Select(m => m.OrderHeaderId).Distinct())
+            {
+                qry += $"'{line}',";
+            }
+            
             return ret;
         }
+    }
+
+    public class MemberSalesAnalysisReportModel
+    {
+    }
+
+    public  class StockMovementResult
+    {
+        public DateTime StartDate { get; set; }
+
+        public DateTime ToDate { get; set; }
+
+        public string ProductCode { get; set; }
+
+        public string ProductDescription { get; set; }
+
+        public int Sales { get; set; }
+
+        public int CreditNotes { get; set; }
+
+        public int NetQuantityMovement { get; set; }
+
+        public decimal TotalNet { get; set; }
     }
 }

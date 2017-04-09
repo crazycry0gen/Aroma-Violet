@@ -1,0 +1,174 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+   
+   
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    
+    @*<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>*@
+    
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+    <script src="~/Scripts/jquery-ui-1.11.4.js"></script>
+</head>
+<body>
+  
+    <div class="container body-content">
+        @Html.Partial("BusyWorking")
+        @RenderBody()
+    </div>
+
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+ 
+</body>
+</html>
+
+
+<script type="text/javascript">
+
+    $(function () {
+        window.onsubmit = ShowBustWorking;
+        TogleVisible("BusyWorkingDiv");
+    });
+
+    function UpdateDateTime(key)
+    {
+        var day = document.getElementById('d' + key);
+        var month = document.getElementById('m' + key);
+        var year = document.getElementById('y' + key);
+        var newValue = day.value + '/' + month.value + '/' + year.value + ' 00:00:00';
+        var dateTime = document.getElementById(key);
+        //alert(dateTime.value);
+        //alert(newValue);
+        dateTime.value = newValue;
+    }
+
+    function UpdateContact(clientId, contactTypeId, newValueControl) {
+        wrapper =  {
+            clientId:clientId,
+            contactTypeId:contactTypeId,
+            value:newValueControl.value
+        };
+
+        url = '@Url.Action("UpdateContact", "Clients")';
+
+        data = JSON.stringify(wrapper);
+
+
+        $.ajax({
+            url: url,
+            type: 'POST',
+            contentType: 'application/json; charset=utf-8',
+            data: data
+        });
+    }
+
+    function TogleVisible(id)
+    {
+        var element = document.getElementById(id);
+        if (element.style.display == 'block'||element.style.display == '') {
+            element.style.display = 'none';
+        }
+        else {
+            element.style.display = 'block';
+        }
+
+    }
+    function TogleVisibleTBody(id) {
+        var element = document.getElementById(id);
+        if (element.style.display == 'table-header-group' || element.style.display == '') {
+            element.style.display = 'none';
+        }
+        else {
+            element.style.display = 'table-header-group';
+        }
+
+    }
+    function SetVisible(id,bVal) {
+        var element = document.getElementById(id);
+        if (!bVal) {
+            element.style.display = 'none';
+        }
+        else {
+            element.style.display = 'block';
+        }
+
+    }
+    function ShowBustWorking() {
+
+        TogleVisible("BusyWorkingDiv");
+    }
+
+    function callServerMethod(clientData, url, responceElement)
+    {
+        data = JSON.stringify(clientData);
+
+        var ret = 'wtf';
+
+        $.ajax({
+            url: url,
+            type: 'POST',
+            contentType: 'application/json; charset=utf-8',
+            data: data,
+            async:false,
+            success: function (rdata) {
+                if (responceElement != '') {
+                    var elementPreview = document.getElementById(responceElement);
+                    elementPreview.innerHTML = rdata;
+                }
+                ret = rdata;
+            },
+            error: function () {
+                if (responceElement != '') {
+                    var elementPreview = document.getElementById(responceElement);
+                    elementPreview.innerHTML = 'Opperation failed';
+                }
+                ret = 'Failed';
+            }
+        });
+        return ret;
+    }
+
+    //$(function () { // will trigger when the document is ready
+    //    $('.datepicker').datepicker({
+    //        autoclose: true,
+    //        changeYear: true,
+    //        dateFormat: 'dd/mm/yy'
+    //    }); //Initialise any date pickers
+
+       // jQuery.validator.addMethod(
+       //    'date',
+       //    function (value, element, params) {
+       //        if (this.optional(element)) {
+       //            return true;
+       //        };
+       //        var result = false;
+       //        try {
+       //            $.datepicker.parseDate('dd/mm/yy', value);
+       //            result = true;
+       //        } catch (err) {
+       //            result = false;
+       //        }
+       //        return result;
+       //    },
+       //    ''
+       //);
+
+    //});
+    function FetchExtraInfo(JournalId)
+    {
+        var clientData = {
+            journalId:JournalId
+        }
+        var responceElement = "Extra-" + JournalId;
+
+        var url = '@Url.Action("GetJournalExtraInfo","AccountMovement")';
+        callServerMethod(clientData, url, responceElement);
+    }
+</script>

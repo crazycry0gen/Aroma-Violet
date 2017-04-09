@@ -6,8 +6,8 @@
     var refNo = Model.OrderHeaderId.ToString();
     var orderLines = Model.OrderLines.Where(m=>m.Active).ToArray();
     var totalPlusShip = Model.Total + Model.Shipping ; //TODO: Add Shipping
-    var tax = totalPlusShip * (decimal)0.14;
-    decimal totalExcl = totalPlusShip-tax;
+    decimal totalExcl = totalPlusShip / (decimal)1.14;
+    var tax = totalPlusShip - totalExcl;
     var lines = Model.OrderLines.ToArray();
     //for (int i = 0; i <lines.Length; i++)
     //{
