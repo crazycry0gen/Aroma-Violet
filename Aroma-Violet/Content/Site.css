@@ -163,6 +163,14 @@ table {
     border: 3px double black;
     }
 
+    table.pickingList {
+     page-break-inside:avoid;
+     page-break-after:auto
+    }
+    tr.pickingList    { page-break-inside:avoid; }
+    thead.pickingList { display:table-header-group }
+    tfoot.pickingList { display:table-footer-group }
+
 tr.bigrow {
     height:70px;
     border: 3px double black;
@@ -215,12 +223,7 @@ td.InvoiceCellHead {
 td.Number, th.Number {
     text-align:right;
 }
-td.Date, th.Date {
-    text-align:right;
-}
-td.Text, th.Text {
-    text-align:left;
-}
+
 
 table.CreditNote {
     border-collapse: separate;
@@ -266,4 +269,15 @@ table.PrintLable{
     position:absolute;
     top:60px;
     left:40px;
+    border:solid;
+}
+
+
+    table.Printable2 { page-break-inside:auto }
+    tr.Printable2     { page-break-inside:avoid; page-break-after:auto }
+    thead.Printable2  { display:table-header-group }
+    tfoot.Printable2  { display:table-footer-group }
+
+    @media print {
+    footer {page-break-after: auto;}
 }

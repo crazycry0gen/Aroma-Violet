@@ -3,6 +3,7 @@
     ViewBag.Title = "ShipmentList";
     List<Guid> detailIds = new List<Guid>();
     ViewBag.HideEdit = 1;
+   
 }
 
 @using (Html.BeginForm())
@@ -17,6 +18,7 @@
         </div>*@
         @Html.EditorFor(m=>m.Skip, new { htmlAttributes = new { @class = "form-control" } })
         <a href="#" class="btn btn-default" onclick="SwitchToPrint()">Print Labels</a>
+        <a href="#" class="btn btn-default" onclick="MarkAsPrinted()">Send to Bartender</a>
         <input type="submit" value="Refresh" class="btn btn-default" />
         
         <table>
@@ -70,34 +72,36 @@
 </div>
 
 <div id="Section2" style="display:none" >
+
     <table class="PrintLable">
         @for (int detailIndex = 0; detailIndex < Model.Shipments.Count() + Model.Skip; detailIndex += 2)
         {
-            var name = detailIndex >= Model.Skip ? detail[detailIndex- Model.Skip].groupId:Guid.Empty;
+            var name = detailIndex >= Model.Skip ? detail[detailIndex - Model.Skip].groupId : Guid.Empty;
 
             <tr>
                 <td class="PrintLabel">
-                    @if(detailIndex>= Model.Skip)
+                    @if (detailIndex >= Model.Skip)
                     {
-                    @Html.DisplayFor(m => detail[detailIndex- Model.Skip].ClientDescription)
-                    
-                    @Html.DisplayFor(m => detail[detailIndex- Model.Skip].Address)
-                    <div>@Html.DisplayFor(m => detail[detailIndex- Model.Skip].PhoneNumber)</div>
+                    @Html.DisplayFor(m => detail[detailIndex - Model.Skip].ClientDescription)
+
+                    @Html.DisplayFor(m => detail[detailIndex - Model.Skip].Address)
+                    <div>@Html.DisplayFor(m => detail[detailIndex - Model.Skip].PhoneNumber)</div>
                     @*<div id="Track-@detailIndex"></div>*@
                     }
                 </td>
                 <td class="PrintLabel">
 
-                    @if (detailIndex- Model.Skip + 1 < Model.Shipments.Count && detailIndex + 1>= Model.Skip)
+                    @if (detailIndex - Model.Skip + 1 < Model.Shipments.Count && detailIndex + 1 >= Model.Skip)
                     {
                         @Html.DisplayFor(m => detail[detailIndex - Model.Skip + 1].ClientDescription)
-                        
+
                         @Html.DisplayFor(m => detail[detailIndex - Model.Skip + 1].Address)
                         <div>@Html.DisplayFor(m => detail[detailIndex - Model.Skip + 1].PhoneNumber)</div>
                         @*<div id="Track-@(detailIndex + 1)"></div>*@
                     }
                 </td>
             </tr>
+
         }
     </table>
 </div>
@@ -121,6 +125,17 @@
         Printed('@g');
             </text>
         }
+    }
+
+    function MarkAsPrinted ()
+    {
+             @foreach (var g in detailIds)
+        {
+            <text>
+        Printed('@g');
+            </text>
+        }
+
     }
 
     function UpdateLabel(textbox, index)

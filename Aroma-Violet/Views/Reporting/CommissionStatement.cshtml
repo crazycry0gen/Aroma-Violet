@@ -21,7 +21,7 @@
                 </tr>
             </table>
         </div>
-        <div id="PrintBit"> 
+        <div id="PrintBit" style="max-width:90%"> 
             <h2 style="text-decoration: underline">Commission Statement</h2>
             @foreach (var statement in Model)
             {
@@ -235,8 +235,8 @@
 <div id="ResponseNode"></div>
 
 <div id="NoPrintHeader1">
-    <a href="#" onclick="SwitchToPrint()">Print</a>|
-    <a href="#" onclick="SwitchToEmail()">Email</a>
+    <a href="#" onclick="SwitchToPrint()">Print</a> |
+    <a id = "EmailLink" href="#" onclick="SwitchToEmail()">Email</a>
 
 </div>
 
@@ -260,5 +260,6 @@
         function SwitchToEmail() {
 
             Email('@clientId', 'PrintBit', 'Commission Statement ' + @clientId, '1')
+            SetVisible("EmailLink", false);
         }
 </script>

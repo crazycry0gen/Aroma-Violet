@@ -233,7 +233,7 @@
 
 <div id="NoPrintHeader1">
     <a href="#" onclick="SwitchToPrint()">Print</a>|
-    <a href="#" onclick="SwitchToEmail()">Email</a>
+    <a id="EmailLink" href="#" onclick="SwitchToEmail()">Email</a>
 
 </div>
 
@@ -250,10 +250,12 @@
             SetVisible("Nav", true);
             SetVisible("NoPrintHeader1", true);
             printDiv.style.position = "relative";
+           
         }
 
         function SwitchToEmail() {
-
             Email('@clientId', 'EmailBody', 'Downline Statement ' + @clientId, '2')
+            SetVisible("EmailLink", false);
+
         }
 </script>

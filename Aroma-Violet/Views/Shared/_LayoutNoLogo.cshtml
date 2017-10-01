@@ -114,10 +114,11 @@
                 }
                 ret = rdata;
             },
-            error: function () {
+            error: function (dta) {
+                var res = (JSON.stringify(dta));
                 if (responceElement != '') {
                     var elementPreview = document.getElementById(responceElement);
-                    elementPreview.innerHTML = 'Opperation failed';
+                    elementPreview.innerHTML = res;
                 }
                 ret = 'Failed';
             }
@@ -125,12 +126,13 @@
         return ret;
     }
 
-    function Email(clientId, tagName, subject) {
+    function Email(clientId, tagName, subject, savedHtmlTypeId) {
         var html = document.getElementById(tagName).innerHTML;
         var clientData = {
             clientId: clientId,
             subject: subject,
-            html: html
+            html: html,
+            savedHtmlTypeId: savedHtmlTypeId
         }
         var responceElement = "ResponseNode";
 

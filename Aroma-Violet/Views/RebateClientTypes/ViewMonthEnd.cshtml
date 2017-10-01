@@ -147,12 +147,9 @@
         @if (showApprove && User.IsInRole("Finance") && Model.Length > 0)
         {
             <tr>
-                <td colspan="10"></td>
+                <td colspan="11"></td>
                 <td>
                     @Html.ActionLink("Approve", "ApproveMonthEnd", new { periodId = Model[0].PeriodId }, htmlAttributes: new { @class = "btn btn-default" })
-                </td>
-                <td>
-                    @Html.ActionLink("Delete", "DeleteMonthEnd", new { periodId = Model[0].PeriodId }, htmlAttributes: new { @class = "btn btn-default" })
                 </td>
             </tr>
 

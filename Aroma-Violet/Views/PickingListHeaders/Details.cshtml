@@ -5,90 +5,113 @@
     var prevClientId = 0;
     var detail = Model.PickingListDetail.ToArray();
     const string detailFormat = "{0} {1} x {2}";
-    int p = 0;
+    int rowsPerPage = 32;
+    int start = 0;
+    var @id = "";
 }
 
 <h4>Date:@ViewBag.dts Type:@Model.ShippingType.ShippingTypeName Method:@Model.ShippingMethod.ShippingMethodName</h4>
 
-<div>
- <table class="pickingList">
-     <tr class="pickingList">
-         <th class="pickingList" colspan="2">Picking List ID</th>
-         <th class="pickingList">Client</th>
-         @*<th class="pickingList" colspan="5">Product List</th>*@
-         <th colspan="6">Product</th>
-         <th>Total Items</th>
-         <th>Transfer qty</th>
-         
-      </tr>
-     
-     @for (int i = 0; i < detail.Length; i++)
-     {
-         prevClientId = detail[i].ClientID;
-         <tr class="pickingList" >
-            <td class="pickingList" colspan="2">@detail[i].PickingListDetailId.ToString("0000000000")</td>
-             <td class="pickingList">@detail[i].ClientID</td>
-             
-             <td  class="pickingList" colspan="8">
+<body>
 
-                 <table>
-                        @while (i < detail.Length)
-                        {
-                        <tr class="findisp">
-                            <td colspan="6" >
-                                @detail[i].Product.ProductName
-                            </td>
-                            <td >
-                                @detail[i].TotalItems
-                            </td>
-                            <td >
-                                @detail[i].TransferQuantity
-                            </td>
-                            
-                        </tr>
-                            if (i < detail.Length-1 && detail[i + 1].ClientID == prevClientId)
+    <table class="pickingList">
+        <thead>
+            <tr class="pickingList">
+                <th class="pickingList" colspan="2">Picking List ID</th>
+                <th class="pickingList">Client</th>
+                @*<th class="pickingList" colspan="5">Product List</th>*@
+                <th colspan="6">Product</th>
+                <th>Total Items</th>
+                <th>Transfer qty</th>
+
+            </tr>
+        </thead>
+ 
+        <tbody>
+
+
+            @for (int i = start; i < detail.Length; i++)
+            {
+
+                if(@id.Length==0 || prevClientId != detail[i].ClientID)
+                {
+                    id = @detail[i].PickingListDetailId.ToString("0000000000");
+                    prevClientId = detail[i].ClientID;
+                }
+
+                <tr class="pickingList"  >
+                    <td class="pickingList" colspan="2">@id</td>
+                    <td class="pickingList">@detail[i].ClientID</td>
+
+                    <td class="pickingList" colspan="8">
+
+                        <table>
+                            @while (i < detail.Length)
                             {
-                                i++;
-                            }
-                            else
-                            {
-                                break;
-                            }
-                        }
 
-                    
+                                <tr class="findisp"  >
+                                    <td colspan="6">
+                                        @detail[i].Product.ProductName
+                                    </td>
+                                    <td>
+                                        @detail[i].TotalItems
+                                    </td>
+                                    <td>
+                                        @detail[i].TransferQuantity
+                                    </td>
 
-                 </table>
-     </td>
-             
-         </tr>
-        
-     }
-     <tr >
-         <th colspan="9">
-             Total
-         </th>
-         <th>
-             @detail.Sum(m => m.TotalItems)
-         </th>
-         <th>
-             @detail.Sum(m => m.TransferQuantity)
-         </th>
-     </tr>
-     <tr class="bigrow">
-         <td class="pickingList" colspan="2">Packed by:</td>
-         <td class="pickingList" colspan="5"></td>
-     </tr>
-     <tr class="bigrow">
-         <td class="pickingList" colspan="2">Signature:</td>
-         <td class="pickingList" colspan="5"></td>
-     </tr>
-     <tr class="bigrow">
-         <td class="pickingList" colspan="2">Picked Date:</td>
-         <td class="pickingList" colspan="5"></td>
-     </tr>
- </table>
-</div>
+                                </tr>
+                                if (i < detail.Length - 1 && detail[i + 1].ClientID == prevClientId && !(i > 0 && i % rowsPerPage == 0))
+                                {
+                                    i++;
+                                }
+                                else
+                                {
+                                    start = i + 1;
+                                    break;
+                                }
+                            }
+
+
+
+                        </table>
+                    </td>
+
+                </tr>
+
+            }
+
+        </tbody>
+        <tr>
+            <th colspan="9">
+                Total
+            </th>
+            <th>
+                @detail.Sum(m => m.TotalItems)
+            </th>
+            <th>
+                @detail.Sum(m => m.TransferQuantity)
+            </th>
+        </tr>
+        <tr class="bigrow">
+            <td class="pickingList" colspan="2">Packed by:</td>
+            <td class="pickingList" colspan="5"></td>
+        </tr>
+        <tr class="bigrow">
+            <td class="pickingList" colspan="2">Signature:</td>
+            <td class="pickingList" colspan="5"></td>
+        </tr>
+        <tr class="bigrow">
+            <td class="pickingList" colspan="2">Picked Date:</td>
+            <td class="pickingList" colspan="5"></td>
+        </tr>
+        <tfoot>
+ <tr style="border:none"></tr>
+ 
+        </tfoot>
+        </table>
+ 
+</body>
 <p id="links">
     @Html.ActionLink("Previous Picking Lists", "Index")|
     @Html.ActionLink("Picking List", "Create")|

@@ -39,6 +39,7 @@ namespace Aroma_Violet.Controllers
         public async Task<ActionResult> Approve()
         {
             this.db.Database.ExecuteSqlCommand("spPopulateStratcolPortalDebitOrder");
+
             return RedirectToAction("Index");
         }
 

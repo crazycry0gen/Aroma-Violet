@@ -16,7 +16,7 @@ namespace MassComm
         private string Password;
         private int Port;
         private string Username;
-
+        
         public MassEmail(string fromEmail, string host, string password, int port, string username)
         {
             FromEmail = fromEmail;
