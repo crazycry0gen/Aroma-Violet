@@ -1,0 +1,61 @@
+﻿@model GenericData.GenericGridReport
+@{
+
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Member Average Purchases</title>
+</head>
+<body>
+    <div>
+        <table>
+            <tr>
+                <td>USER TRANSACTIONS</td>
+                <td></td>
+                <td></td>
+                <td>SC0003_V1_10</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>USER'S CODE sending this spreadsheet</td>
+                <td></td>
+                <td></td>
+                <td>8321</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>USER's Name</td>
+                <td></td>
+                <td>Novus Fragrances</td>
+                <td></td>
+
+            </tr>
+            @for (var r = 0; r < Model.Rows.Count; r++)
+            {
+                <tr  class="findisp">
+                    @for (int i = 0; i < Model.Columns.Count; i++)
+                {
+                        <td>@Model.Rows[r][i]</td>
+                    }
+                </tr>
+            }
+        </table>
+    </div>
+</body>
+</html>

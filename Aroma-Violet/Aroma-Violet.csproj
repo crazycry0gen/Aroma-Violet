@@ -710,6 +710,8 @@
     <Content Include="Views\SavedHtmls\Details.cshtml" />
     <Content Include="Views\SavedHtmls\Edit.cshtml" />
     <Content Include="Views\SavedHtmls\Index.cshtml" />
+    <Content Include="Views\finAccounts\Balances.cshtml" />
+    <Content Include="Views\Reporting\DebitOrderExcelExport.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
