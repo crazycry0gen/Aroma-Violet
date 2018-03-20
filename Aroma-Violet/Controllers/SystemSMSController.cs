@@ -141,6 +141,9 @@ namespace Aroma_Violet.Controllers
                            select item).ToArray();
 
             }
+
+            clients = clients.OrderBy(m => m.ClientId).ToArray();
+
             return clients;
         }
 
@@ -181,7 +184,23 @@ namespace Aroma_Violet.Controllers
 
                                        Source = userId,
                                        SystemSMSStatusId = 1
-                                   }).ToArray();
+                                   }).ToList();
+                    
+                    for (int i = entries.Count()-1; i  >= 0; i--)
+                    {
+                        var cclientId = entries[i].ClientID;
+                        var txt = entries[i].SMSDescription;
+                        var exists = i > 0 && entries[i].ClientID == entries[i-1].ClientID;
+                        exists = exists || (from item in db.SystemSMSes
+                                      where item.ClientID == cclientId
+                                      && item.SMSDescription == txt
+                                      && item.iDate > DateTime.Today
+                                      select 1).Count() > 0;
+                        if (exists)
+                        {
+                            entries.RemoveAt(i);
+                        }
+                    }
 
                     var links = (from item in entries
                                  select new SystemLink()
@@ -191,6 +210,9 @@ namespace Aroma_Violet.Controllers
                                      LinkId = Guid.NewGuid(),
                                      Parent = ClientKey(item.ClientID)
                                  }).ToArray();
+
+                    
+
 
                     db.SystemSMSes.AddRange(entries);
                     db.SystemLinks.AddRange(links);
